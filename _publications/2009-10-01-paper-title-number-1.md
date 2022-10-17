@@ -10,6 +10,6 @@ paperurl: 'https://arxiv.org/pdf/2011.06103.pdf'
 ---
 <!-- This paper is about the number 1. The number 2 is left for future work. -->
 **Viska Wei**, Nikita Ivkin, Alex Szalay, Vladimir Braverman
-[Download paper here]([pdf])
+[pdf]([https://arxiv.org/pdf/2011.06103.pdf])
 
 <!-- Recommended citation: Your Name, You. (2009). "Paper Title Number 1." <i>Journal 1</i>. 1(1). -->
