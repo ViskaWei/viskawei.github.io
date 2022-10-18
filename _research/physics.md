@@ -1,6 +1,6 @@
 ---
 title: "Physics Informed Machine Learning"
-excerpt: "Short description of portfolio item number 1<br/><img src='/images/PIML/telescope.png'>"
+excerpt: "AI telescope <br/><img src='/images/PIML/telescope.png'>"
 collection: research
 ---
 
@@ -24,4 +24,5 @@ Motivated by the discovery potential of wide-field surveys of the sky, the world
 
 
 ### Technique
+#### PCA
 
