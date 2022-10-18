@@ -1,6 +1,6 @@
 ---
 title: "Sketch and Streaming Algorithm"
-excerpt: "Geo-distributed tSNE and UMAP <br/><img src='images/IEEE/pca_tsne_umap.png'>"
+excerpt: "Geo-distributed tSNE and UMAP <br/><img src='/images/IEEE/pca_tsne_umap.png'>"
 collection: research
 ---
 ### Why use tSNE and UMAP instead of PCA?
