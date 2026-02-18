@@ -1,0 +1,45 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const linkUrl = project.liveUrl || project.githubUrl || project.paperUrl || '#';
+---
+
+<div
+  class:list={['project-card', { featured: project.featured }]}
+  data-card-style={project.cardStyle}
+  data-href={linkUrl}
+>
+  <div class="card-canvas" data-card-init={project.cardStyle} style="position: relative; width: 100%; height: 220px; overflow: hidden;"></div>
+  <div class="card-body">
+    <div class="card-title">{project.title}</div>
+    <div class="card-tagline">{project.tagline}</div>
+    <div class="card-tags">
+      {project.tags.map(tag => <span class="card-tag">{tag}</span>)}
+    </div>
+    <div class="card-meta">
+      {project.year && <span>{project.year}</span>}
+      {project.venue && <span>· {project.venue}</span>}
+      {project.githubUrl && <span>· <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="card-link">Code</a></span>}
+      {project.paperUrl && <span>· <a href={project.paperUrl} target="_blank" rel="noopener noreferrer" class="card-link">Paper</a></span>}
+    </div>
+  </div>
+</div>
+
+<script>
+  // Make cards clickable without nested <a> tags
+  document.querySelectorAll<HTMLElement>('.project-card[data-href]').forEach(card => {
+    card.addEventListener('click', (e) => {
+      // Don't navigate if clicking a link inside the card
+      if ((e.target as HTMLElement).closest('.card-link')) return;
+      const href = card.dataset.href;
+      if (href && href !== '#') {
+        window.open(href, '_blank', 'noopener,noreferrer');
+      }
+    });
+  });
+</script>

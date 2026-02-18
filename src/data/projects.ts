@@ -1,0 +1,83 @@
+export interface Project {
+  slug: string;
+  title: string;
+  tagline: string;
+  cardStyle: string;
+  featured: boolean;
+  year: number;
+  venue?: string;
+  tags: string[];
+  paperUrl?: string;
+  githubUrl?: string;
+  liveUrl?: string;
+  relatedCourses?: string[];
+}
+
+export const projects: Project[] = [
+  {
+    slug: 'specvit',
+    title: 'SpecViT',
+    tagline: 'Vision Transformers for stellar parameter estimation from spectroscopic data',
+    cardStyle: 'StellarSpectrum',
+    featured: true,
+    year: 2025,
+    tags: ['Deep Learning', 'Astronomy', 'Vision Transformers'],
+    githubUrl: 'https://github.com/viskawei/SpecViT',
+    liveUrl: 'https://viskawei.github.io/SpecViT-web',
+    relatedCourses: ['EN.601.682', 'AS.171.749', 'AS.171.801'],
+  },
+  {
+    slug: 'ips-unlabeled-particle',
+    title: 'IPS Unlabeled Particle',
+    tagline: 'Interacting particle systems with unlabeled particles and mean-field limits',
+    cardStyle: 'MonetGlass',
+    featured: false,
+    year: 2024,
+    tags: ['Stochastic Processes', 'Mathematical Physics', 'Mean-Field Theory'],
+    relatedCourses: ['EN.553.626', 'EN.553.627'],
+  },
+  {
+    slug: 'sketch-and-scale',
+    title: 'Sketch & Scale',
+    tagline: 'Dimensionality reduction pipeline: PCA → random sketching → UMAP for large-scale data',
+    cardStyle: 'SketchFlow',
+    featured: false,
+    year: 2023,
+    tags: ['Data Science', 'Dimensionality Reduction', 'Algorithms'],
+    githubUrl: 'https://github.com/viskawei',
+    relatedCourses: ['EN.553.636', 'EN.601.633'],
+  },
+  {
+    slug: 'charm-yukawa',
+    title: 'Charm Yukawa Coupling',
+    tagline: 'Probing charm quark Yukawa coupling at the LHC via Higgs production channels',
+    cardStyle: 'ParticleSim',
+    featured: false,
+    year: 2020,
+    venue: 'UC Berkeley',
+    tags: ['Particle Physics', 'QFT', 'Collider Phenomenology'],
+    relatedCourses: ['PHYS232A', 'PHYS232B', 'PHYS233A'],
+  },
+  {
+    slug: 'piml',
+    title: 'Physics-Informed ML',
+    tagline: 'Physics-informed neural networks for stellar atmosphere parameter estimation',
+    cardStyle: 'NeuralField',
+    featured: false,
+    year: 2024,
+    tags: ['Physics-Informed', 'ML', 'Stellar Physics'],
+    relatedCourses: ['AS.171.749', 'AS.171.801'],
+  },
+  {
+    slug: 'cancer-clustering',
+    title: 'Cancer Subtype Clustering',
+    tagline: 'Unsupervised clustering of cancer subtypes using multi-omics data with UMAP',
+    cardStyle: 'ClusterMap',
+    featured: false,
+    year: 2019,
+    venue: 'IEEE Big Data',
+    tags: ['Bioinformatics', 'Clustering', 'UMAP'],
+    paperUrl: '/files/paper1.pdf',
+    relatedCourses: ['EN.553.636'],
+  },
+];

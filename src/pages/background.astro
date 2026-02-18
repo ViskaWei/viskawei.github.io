@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { tracks } from '../data/techtree';
+import '../styles/techtree.css';
+
+// Group tracks by branch
+const coreTracks = tracks.filter(t => t.branch === 'core');
+const engineeringTracks = tracks.filter(t => t.branch === 'engineering');
+const societyTracks = tracks.filter(t => t.branch === 'society');
+---
+
+<BaseLayout title="Tech Tree — Viska Wei" description="Academic skill tree: Physics, Mathematics, CS, ML/AI, Finance, and more">
+  <div class="techtree-page">
+    <Nav />
+
+    <div class="techtree-header">
+      <h1>Skill Tree</h1>
+      <div class="subtitle">// academic progression &mdash; present to 2017</div>
+    </div>
+
+    <div class="techtree-container" id="techtree-root">
+      <!-- Track filter sidebar — grouped by branch -->
+      <div class="track-filters">
+        <div class="track-filter-group">
+          <div class="track-filter-group-label">Core</div>
+          {coreTracks.map(track => (
+            <button
+              class="track-filter-btn"
+              data-track={track.id}
+              style={`--track-color: ${track.color}`}
+            >
+              <span class="track-dot"></span>
+              {track.label}
+            </button>
+          ))}
+        </div>
+        <div class="track-filter-group">
+          <div class="track-filter-group-label">Engineering</div>
+          {engineeringTracks.map(track => (
+            <button
+              class="track-filter-btn"
+              data-track={track.id}
+              style={`--track-color: ${track.color}`}
+            >
+              <span class="track-dot"></span>
+              {track.label}
+            </button>
+          ))}
+        </div>
+        <div class="track-filter-group">
+          <div class="track-filter-group-label">Society</div>
+          {societyTracks.map(track => (
+            <button
+              class="track-filter-btn"
+              data-track={track.id}
+              style={`--track-color: ${track.color}`}
+            >
+              <span class="track-dot"></span>
+              {track.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Detail panel -->
+      <div class="detail-panel">
+        <button class="close-btn" aria-label="Close">&times;</button>
+        <h3>Course Name</h3>
+        <div class="detail-code">EN.601.682</div>
+        <div class="detail-meta">
+          <span class="detail-institution-badge">JHU</span>
+          <span class="detail-year">2023</span>
+        </div>
+        <span class="detail-grade">A+</span>
+        <div class="detail-type">COURSE</div>
+        <div class="detail-track">ML / AI</div>
+
+        <div class="detail-prereqs detail-section">
+          <h4>Prerequisites</h4>
+          <div class="detail-list"></div>
+        </div>
+
+        <div class="detail-projects detail-section">
+          <h4>Related Projects</h4>
+          <div class="detail-list"></div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="techtree-legend">
+        <div class="legend-item">
+          <span class="legend-rect"></span>
+          Course
+        </div>
+        <div class="legend-item">
+          <span class="legend-diamond"></span>
+          Project
+        </div>
+        <div class="legend-item">
+          <span class="legend-hexagon"></span>
+          Thesis
+        </div>
+        <div class="legend-item">
+          <span class="legend-pentagon"></span>
+          Internship
+        </div>
+        <div class="legend-item">
+          <span class="legend-pub"></span>
+          Publication
+        </div>
+        <div class="legend-item">
+          <span class="legend-octagon"></span>
+          Repo
+        </div>
+        <div class="legend-item">
+          <span class="legend-line"></span>
+          Prerequisite
+        </div>
+      </div>
+    </div>
+
+    <Footer />
+  </div>
+</BaseLayout>
+
+<script>
+  import { initTechTree } from '../islands/TechTree';
+  import { courses, projectNodes, tracks } from '../data/techtree';
+
+  const container = document.getElementById('techtree-root');
+  if (container) {
+    initTechTree(container, courses, projectNodes, tracks);
+  }
+</script>

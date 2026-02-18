@@ -1,0 +1,303 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+import '../styles/cards.css';
+
+// Sort: featured first, then by year desc
+const sortedProjects = [...projects].sort((a, b) => {
+  if (a.featured && !b.featured) return -1;
+  if (!a.featured && b.featured) return 1;
+  return b.year - a.year;
+});
+---
+
+<BaseLayout title="Viska Wei — Portfolio">
+  <Nav />
+
+  <div id="monet-bg"></div>
+
+  <!-- Hero -->
+  <section class="hero section animate-in">
+    <div class="hero-profile">
+      <div class="hero-avatar-wrapper">
+        <img src="/images/profile/viskawei.jpg" alt="Viska Wei" class="hero-avatar" />
+      </div>
+      <div class="hero-text">
+        <h1>Viska Wei</h1>
+        <p class="hero-subtitle">Physics · Machine Learning · Data Science</p>
+        <p class="hero-affiliation">PhD Student, Applied Mathematics & Statistics / CS<br/>Johns Hopkins University</p>
+        <div class="hero-links">
+          <a href="https://github.com/viskawei" target="_blank" rel="noopener noreferrer" class="hero-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+          <a href="mailto:swei20@jhu.edu" class="hero-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Email
+          </a>
+          <a href="/files/Viska_Wei_CV.pdf" target="_blank" class="hero-link">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            CV
+          </a>
+        </div>
+      </div>
+    </div>
+    <p class="hero-bio">
+      I build bridges between physics and machine learning — from quantum field theory to
+      vision transformers for stellar spectroscopy. My work spans stochastic processes,
+      deep learning, and computational astrophysics.
+    </p>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- Projects -->
+  <section class="section-wide animate-in delay-2">
+    <div class="projects-header">
+      <h2>Projects</h2>
+      <p class="projects-subtitle">Research and side projects spanning physics, machine learning, and data science.</p>
+    </div>
+    <div class="card-grid">
+      {sortedProjects.map(project => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .hero {
+    max-width: 860px;
+    padding-top: 5rem;
+    padding-bottom: 3rem;
+  }
+
+  .hero-profile {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    margin-bottom: 2.25rem;
+  }
+
+  .hero-avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    width: 156px;
+    height: 156px;
+    border-radius: 50%;
+    padding: 4px;
+    background: transparent;
+  }
+
+  .hero-avatar-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 0deg,
+      var(--monet-lavender),
+      var(--monet-sky),
+      var(--monet-mint),
+      var(--monet-yellow),
+      var(--monet-rose),
+      var(--monet-lavender)
+    );
+    animation: avatar-border-rotate 6s linear infinite;
+    z-index: 0;
+  }
+
+  .hero-avatar-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    background: conic-gradient(
+      from 180deg,
+      var(--monet-rose),
+      var(--monet-lavender),
+      var(--monet-sky),
+      var(--monet-mint),
+      var(--monet-rose)
+    );
+    animation: avatar-border-rotate 6s linear infinite reverse;
+    z-index: -1;
+    filter: blur(12px);
+    opacity: 0.5;
+  }
+
+  @keyframes avatar-border-rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .hero-avatar {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--bg-primary);
+    display: block;
+  }
+
+  .hero-text {
+    flex: 1;
+  }
+
+  .hero-text h1 {
+    margin-bottom: 0.35rem;
+    line-height: 1.15;
+  }
+
+  .hero-subtitle {
+    font-size: 1.15rem;
+    color: var(--accent-purple);
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.03em;
+    opacity: 0.9;
+  }
+
+  .hero-affiliation {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 1.1rem;
+  }
+
+  .hero-links {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(124,92,191,0.12);
+    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    text-decoration: none;
+  }
+
+  .hero-link:hover {
+    color: var(--accent-purple);
+    background: rgba(255,255,255,0.75);
+    border-color: rgba(124,92,191,0.3);
+    transform: translateY(-2px);
+    box-shadow:
+      0 4px 16px rgba(124,92,191,0.12),
+      0 0 0 1px rgba(124,92,191,0.06);
+  }
+
+  .hero-link svg {
+    flex-shrink: 0;
+    opacity: 0.65;
+    transition: opacity 0.2s ease;
+  }
+
+  .hero-link:hover svg {
+    opacity: 1;
+  }
+
+  .hero-bio {
+    font-size: 1.08rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    max-width: 680px;
+    position: relative;
+    padding-left: 1.25rem;
+    border-left: 2px solid rgba(124,92,191,0.25);
+  }
+
+  .projects-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .projects-header h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  .projects-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      padding-top: 3.5rem;
+    }
+
+    .hero-profile {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .hero-avatar-wrapper {
+      width: 124px;
+      height: 124px;
+    }
+
+    .hero-links {
+      justify-content: center;
+    }
+
+    .hero-bio {
+      text-align: center;
+      border-left: none;
+      padding-left: 0;
+    }
+  }
+</style>
+
+<script>
+  // Initialize Monet background
+  import { initMonetBackground } from '../islands/MonetBackground';
+  const bgContainer = document.getElementById('monet-bg');
+  if (bgContainer) initMonetBackground(bgContainer);
+
+  // Initialize card animations
+  import { initMonetGlass } from '../cards/CardMonetGlass';
+  import { initMinimalistMath } from '../cards/CardMinimalistMath';
+  import { initSketchFlow } from '../cards/CardSketchFlow';
+  import { initParticleSim } from '../cards/CardParticleSim';
+  import { initNeuralField } from '../cards/CardNeuralField';
+  import { initClusterMap } from '../cards/CardClusterMap';
+  import { initStellarSpectrum } from '../cards/CardStellarSpectrum';
+  import { initDefault } from '../cards/CardDefault';
+
+  const cardInits: Record<string, (el: HTMLElement) => void> = {
+    MonetGlass: initMonetGlass,
+    MinimalistMath: initMinimalistMath,
+    SketchFlow: initSketchFlow,
+    ParticleSim: initParticleSim,
+    NeuralField: initNeuralField,
+    ClusterMap: initClusterMap,
+    StellarSpectrum: initStellarSpectrum,
+    Default: initDefault,
+  };
+
+  document.querySelectorAll<HTMLElement>('[data-card-init]').forEach(el => {
+    const style = el.dataset.cardInit!;
+    const init = cardInits[style] || cardInits.Default;
+    init(el);
+  });
+</script>

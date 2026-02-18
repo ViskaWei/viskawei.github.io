@@ -1,0 +1,643 @@
+/* ═══════════════════════════════════════════════════════════════
+   Tech Tree — Stellaris Aesthetic
+   Dark background, soft pastel glow, rounded design
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Color tokens ────────────────────────────────────────── */
+:root {
+  --st-bg: #0d1117;
+  --st-bg-card: rgba(13, 17, 23, 0.92);
+  --st-bg-panel: rgba(13, 17, 23, 0.95);
+  --st-border: rgba(255, 255, 255, 0.06);
+  --st-text: #e2e8f0;
+  --st-text-dim: #8b949e;
+  --st-text-muted: #484f58;
+}
+
+/* ── Page base ────────────────────────────────────────────── */
+.techtree-page {
+  background: var(--st-bg);
+  min-height: 100vh;
+  color: var(--st-text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Nav overrides for dark theme ─────────────────────────── */
+.techtree-page .nav {
+  background: rgba(13, 17, 23, 0.92);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+}
+
+.techtree-page .nav-brand {
+  background: linear-gradient(135deg, #a0c8e8, #c4b5e0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.techtree-page .nav-link {
+  color: #8b949e;
+}
+
+.techtree-page .nav-link:hover,
+.techtree-page .nav-link.active {
+  color: #e2e8f0;
+}
+
+.techtree-page .nav-link.active::after {
+  background: linear-gradient(90deg, #a0c8e8, #c4b5e0);
+}
+
+/* ── Footer overrides ─────────────────────────────────────── */
+.techtree-page .footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin-top: 0;
+  padding: 1rem 2rem;
+  background: rgba(13, 17, 23, 0.95);
+}
+
+.techtree-page .footer-name {
+  color: var(--st-text);
+}
+
+.techtree-page .footer-role {
+  color: var(--st-text-dim);
+}
+
+.techtree-page .footer-copy {
+  color: var(--st-text-muted);
+}
+
+.techtree-page .footer-links a {
+  color: #a0c8e8;
+}
+
+.techtree-page .footer-divider {
+  color: var(--st-text-muted);
+}
+
+/* ── Page header ──────────────────────────────────────────── */
+.techtree-header {
+  padding: 5.5rem 2rem 1rem;
+  text-align: center;
+  position: relative;
+}
+
+.techtree-header h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #c4b5e0, #a0c8e8);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0;
+}
+
+.techtree-header .subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--st-text-muted);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+/* ── Tree container ───────────────────────────────────────── */
+.techtree-container {
+  width: 100%;
+  height: calc(100vh - 160px);
+  position: relative;
+  overflow: auto;
+}
+
+/* Dark scrollbar for tree container */
+.techtree-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.techtree-container::-webkit-scrollbar-track {
+  background: rgba(13, 17, 23, 0.5);
+}
+
+.techtree-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.techtree-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.techtree-container::-webkit-scrollbar-corner {
+  background: rgba(13, 17, 23, 0.5);
+}
+
+.techtree-svg {
+  display: block;
+}
+
+/* ── Node styling — rounded rectangles ────────────────────── */
+.tree-node {
+  cursor: pointer;
+}
+
+.tree-node rect.node-bg {
+  transition: filter 0.25s ease, stroke-width 0.25s ease;
+}
+
+.tree-node:hover rect.node-bg {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 8px var(--node-color));
+}
+
+.tree-node.highlighted rect.node-bg {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 6px var(--node-color));
+}
+
+.tree-node.dimmed {
+  opacity: 0.18;
+}
+
+/* ── Project nodes — diamond ──────────────────────────────── */
+.tree-node.project-node polygon {
+  stroke-width: 2;
+  transition: filter 0.25s ease;
+  cursor: pointer;
+}
+
+.tree-node.project-node:hover polygon {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--node-color));
+}
+
+.tree-node.project-node.highlighted polygon {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 8px var(--node-color));
+}
+
+/* ── Thesis nodes — hexagon ───────────────────────────────── */
+.tree-node.thesis-node polygon {
+  stroke-width: 2;
+  transition: filter 0.25s ease;
+}
+
+.tree-node.thesis-node:hover polygon {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 12px var(--node-color));
+}
+
+/* ── Internship nodes — pentagon ──────────────────────────── */
+.tree-node.internship-node polygon {
+  stroke-width: 2;
+  transition: filter 0.25s ease;
+}
+
+.tree-node.internship-node:hover polygon {
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 10px var(--node-color));
+}
+
+/* ── Publication nodes — dashed rounded rect ─────────────── */
+.tree-node.publication-node rect {
+  transition: filter 0.25s ease;
+}
+
+.tree-node.publication-node:hover rect {
+  filter: drop-shadow(0 0 8px var(--node-color));
+}
+
+/* ── Repo nodes — octagon ────────────────────────────────── */
+.tree-node.repo-node polygon {
+  stroke-width: 1.5;
+  transition: filter 0.25s ease;
+}
+
+.tree-node.repo-node:hover polygon {
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px var(--node-color));
+}
+
+/* ── Edges — soft colored lines ──────────────────────────── */
+.tree-edge {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.12);
+  stroke-width: 1;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.tree-edge.highlighted {
+  stroke-width: 2;
+  stroke-dasharray: 8 4;
+  animation: dash-flow 1.2s linear infinite;
+  filter: drop-shadow(0 0 3px var(--edge-color));
+}
+
+.tree-edge.dimmed {
+  opacity: 0.06;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* Arrow markers */
+.tree-edge-arrow {
+  fill: rgba(255, 255, 255, 0.2);
+}
+
+.tree-edge-arrow.highlighted {
+  fill: var(--edge-color);
+}
+
+/* ── Track filter sidebar ─────────────────────────────────── */
+.track-filters {
+  position: absolute;
+  top: 12px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 10;
+}
+
+.track-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.track-filter-group-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--st-text-dim);
+  padding: 4px 14px 2px;
+}
+
+.track-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+  background: var(--st-bg-panel);
+  backdrop-filter: blur(12px);
+  color: var(--st-text-muted);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.track-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--st-text-dim);
+}
+
+.track-filter-btn.active {
+  border-color: var(--track-color);
+  color: var(--track-color);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.track-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--track-color);
+  flex-shrink: 0;
+  transition: box-shadow 0.2s ease;
+}
+
+.track-filter-btn.active .track-dot {
+  box-shadow: 0 0 6px var(--track-color);
+}
+
+/* ── Detail panel ─────────────────────────────────────────── */
+.detail-panel {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 300px;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  background: var(--st-bg-panel);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  z-index: 10;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.detail-panel.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* Accent line at top */
+.detail-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--track-color, #a0c8e8);
+}
+
+.detail-panel h3 {
+  color: var(--st-text);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  padding-right: 24px;
+}
+
+.detail-panel .detail-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--track-color, #a0c8e8);
+  margin-bottom: 0.5rem;
+}
+
+.detail-panel .detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.detail-panel .detail-institution-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--st-text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.detail-panel .detail-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--st-text-muted);
+}
+
+.detail-panel .detail-grade {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(48, 209, 88, 0.1);
+  color: #30d158;
+  border: 1px solid rgba(48, 209, 88, 0.2);
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.detail-panel .detail-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.detail-panel .detail-track {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--track-color, var(--st-text-dim));
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.detail-panel .detail-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.detail-panel .detail-section h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--st-text-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem 0;
+}
+
+.detail-panel .detail-prereq-item,
+.detail-panel .detail-related-item {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.78rem;
+  color: var(--st-text-dim);
+  padding: 0.2rem 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.detail-panel .detail-prereq-item:hover,
+.detail-panel .detail-related-item:hover {
+  color: #e2e8f0;
+}
+
+.detail-panel .close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--st-text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.detail-panel .close-btn:hover {
+  color: #e2e8f0;
+}
+
+/* ── Legend ────────────────────────────────────────────────── */
+.techtree-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 10px 16px;
+  background: var(--st-bg-panel);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--st-text-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  z-index: 10;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-rect {
+  width: 16px;
+  height: 12px;
+  border: 1.5px solid #a0c8e8;
+  border-radius: 3px;
+  background: rgba(160, 200, 232, 0.08);
+}
+
+.legend-diamond {
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  border: 1.5px solid #c4b5e0;
+  background: rgba(196, 181, 224, 0.12);
+}
+
+.legend-hexagon {
+  width: 12px;
+  height: 12px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background: rgba(240, 230, 160, 0.25);
+  border: none;
+}
+
+.legend-pentagon {
+  width: 12px;
+  height: 12px;
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+  background: rgba(255, 77, 77, 0.25);
+}
+
+.legend-pub {
+  width: 16px;
+  height: 10px;
+  border: 1.5px dashed #7fd4a8;
+  border-radius: 5px;
+  background: rgba(127, 212, 168, 0.08);
+}
+
+.legend-octagon {
+  width: 12px;
+  height: 12px;
+  clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+  background: rgba(127, 212, 168, 0.2);
+}
+
+.legend-line {
+  display: inline-block;
+  width: 20px;
+  height: 0;
+  border-top: 2px solid rgba(255, 255, 255, 0.25);
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .techtree-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .track-filters {
+    top: auto;
+    bottom: 50px;
+    left: 8px;
+    right: 8px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .track-filter-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  .track-filter-group-label {
+    display: none;
+  }
+
+  .track-filter-btn {
+    padding: 4px 10px;
+    font-size: 0.6rem;
+  }
+
+  .detail-panel {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 12px 12px 0 0;
+    transform: translateY(20px);
+  }
+
+  .detail-panel.visible {
+    transform: translateY(0);
+  }
+
+  .techtree-legend {
+    display: none;
+  }
+}
+
+/* ── Scrollbar styling ────────────────────────────────────── */
+.detail-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.detail-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.detail-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+.detail-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
