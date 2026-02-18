@@ -1,0 +1,125 @@
+# Infrastructure: state.sh + report.sh + checkpoint.sh
+# State management, execution reporting, and git checkpointing
+
+classes: {
+  entrypoint: {
+    style.fill: "#2980b9"
+    style.font-color: "#ffffff"
+    style.stroke: "#1a5276"
+    style.stroke-width: 3
+    style.bold: true
+    style.shadow: true
+    style.border-radius: 8
+  }
+  function: {
+    style.fill: "#d6eaf8"
+    style.stroke: "#2980b9"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  external-call: {
+    style.fill: "#fef9e7"
+    style.stroke: "#f39c12"
+    style.stroke-width: 2
+    style.stroke-dash: 4
+    style.border-radius: 5
+  }
+  data-store: {
+    style.fill: "#d5f5e3"
+    style.stroke: "#27ae60"
+    style.stroke-width: 2
+    style.border-radius: 3
+  }
+  utility: {
+    style.fill: "#f2f3f4"
+    style.stroke: "#95a5a6"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+}
+
+direction: down
+
+# ── state.sh ──
+state: "lib/state.sh" {
+  style.fill: "#eaf2f8"
+  style.stroke: "#2980b9"
+  style.border-radius: 8
+  style.bold: true
+  direction: right
+
+  state_init: "state_init()" { class: entrypoint }
+  state_update: "state_update()" { class: function }
+  state_read: "state_read()" { class: function }
+
+  state_json: "state.json" { class: data-store; shape: page }
+  python3_json: "python3\n(JSON R/W)" { class: external-call }
+
+  state_init -> state_json: creates
+  state_update -> python3_json: update keys
+  python3_json -> state_json: writes
+  state_read -> python3_json: read key
+  python3_json -> state_json: reads {
+    style.stroke: "#27ae60"
+  }
+}
+
+# ── report.sh ──
+report: "lib/report.sh" {
+  style.fill: "#fef9e7"
+  style.stroke: "#f39c12"
+  style.border-radius: 8
+  style.bold: true
+  direction: right
+
+  report_init: "report_init()" { class: entrypoint }
+  report_phase: "report_phase()" { class: function }
+  report_task: "report_task()" { class: function }
+  report_iteration: "report_iteration()" { class: function }
+  report_finish: "report_finish()" { class: function }
+
+  helpers: "Helpers" {
+    style.fill: "#f2f3f4"
+    style.stroke: "#bdc3c7"
+    style.border-radius: 5
+    direction: right
+    epoch: "_epoch()" { class: utility }
+    iso_time: "_iso_time()" { class: utility }
+    json_escape: "_json_escape()" { class: utility }
+  }
+
+  report_json: "report.json" { class: data-store; shape: page }
+  finish_reason: ".finish_reason" { class: data-store; shape: page }
+
+  report_init -> report_json: creates
+  report_phase -> helpers.epoch: timing
+  report_finish -> report_json: writes final
+  report_finish -> finish_reason: writes exit
+}
+
+# ── checkpoint.sh ──
+checkpoint: "lib/checkpoint.sh" {
+  style.fill: "#d5f5e3"
+  style.stroke: "#27ae60"
+  style.border-radius: 8
+  style.bold: true
+  direction: right
+
+  checkpoint_create: "checkpoint_create()" { class: entrypoint }
+  checkpoint_list: "checkpoint_list()" { class: function }
+  checkpoint_rollback: "checkpoint_rollback()" { class: function }
+  checkpoint_cleanup: "checkpoint_cleanup()" { class: function }
+
+  git: "git tag\nblade-checkpoint-*" { class: external-call }
+
+  checkpoint_create -> git: "git tag create"
+  checkpoint_list -> git: "git tag -l"
+  checkpoint_rollback -> git: "print reset cmd\n(no auto-exec)"
+  checkpoint_cleanup -> git: "git tag -d"
+}
+
+# ── Cross-module connections ──
+state.state_update -> report.report_phase: both called\nper phase {
+  style.stroke: "#95a5a6"
+  style.stroke-dash: 5
+}

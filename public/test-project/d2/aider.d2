@@ -1,0 +1,118 @@
+# lib/aider.sh — Aider Execution Backend
+# Parses fix_plan.md → runs Aider per task → validates → marks done
+
+classes: {
+  entrypoint: {
+    style.fill: "#2980b9"
+    style.font-color: "#ffffff"
+    style.stroke: "#1a5276"
+    style.stroke-width: 3
+    style.bold: true
+    style.shadow: true
+    style.border-radius: 8
+  }
+  function: {
+    style.fill: "#d6eaf8"
+    style.stroke: "#2980b9"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  external-call: {
+    style.fill: "#fef9e7"
+    style.stroke: "#f39c12"
+    style.stroke-width: 2
+    style.stroke-dash: 4
+    style.border-radius: 5
+  }
+  data-store: {
+    style.fill: "#d5f5e3"
+    style.stroke: "#27ae60"
+    style.stroke-width: 2
+    style.border-radius: 3
+  }
+  utility: {
+    style.fill: "#f2f3f4"
+    style.stroke: "#95a5a6"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  error-path: {
+    style.fill: "#fdedec"
+    style.stroke: "#e74c3c"
+    style.stroke-width: 2
+    style.stroke-dash: 4
+    style.border-radius: 5
+  }
+  decision: {
+    shape: diamond
+    style.fill: "#fdebd0"
+    style.stroke: "#e67e22"
+    style.stroke-width: 2
+  }
+}
+
+direction: down
+
+# ── Entry ──
+aider_execute_plan: "aider_execute_plan()" { class: entrypoint }
+fix_plan: "fix_plan.md" { class: data-store; shape: page }
+aider_execute_plan -> fix_plan: reads
+
+# ── Configuration ──
+resolve_model: "_aider_resolve_model()" { class: utility }
+base_flags: "_aider_base_flags()" { class: utility }
+aider_execute_plan -> resolve_model: resolve model
+aider_execute_plan -> base_flags: build flags
+
+# ── Parse Tasks ──
+parse_tasks: "_parse_unchecked_tasks()" { class: function }
+aider_execute_plan -> parse_tasks: extract tasks
+
+format_check: "Format A or B?" { class: decision }
+parse_tasks -> format_check
+
+checkbox: "Checkbox format\n- [ ] task" { class: utility }
+heading: "Heading format\n### Task N" { class: utility }
+format_check -> checkbox: "Format A"
+format_check -> heading: "Format B"
+
+# ── Task Loop ──
+task_loop: "For each unchecked task" {
+  style.fill: "#eaf2f8"
+  style.stroke: "#2980b9"
+  style.stroke-width: 2
+  style.border-radius: 10
+  direction: down
+
+  run_task: "_aider_run_task()" { class: function }
+  aider_cli: "aider CLI\n--yes-always --auto-commits" { class: external-call }
+  run_task -> aider_cli: exec
+
+  validate: "_validate_edited_files()" { class: function }
+  aider_cli -> validate: check output
+
+  valid_check: "Files valid?" { class: decision }
+  validate -> valid_check
+
+  mark_done: "_mark_task_done()" { class: function }
+  valid_check -> mark_done: "yes" { style.stroke: "#27ae60" }
+
+  revert: "_revert_last_commit()" { class: error-path }
+  valid_check -> revert: "no (corrupt)" {
+    style.stroke: "#e74c3c"
+    style.stroke-dash: 3
+  }
+}
+
+parse_tasks -> task_loop: iterate
+
+# ── Summary ──
+summary: "Summary:\ncompleted / failed / total" { class: utility }
+task_loop -> summary
+
+# ── Single-shot mode ──
+aider_run_message: "aider_run_message()" { class: function }
+aider_run_message -> aider_cli: single prompt {
+  style.stroke: "#95a5a6"
+  style.stroke-dash: 5
+}
