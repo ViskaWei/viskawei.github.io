@@ -490,36 +490,6 @@
   color: #e2e8f0;
 }
 
-
-/* ── URL link in detail panel (injected by deploy_portfolio.py) ─── */
-.detail-panel .detail-url {
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 0.75rem;
-  margin-top: 0.75rem;
-}
-
-.detail-panel .detail-url-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--node-color, #a0c8e8);
-  text-decoration: none;
-  padding: 0.35rem 0.75rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
-  transition: all 0.2s ease;
-}
-
-.detail-panel .detail-url-link:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #e2e8f0;
-}
-
 /* ── Legend ────────────────────────────────────────────────── */
 .techtree-legend {
   position: absolute;

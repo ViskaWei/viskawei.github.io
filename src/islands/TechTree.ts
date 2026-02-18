@@ -802,17 +802,6 @@ export function initTechTree(
       const trackEl = detailPanel.querySelector('.detail-track') as HTMLElement;
       trackEl.textContent = `${track?.label || d.track}`;
 
-      // URL link section (injected by deploy_portfolio.py)
-      const urlSection = detailPanel.querySelector('.detail-url') as HTMLElement;
-      const urlLink = urlSection?.querySelector('.detail-url-link') as HTMLAnchorElement;
-      if (d.url && urlSection && urlLink) {
-        urlLink.href = d.url;
-        urlLink.textContent = d.nodeType === 'repo' ? 'Open Repository \u2192' : 'View Project \u2192';
-        urlSection.style.display = 'block';
-      } else if (urlSection) {
-        urlSection.style.display = 'none';
-      }
-
       // Prerequisites section
       const prereqSection = detailPanel.querySelector('.detail-prereqs') as HTMLElement;
       const prereqList = prereqSection.querySelector('.detail-list') as HTMLElement;

@@ -80,15 +80,4 @@ export const projects: Project[] = [
     paperUrl: '/files/paper1.pdf',
     relatedCourses: ['EN.553.636'],
   },
-  {
-    slug: 'test-project',
-    title: 'Test Project',
-    tagline: 'A test project for validation',
-    cardStyle: 'Default',
-    featured: false,
-    year: 2026,
-    tags: ['Test', 'Validation'],
-    githubUrl: 'https://github.com/ViskaWei/test-project',
-    liveUrl: 'https://viskawei.github.io/test-project/',
-  },
 ];

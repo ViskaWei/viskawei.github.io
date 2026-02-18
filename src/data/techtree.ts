@@ -360,10 +360,4 @@ export const projectNodes: ProjectNode[] = [
     year: 2026, semester: 'Spring', track: 'social',
     nodeType: 'project',
   },
-  {
-    id: 'repo-test-project', name: 'Test Project',
-    relatedCourses: ['EN601664'],
-    year: 2026, semester: 'Spring', track: 'ai',
-    nodeType: 'repo', url: 'https://github.com/ViskaWei/test-project',
-  },
 ];
