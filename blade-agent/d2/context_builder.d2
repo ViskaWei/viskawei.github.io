@@ -1,0 +1,151 @@
+# lib/context_builder.sh — Build focused context for Ralph
+# Outputs relevant snippets per lane/step (< 10k tokens)
+
+classes: {
+  entrypoint: {
+    style.fill: "#2980b9"
+    style.font-color: "#ffffff"
+    style.stroke: "#1a5276"
+    style.stroke-width: 3
+    style.bold: true
+    style.shadow: true
+    style.border-radius: 8
+  }
+  function: {
+    style.fill: "#d6eaf8"
+    style.stroke: "#2980b9"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  data-store: {
+    style.fill: "#d5f5e3"
+    style.stroke: "#27ae60"
+    style.stroke-width: 2
+    style.border-radius: 3
+  }
+  utility: {
+    style.fill: "#f2f3f4"
+    style.stroke: "#95a5a6"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  decision: {
+    shape: diamond
+    style.fill: "#fdebd0"
+    style.stroke: "#e67e22"
+    style.stroke-width: 2
+  }
+}
+
+direction: down
+
+# ── Entry ──
+context_builder: "context_builder.sh\n<lane> <step>" { class: entrypoint }
+goal_file: "goal.md" { class: data-store; shape: page }
+context_builder -> goal_file: reads TOPIC, PROJECT
+
+# ── Helpers ──
+helpers: "Helpers" {
+  style.fill: "#f2f3f4"
+  style.stroke: "#bdc3c7"
+  style.border-radius: 8
+  direction: right
+
+  section: "section()" { class: utility }
+  emit_file: "emit_file()\ntruncated" { class: utility }
+  emit_tree: "emit_tree()\nrepomap-style" { class: utility }
+}
+
+# ── Lane Dispatch ──
+lane_check: "Lane?" { class: decision }
+context_builder -> lane_check
+
+# ── Engineer Context ──
+engineer: "Engineer" {
+  style.fill: "#eaf2f8"
+  style.stroke: "#2980b9"
+  style.border-radius: 8
+  direction: down
+
+  step_check: "Step?" { class: decision }
+
+  plan_ctx: "plan context" { class: function }
+  step_check -> plan_ctx: plan
+
+  execute_ctx: "execute context" { class: function }
+  step_check -> execute_ctx: execute
+
+  project_tree: "Project tree" { class: data-store }
+  fix_plan_file: "fix_plan.md" { class: data-store; shape: page }
+  key_files: "Key files\n(from goal refs)" { class: data-store }
+  diagnostic: "diagnostic_feedback.md" { class: data-store; shape: page }
+  git_log: "git log -5" { class: utility }
+
+  plan_ctx -> project_tree: emit
+  plan_ctx -> fix_plan_file: emit
+  plan_ctx -> key_files: emit
+  plan_ctx -> diagnostic: emit
+  plan_ctx -> git_log: emit
+  execute_ctx -> fix_plan_file: emit
+}
+lane_check -> engineer: engineer
+
+# ── Scientist Context ──
+scientist: "Scientist" {
+  style.fill: "#fef9e7"
+  style.stroke: "#f39c12"
+  style.border-radius: 8
+  direction: down
+
+  step_check: "Step?" { class: decision }
+
+  session_ctx: "session" { class: function }
+  hub_ctx: "hub" { class: function }
+  roadmap_ctx: "roadmap" { class: function }
+  exp_ctx: "exp" { class: function }
+  gate_ctx: "gate" { class: function }
+  knowledge_ctx: "knowledge" { class: function }
+  retro_ctx: "retrospective" { class: function }
+
+  step_check -> session_ctx
+  step_check -> hub_ctx
+  step_check -> roadmap_ctx
+  step_check -> exp_ctx
+  step_check -> gate_ctx
+  step_check -> knowledge_ctx
+  step_check -> retro_ctx
+
+  exp_dir: "experiments/TOPIC/" { class: data-store }
+  session_ctx -> exp_dir: project structure
+  hub_ctx -> exp_dir: latest session
+  roadmap_ctx -> exp_dir: hub summary
+  exp_ctx -> exp_dir: active MVPs
+  gate_ctx -> exp_dir: gates + exp results
+  knowledge_ctx -> exp_dir: hub (update)
+  retro_ctx -> exp_dir: reports + cards + skills
+}
+lane_check -> scientist: scientist
+
+# ── Student Context ──
+student: "Student" {
+  style.fill: "#d5f5e3"
+  style.stroke: "#27ae60"
+  style.border-radius: 8
+  direction: down
+
+  mode_check: "Mode?" { class: decision }
+  research_ctx: "research context\n(existing cards)" { class: function }
+  learn_split: "learn/split\n(PDF info + chunks)" { class: function }
+  learn_audio: "learn/audio\n(MD files + WAV)" { class: function }
+
+  mode_check -> research_ctx: research
+  mode_check -> learn_split: learn (split)
+  mode_check -> learn_audio: learn (audio)
+}
+lane_check -> student: student
+
+# ── Output ──
+prompt_file: "PROMPT.md\n(stdout appended)" { class: data-store; shape: page }
+engineer -> prompt_file: stdout
+scientist -> prompt_file: stdout
+student -> prompt_file: stdout

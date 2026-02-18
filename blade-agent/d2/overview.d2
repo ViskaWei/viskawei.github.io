@@ -1,0 +1,163 @@
+# blade-agent — Architecture Overview
+# Inter-file relationships and data flow
+
+classes: {
+  entrypoint: {
+    style.fill: "#2980b9"
+    style.font-color: "#ffffff"
+    style.stroke: "#1a5276"
+    style.stroke-width: 3
+    style.bold: true
+    style.shadow: true
+    style.border-radius: 8
+  }
+  function: {
+    style.fill: "#d6eaf8"
+    style.stroke: "#2980b9"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  external-call: {
+    style.fill: "#fef9e7"
+    style.stroke: "#f39c12"
+    style.stroke-width: 2
+    style.stroke-dash: 4
+    style.border-radius: 5
+  }
+  data-store: {
+    style.fill: "#d5f5e3"
+    style.stroke: "#27ae60"
+    style.stroke-width: 2
+    style.border-radius: 3
+  }
+  utility: {
+    style.fill: "#f2f3f4"
+    style.stroke: "#95a5a6"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+}
+
+direction: down
+
+# ── Core Orchestrator ──
+blade_agent: "blade-agent.sh\n(Big Loop Orchestrator)" { class: entrypoint }
+
+# ── Data Files ──
+data: "Data" {
+  style.fill: "#d5f5e3"
+  style.stroke: "#27ae60"
+  style.border-radius: 8
+  direction: right
+
+  goal: "goal.md" { class: data-store; shape: page }
+  state: "state.json" { class: data-store; shape: page }
+  fix_plan: "fix_plan.md" { class: data-store; shape: page }
+  prompt: "PROMPT.md" { class: data-store; shape: page }
+  report: "report.json" { class: data-store; shape: page }
+  feedback: "verify_feedback.md" { class: data-store; shape: page }
+}
+
+blade_agent -> data.goal: reads
+
+# ── Lib Modules (sourced) ──
+libs: "lib/" {
+  style.fill: "#eaf2f8"
+  style.stroke: "#2980b9"
+  style.border-radius: 8
+  direction: right
+
+  lane_selector: "lane_selector.sh\n(parse goal directives)" { class: function }
+  context_builder: "context_builder.sh\n(build focused prompt)" { class: function }
+  state_sh: "state.sh\n(JSON state R/W)" { class: function }
+  report_sh: "report.sh\n(execution report)" { class: function }
+  checkpoint_sh: "checkpoint.sh\n(git tag checkpoints)" { class: function }
+  notify_sh: "notify.sh\n(Telegram alerts)" { class: function }
+  learn_tts: "learn_tts.sh\n(Fish-Speech TTS)" { class: function }
+}
+
+blade_agent -> libs.lane_selector: source
+blade_agent -> libs.state_sh: source
+blade_agent -> libs.report_sh: source
+blade_agent -> libs.checkpoint_sh: source
+blade_agent -> libs.notify_sh: source
+blade_agent -> libs.learn_tts: source
+
+# ── Execution Backends (one selected via EXEC_BACKEND) ──
+backends: "Execution Backends" {
+  style.fill: "#fef9e7"
+  style.stroke: "#f39c12"
+  style.border-radius: 8
+  direction: right
+
+  aider: "aider.sh\n(Aider whole-file rewrite)" { class: external-call }
+  claude_coder: "claude_coder.sh\n(Claude CLI targeted edit)" { class: external-call }
+}
+
+blade_agent -> backends.aider: "EXEC_BACKEND=aider"
+blade_agent -> backends.claude_coder: "EXEC_BACKEND=claude"
+
+# ── Verification Scripts ──
+verify: "verify/" {
+  style.fill: "#fdedec"
+  style.stroke: "#e74c3c"
+  style.border-radius: 8
+  direction: right
+
+  engineer_ok: "engineer_ok.sh\n(all tasks done?)" { class: function }
+  scientist_ok: "scientist_ok.sh\n(7-step artifacts?)" { class: function }
+  student_ok: "student_ok.sh" { class: function }
+  goal_check: "goal_check.sh\n(eval CHECK: cmds)" { class: function }
+}
+
+blade_agent -> verify.goal_check: every iteration
+
+# ── External Tools ──
+external: "External Tools" {
+  style.fill: "#f2f3f4"
+  style.stroke: "#95a5a6"
+  style.border-radius: 8
+  direction: right
+
+  ralph: "Ralph CLI\n(LLM planning)" { class: external-call }
+  aider_cli: "Aider CLI\n(code editing)" { class: external-call }
+  claude_cli: "Claude Code CLI\n(code editing)" { class: external-call }
+  git: "git\n(version control)" { class: external-call }
+  telegram: "Telegram API" { class: external-call }
+  fish_speech: "Fish-Speech\n(TTS)" { class: external-call }
+}
+
+blade_agent -> external.ralph: planning phases
+backends.aider -> external.aider_cli: execute tasks
+backends.claude_coder -> external.claude_cli: execute tasks
+libs.checkpoint_sh -> external.git: tag/cleanup
+libs.notify_sh -> external.telegram: send alerts
+libs.learn_tts -> external.fish_speech: generate audio
+
+# ── Data Flow ──
+libs.lane_selector -> data.goal: parses {
+  style.stroke: "#27ae60"
+}
+libs.context_builder -> data.prompt: builds {
+  style.stroke: "#27ae60"
+}
+libs.state_sh -> data.state: R/W {
+  style.stroke: "#27ae60"
+}
+libs.report_sh -> data.report: writes {
+  style.stroke: "#27ae60"
+}
+verify.goal_check -> data.goal: reads CHECKs {
+  style.stroke: "#27ae60"
+}
+verify.engineer_ok -> data.fix_plan: checks tasks {
+  style.stroke: "#27ae60"
+}
+blade_agent -> data.feedback: writes on fail {
+  style.stroke: "#e74c3c"
+  style.stroke-dash: 3
+}
+libs.context_builder -> data.feedback: appends to prompt {
+  style.stroke: "#e74c3c"
+  style.stroke-dash: 3
+}

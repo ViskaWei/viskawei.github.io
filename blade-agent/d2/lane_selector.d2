@@ -1,0 +1,79 @@
+# lib/lane_selector.sh — Parse goal.md for LANE, TOPIC, CHECK directives
+
+classes: {
+  entrypoint: {
+    style.fill: "#2980b9"
+    style.font-color: "#ffffff"
+    style.stroke: "#1a5276"
+    style.stroke-width: 3
+    style.bold: true
+    style.shadow: true
+    style.border-radius: 8
+  }
+  function: {
+    style.fill: "#d6eaf8"
+    style.stroke: "#2980b9"
+    style.stroke-width: 1
+    style.border-radius: 5
+  }
+  data-store: {
+    style.fill: "#d5f5e3"
+    style.stroke: "#27ae60"
+    style.stroke-width: 2
+    style.border-radius: 3
+  }
+  decision: {
+    shape: diamond
+    style.fill: "#fdebd0"
+    style.stroke: "#e67e22"
+    style.stroke-width: 2
+  }
+  error-path: {
+    style.fill: "#fdedec"
+    style.stroke: "#e74c3c"
+    style.stroke-width: 2
+    style.stroke-dash: 4
+    style.border-radius: 5
+  }
+}
+
+direction: right
+
+# ── Input ──
+goal_file: "goal.md" { class: data-store; shape: page }
+
+# ── Parsers ──
+parse_lane: "parse_lane()" { class: entrypoint }
+parse_topic: "parse_topic()" { class: function }
+parse_project: "parse_project()" { class: function }
+parse_checks: "parse_checks()" { class: function }
+parse_mode: "parse_mode()" { class: function }
+parse_pdf: "parse_pdf()" { class: function }
+parse_chunks: "parse_chunks()" { class: function }
+parse_voice_ref: "parse_voice_ref()" { class: function }
+
+goal_file -> parse_lane: "LANE:"
+goal_file -> parse_topic: "TOPIC:"
+goal_file -> parse_project: "PROJECT:"
+goal_file -> parse_checks: "CHECK:"
+goal_file -> parse_mode: "MODE:"
+goal_file -> parse_pdf: "PDF:"
+goal_file -> parse_chunks: "CHUNKS:"
+goal_file -> parse_voice_ref: "VOICE_REF:"
+
+# ── Lane Validation ──
+lane_valid: "Valid lane?" { class: decision }
+parse_lane -> lane_valid
+
+engineer: "engineer" { class: function }
+scientist: "scientist" { class: function }
+student: "student" { class: function }
+invalid: "ERROR: Invalid lane" { class: error-path }
+
+lane_valid -> engineer
+lane_valid -> scientist
+lane_valid -> student
+lane_valid -> invalid: "other" {
+  style.stroke: "#e74c3c"
+  style.stroke-dash: 3
+}
