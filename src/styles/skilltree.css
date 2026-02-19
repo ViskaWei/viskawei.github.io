@@ -1,0 +1,1590 @@
+/* ═══════════════════════════════════════════════════════════════
+   Skill Galaxy — Stellaris Edition
+   Three.js WebGL background + D3/SVG nodes + HTML HUD chrome
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties ──────────────────────────────────── */
+:root {
+  --galaxy-bg: #05070a;
+  --galaxy-surface: rgba(8, 12, 18, 0.92);
+  --galaxy-surface-light: rgba(12, 18, 28, 0.85);
+  --galaxy-border: rgba(255, 255, 255, 0.06);
+  --galaxy-text: #e2e8f0;
+  --galaxy-text-dim: #8b949e;
+  --galaxy-text-muted: #484f58;
+  --galaxy-glass: rgba(10, 14, 22, 0.88);
+  --galaxy-hud-cyan: rgba(79, 195, 247, 0.5);
+
+  /* Per-cluster colors */
+  --cluster-physics: #4fc3f7;
+  --cluster-math: #ffd54f;
+  --cluster-cs: #66bb6a;
+  --cluster-aiml: #ef5350;
+  --cluster-engineering: #26c6da;
+  --cluster-data: #ab47bc;
+  --cluster-business: #ff7043;
+  --cluster-core: #ffffff;
+}
+
+/* ── Font Declarations ──────────────────────────────────────── */
+.galaxy-title,
+.cluster-label {
+  font-family: 'Orbitron', 'Inter', sans-serif;
+}
+
+.galaxy-body,
+.node-label {
+  font-family: 'Rajdhani', 'Inter', sans-serif;
+}
+
+/* ── Page Layout ─────────────────────────────────────────────── */
+.galaxy-page {
+  background: var(--galaxy-bg);
+  min-height: 100vh;
+  color: var(--galaxy-text);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Nav overrides for dark theme ────────────────────────────── */
+.galaxy-page .nav {
+  background: rgba(5, 7, 10, 0.85);
+  border-bottom: 1px solid var(--galaxy-border);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+  position: relative;
+}
+
+.galaxy-page .nav-brand {
+  background: linear-gradient(135deg, #4fc3f7, #ab47bc);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.galaxy-page .nav-link {
+  color: var(--galaxy-text-dim);
+}
+
+.galaxy-page .nav-link:hover,
+.galaxy-page .nav-link.active {
+  color: var(--galaxy-text);
+}
+
+.galaxy-page .nav-link.active::after {
+  background: linear-gradient(90deg, #4fc3f7, #ab47bc);
+}
+
+/* ── Footer overrides ────────────────────────────────────────── */
+.galaxy-page .footer {
+  border-top: 1px solid var(--galaxy-border);
+  margin-top: 0;
+  padding: 0.75rem 2rem;
+  background: rgba(5, 7, 10, 0.95);
+  position: relative;
+  z-index: 100;
+}
+
+.galaxy-page .footer-name {
+  color: var(--galaxy-text);
+}
+
+.galaxy-page .footer-role {
+  color: var(--galaxy-text-dim);
+}
+
+.galaxy-page .footer-copy {
+  color: var(--galaxy-text-muted);
+}
+
+.galaxy-page .footer-links a {
+  color: #4fc3f7;
+}
+
+.galaxy-page .footer-divider {
+  color: var(--galaxy-text-muted);
+}
+
+/* ── Galaxy Container ────────────────────────────────────────── */
+.galaxy-container {
+  width: 100%;
+  height: calc(100vh - 100px);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Canvas / SVG Layering ───────────────────────────────────── */
+.galaxy-container canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.galaxy-container svg.galaxy-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ── Scanline Overlay (animated, cyan-tinted) ──────────────── */
+.galaxy-container::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  width: 100%;
+  height: 300%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(79, 195, 247, 0.006) 2px,
+    rgba(79, 195, 247, 0.006) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+  animation: scanline-scroll 8s linear infinite;
+}
+
+@keyframes scanline-scroll {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(33.33%); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAR CLASS STYLES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Base Star Node ─────────────────────────────────────────── */
+.galaxy-star {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.galaxy-star circle.star-core {
+  transition: r 0.2s ease, filter 0.3s ease;
+}
+
+/* Halo layer — soft atmospheric glow */
+.galaxy-star .star-halo {
+  pointer-events: none;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.galaxy-star:hover .star-halo {
+  opacity: 1;
+}
+
+.galaxy-star:hover circle.star-core {
+  filter:
+    drop-shadow(0 0 8px var(--star-color, #fff))
+    drop-shadow(0 0 20px var(--star-color, #fff))
+    drop-shadow(0 0 40px var(--star-color, #fff)) !important;
+}
+
+.galaxy-star.highlighted circle.star-core {
+  filter:
+    drop-shadow(0 0 6px var(--star-color, #fff))
+    drop-shadow(0 0 15px var(--star-color, #fff)) !important;
+}
+
+.galaxy-star.dimmed {
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+/* ── Hypergiant (A+, thesis, publication) ──────────────────── */
+.galaxy-star.star-hypergiant .corona-outer {
+  animation: corona-pulse 4s ease-in-out infinite;
+}
+
+.galaxy-star.star-hypergiant .accretion-disk {
+  animation: accretion-rotate 12s linear infinite;
+  transform-origin: center;
+}
+
+.galaxy-star.star-hypergiant .star-hotspot {
+  animation: hotspot-flare 2s ease-in-out infinite;
+}
+
+.galaxy-star.star-hypergiant .star-mid-glow {
+  animation: corona-pulse 4s ease-in-out infinite 1s;
+}
+
+@keyframes corona-pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.08;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.15;
+  }
+}
+
+@keyframes accretion-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes hotspot-flare {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 0.6; }
+}
+
+/* ── Main Sequence (A, A-) ─────────────────────────────────── */
+.galaxy-star.star-main-sequence .star-glow {
+  transition: opacity 0.3s ease;
+}
+
+.galaxy-star.star-main-sequence:hover .star-glow {
+  opacity: 0.12;
+}
+
+/* ── Brown Dwarf (B+, P) ───────────────────────────────────── */
+.galaxy-star.star-brown-dwarf .brown-dwarf-core {
+  transition: opacity 0.3s ease;
+}
+
+.galaxy-star.star-brown-dwarf:hover .brown-dwarf-core {
+  opacity: 0.8;
+}
+
+/* ── Ghost (dark/locked) ───────────────────────────────────── */
+.galaxy-star.star-ghost,
+.ghost-flicker {
+  animation: ghost-flicker-anim 3s steps(5) infinite;
+}
+
+.galaxy-star.star-ghost .ghost-outline {
+  stroke-dasharray: 2 3;
+}
+
+.galaxy-star.star-ghost .ghost-question {
+  animation: ghost-flicker-anim 3s steps(5) infinite 0.5s;
+}
+
+@keyframes ghost-flicker-anim {
+  0%   { opacity: 0.8; }
+  20%  { opacity: 0.4; }
+  40%  { opacity: 0.9; }
+  60%  { opacity: 0.3; }
+  80%  { opacity: 0.7; }
+  100% { opacity: 0.8; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   OVERCLOCKING EFFECT — Project → Skill energy feedback
+   When a project node is highlighted, its upstream skill dependencies
+   "overclock" — brighter, purple-white high-energy state
+   ═══════════════════════════════════════════════════════════════ */
+
+.galaxy-star.overclocked circle.star-core {
+  fill: #e0c0ff !important;
+  opacity: 1 !important;
+  filter:
+    drop-shadow(0 0 8px rgba(200, 160, 255, 0.7))
+    drop-shadow(0 0 20px rgba(200, 160, 255, 0.4))
+    drop-shadow(0 0 40px rgba(200, 160, 255, 0.15)) !important;
+  animation: overclock-pulse 1.2s ease-in-out infinite !important;
+}
+
+.galaxy-star.overclocked circle.star-glow,
+.galaxy-star.overclocked circle.corona-outer,
+.galaxy-star.overclocked circle.star-mid-glow {
+  fill: rgba(200, 160, 255, 0.12) !important;
+  animation: overclock-corona 2s ease-in-out infinite !important;
+}
+
+.galaxy-star.overclocked .star-hotspot {
+  fill: #ffffff !important;
+  opacity: 1 !important;
+  animation: overclock-hotspot 0.8s ease-in-out infinite !important;
+}
+
+.galaxy-star.overclocked .star-label {
+  opacity: 1 !important;
+  fill: #e0c0ff !important;
+  text-shadow: 0 0 6px rgba(200, 160, 255, 0.5);
+}
+
+/* Overclock edge glow */
+.constellation-edge.overclocked {
+  stroke: rgba(200, 160, 255, 0.6) !important;
+  stroke-width: 2.2 !important;
+  filter: drop-shadow(0 0 6px rgba(200, 160, 255, 0.4)) !important;
+}
+
+/* Overclock energy particles */
+.overclock-particle {
+  filter: drop-shadow(0 0 4px rgba(200, 160, 255, 0.6));
+}
+
+@keyframes overclock-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter:
+      drop-shadow(0 0 8px rgba(200, 160, 255, 0.7))
+      drop-shadow(0 0 20px rgba(200, 160, 255, 0.4));
+  }
+  50% {
+    transform: scale(1.15);
+    filter:
+      drop-shadow(0 0 14px rgba(200, 160, 255, 0.9))
+      drop-shadow(0 0 30px rgba(200, 160, 255, 0.5))
+      drop-shadow(0 0 50px rgba(200, 160, 255, 0.2));
+  }
+}
+
+@keyframes overclock-corona {
+  0%, 100% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.22;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes overclock-hotspot {
+  0%, 100% { opacity: 0.9; }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ── Dark stars — Wireframe Fog of War aesthetic ─────────── */
+.galaxy-star.dark-star {
+  opacity: 0.35;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  animation: dark-drift 6s ease-in-out infinite;
+}
+
+.galaxy-star.dark-star.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Wireframe elements */
+.galaxy-star.dark-star .dark-wireframe-outer {
+  animation: dark-wireframe-rotate 30s linear infinite;
+  transform-origin: center;
+}
+
+.galaxy-star.dark-star .dark-wireframe-core {
+  animation: ghost-flicker-anim 4s steps(5) infinite;
+}
+
+.galaxy-star.dark-star .dark-locked-label {
+  animation: dark-locked-blink 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.galaxy-star.dark-star .dark-name {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.galaxy-star.dark-star.visible .dark-name {
+  opacity: 1;
+}
+
+.galaxy-star.dark-star .dark-missing-label {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.galaxy-star.dark-star.visible .dark-missing-label {
+  opacity: 1;
+}
+
+@keyframes dark-wireframe-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes dark-locked-blink {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.05; }
+}
+
+@keyframes dark-drift {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.25; }
+}
+
+/* ── Node labels ───────────────────────────────────────────── */
+.galaxy-star .star-label {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--galaxy-text-dim);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.galaxy-star:hover .star-label,
+.galaxy-star.highlighted .star-label {
+  opacity: 1;
+}
+
+/* ── Cluster labels ────────────────────────────────────────── */
+.cluster-label-text {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  fill: var(--galaxy-text-dim);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MEGASTRUCTURE ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+
+.megastructure {
+  pointer-events: none;
+}
+
+/* ── Dyson sphere — hex frame + rotating ring ──────────────── */
+.mega-dyson .dyson-ring {
+  animation: dyson-rotate 20s linear infinite;
+  transform-origin: center;
+}
+
+.mega-dyson .dyson-hex {
+  animation: mega-breathe 4s ease-in-out infinite;
+}
+
+.mega-dyson .dyson-inner-hex {
+  animation: dyson-rotate 25s linear infinite reverse;
+  transform-origin: center;
+}
+
+@keyframes dyson-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes mega-breathe {
+  0%, 100% {
+    stroke-opacity: 0.5;
+    fill-opacity: 0.8;
+  }
+  50% {
+    stroke-opacity: 0.8;
+    fill-opacity: 1;
+  }
+}
+
+/* ── Crystal (publication) — neon pulsing star-shape ────────── */
+.mega-crystal .crystal-shape {
+  animation: crystal-neon 2.5s ease-in-out infinite alternate;
+}
+
+.mega-crystal .crystal-inner {
+  animation: crystal-inner-rotate 15s linear infinite;
+  transform-origin: center;
+}
+
+@keyframes crystal-neon {
+  0% {
+    filter: url(#mega-glow);
+    stroke-opacity: 0.6;
+  }
+  100% {
+    filter: url(#mega-glow) drop-shadow(0 0 6px var(--star-color, #fff));
+    stroke-opacity: 1;
+  }
+}
+
+@keyframes crystal-inner-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ── Station (internship) — pentagon with struts ────────────── */
+.mega-station .station-shape {
+  animation: mega-breathe 3.5s ease-in-out infinite;
+}
+
+.mega-station .station-strut {
+  pointer-events: none;
+}
+
+/* ── Module (repo) — octagon with inner ring ───────────────── */
+.mega-module .module-shape {
+  animation: mega-breathe 5s ease-in-out infinite 1s;
+}
+
+.mega-module .module-inner-ring {
+  animation: dyson-rotate 18s linear infinite;
+  transform-origin: center;
+}
+
+/* ── Diamond (project) — diamond with cross ────────────────── */
+.mega-diamond .diamond-shape {
+  animation: diamond-glow 3s ease-in-out infinite;
+}
+
+.mega-diamond .diamond-cross {
+  pointer-events: none;
+}
+
+@keyframes diamond-glow {
+  0%, 100% {
+    fill-opacity: 0.8;
+    stroke-opacity: 0.4;
+  }
+  50% {
+    fill-opacity: 1;
+    stroke-opacity: 0.7;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CONSTELLATION EDGES + ENERGY PARTICLES
+   ═══════════════════════════════════════════════════════════════ */
+
+.constellation-edge {
+  fill: none;
+  stroke: rgba(120, 140, 180, 0.08);
+  stroke-width: 0.6;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.constellation-edge.highlighted {
+  stroke-width: 2;
+  stroke-dasharray: 10 5;
+  animation: dash-flow 1s linear infinite;
+  filter:
+    drop-shadow(0 0 3px var(--edge-color, rgba(255,255,255,0.4)))
+    drop-shadow(0 0 8px var(--edge-color, rgba(255,255,255,0.15)));
+}
+
+.constellation-edge.dimmed {
+  opacity: 0.02;
+}
+
+@keyframes dash-flow {
+  to {
+    stroke-dashoffset: -12;
+  }
+}
+
+/* Energy flow particles */
+.energy-dot {
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CORE NODE
+   ═══════════════════════════════════════════════════════════════ */
+
+.core-node {
+  cursor: default;
+}
+
+.core-node .core-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.3em;
+  fill: #ffffff;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HUD CHROME — SIDEBAR
+   ═══════════════════════════════════════════════════════════════ */
+
+.galaxy-sidebar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 240px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: calc(100% - 24px);
+  overflow-y: auto;
+}
+
+.galaxy-sidebar::-webkit-scrollbar {
+  width: 3px;
+}
+
+.galaxy-sidebar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* Sidebar title */
+.sidebar-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--galaxy-text);
+  padding: 10px 14px 6px;
+  text-transform: uppercase;
+}
+
+.sidebar-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  color: var(--galaxy-text-muted);
+  padding: 0 14px 8px;
+  letter-spacing: 0.08em;
+}
+
+/* Cluster navigation buttons */
+.cluster-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  background: var(--galaxy-glass);
+  backdrop-filter: blur(12px);
+  color: var(--galaxy-text-muted);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+  width: 100%;
+  position: relative;
+}
+
+.cluster-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--galaxy-text-dim);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.cluster-nav-btn.active {
+  border-color: var(--cluster-color);
+  color: var(--cluster-color);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cluster-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cluster-color);
+  flex-shrink: 0;
+  transition: box-shadow 0.2s ease;
+}
+
+.cluster-nav-btn.active .cluster-dot {
+  box-shadow: 0 0 8px var(--cluster-color);
+}
+
+.cluster-count {
+  margin-left: auto;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--galaxy-text-muted);
+  opacity: 0.7;
+}
+
+/* ── XP Bar ─────────────────────────────────────────────────── */
+.xp-section {
+  margin-top: 8px;
+  padding: 12px 14px;
+  background: var(--galaxy-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--galaxy-border);
+  border-radius: 8px;
+  position: relative;
+}
+
+/* HUD corner accents on XP section */
+.xp-section::before,
+.xp-section::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+
+.xp-section::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--galaxy-hud-cyan);
+  border-left: 2px solid var(--galaxy-hud-cyan);
+}
+
+.xp-section::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--galaxy-hud-cyan);
+  border-right: 2px solid var(--galaxy-hud-cyan);
+}
+
+.xp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.xp-level {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--galaxy-text);
+  letter-spacing: 0.1em;
+}
+
+.xp-rank {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  color: var(--galaxy-text-dim);
+}
+
+.xp-bar-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4fc3f7, #ab47bc);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.xp-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--galaxy-text-muted);
+  text-align: right;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HUD CHROME — DETAIL PANEL
+   ═══════════════════════════════════════════════════════════════ */
+
+.galaxy-detail-panel {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 300px;
+  max-height: calc(100% - 24px);
+  overflow-y: auto;
+  background: var(--galaxy-glass);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  z-index: 10;
+  opacity: 0;
+  transform: translateX(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  box-shadow:
+    0 0 30px rgba(79, 195, 247, 0.03),
+    inset 0 0 20px rgba(79, 195, 247, 0.02);
+}
+
+.galaxy-detail-panel.visible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+/* HUD corner accents */
+.galaxy-detail-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 16px;
+  height: 16px;
+  border-top: 2px solid var(--detail-color, var(--galaxy-hud-cyan));
+  border-left: 2px solid var(--detail-color, var(--galaxy-hud-cyan));
+  border-radius: 12px 0 0 0;
+  pointer-events: none;
+}
+
+.galaxy-detail-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 16px;
+  height: 16px;
+  border-bottom: 2px solid var(--detail-color, var(--galaxy-hud-cyan));
+  border-right: 2px solid var(--detail-color, var(--galaxy-hud-cyan));
+  border-radius: 0 0 12px 0;
+  pointer-events: none;
+}
+
+.galaxy-detail-panel h3 {
+  color: var(--galaxy-text);
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 0.25rem 0;
+  padding-right: 24px;
+}
+
+.galaxy-detail-panel .detail-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--detail-color, #4fc3f7);
+  margin-bottom: 0.5rem;
+}
+
+.galaxy-detail-panel .detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.galaxy-detail-panel .detail-institution-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--galaxy-text-dim);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.galaxy-detail-panel .detail-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--galaxy-text-muted);
+}
+
+.galaxy-detail-panel .detail-grade {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(48, 209, 88, 0.1);
+  color: #30d158;
+  border: 1px solid rgba(48, 209, 88, 0.2);
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+.galaxy-detail-panel .detail-type {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.galaxy-detail-panel .detail-track {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--detail-color, var(--galaxy-text-dim));
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.galaxy-detail-panel .detail-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.galaxy-detail-panel .detail-section h4 {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--galaxy-text-muted);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin: 0 0 0.4rem 0;
+}
+
+.galaxy-detail-panel .detail-prereq-item,
+.galaxy-detail-panel .detail-related-item {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.82rem;
+  color: var(--galaxy-text-dim);
+  padding: 0.2rem 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.galaxy-detail-panel .detail-prereq-item:hover,
+.galaxy-detail-panel .detail-related-item:hover {
+  color: #e2e8f0;
+}
+
+.galaxy-detail-panel .close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: none;
+  border: none;
+  color: var(--galaxy-text-muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.galaxy-detail-panel .close-btn:hover {
+  color: #e2e8f0;
+}
+
+/* Detail panel scrollbar */
+.galaxy-detail-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.galaxy-detail-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.galaxy-detail-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEGEND — Updated for star classification
+   ═══════════════════════════════════════════════════════════════ */
+
+.galaxy-legend {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 10px 16px;
+  background: var(--galaxy-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--galaxy-border);
+  border-radius: 8px;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--galaxy-text-muted);
+  letter-spacing: 0.04em;
+  z-index: 10;
+  position: relative;
+}
+
+/* HUD corner accents on legend */
+.galaxy-legend::before,
+.galaxy-legend::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  pointer-events: none;
+}
+
+.galaxy-legend::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--galaxy-hud-cyan);
+  border-left: 2px solid var(--galaxy-hud-cyan);
+}
+
+.galaxy-legend::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--galaxy-hud-cyan);
+  border-right: 2px solid var(--galaxy-hud-cyan);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Hypergiant legend icon: multi-layer glow */
+.legend-hypergiant {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 25%, #4fc3f7 60%, transparent 100%);
+  box-shadow:
+    0 0 4px #4fc3f7,
+    0 0 10px rgba(79, 195, 247, 0.3),
+    0 0 20px rgba(79, 195, 247, 0.1);
+}
+
+/* Main Sequence legend icon */
+.legend-main-seq {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 30%, #66bb6a 100%);
+  box-shadow: 0 0 4px #66bb6a;
+}
+
+/* Brown Dwarf legend icon */
+.legend-brown-dwarf {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8b949e;
+  opacity: 0.6;
+}
+
+/* Ghost/Locked legend icon */
+.legend-ghost {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  background: transparent;
+  animation: ghost-flicker-anim 3s steps(5) infinite;
+}
+
+/* Dyson (Thesis) legend icon: hexagonal clip-path with glow */
+.legend-dyson {
+  width: 14px;
+  height: 14px;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  position: relative;
+}
+
+.legend-dyson::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  border: 1px solid rgba(79, 195, 247, 0.5);
+}
+
+/* Crystal (Publication) legend icon */
+.legend-crystal {
+  width: 12px;
+  height: 12px;
+  clip-path: polygon(50% 0%, 80% 10%, 100% 40%, 90% 80%, 50% 100%, 10% 80%, 0% 40%, 20% 10%);
+  background: rgba(171, 71, 188, 0.3);
+  box-shadow: 0 0 4px rgba(171, 71, 188, 0.5);
+}
+
+/* Edge/Connection legend icon */
+.legend-edge-line {
+  display: inline-block;
+  width: 20px;
+  height: 0;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.25);
+  vertical-align: middle;
+  opacity: 0.6;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ZOOM CONTROLS — HUD style
+   ═══════════════════════════════════════════════════════════════ */
+
+.galaxy-zoom-controls {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 10;
+}
+
+.galaxy-zoom-controls button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--galaxy-glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--galaxy-border);
+  color: var(--galaxy-text-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.galaxy-zoom-controls button:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.galaxy-zoom-controls button:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.galaxy-zoom-controls button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--galaxy-text);
+  border-color: var(--galaxy-hud-cyan);
+  box-shadow: 0 0 8px rgba(79, 195, 247, 0.1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STELLARIS SYSTEM BORDERS — Cluster boundary circles
+   ═══════════════════════════════════════════════════════════════ */
+
+.system-border {
+  pointer-events: none;
+  animation: border-pulse 6s ease-in-out infinite;
+}
+
+@keyframes border-pulse {
+  0%, 100% { stroke-opacity: 0.06; }
+  50% { stroke-opacity: 0.1; }
+}
+
+.layer-ring {
+  pointer-events: none;
+}
+
+/* Stellaris system name plates */
+.system-name-bg {
+  pointer-events: none;
+}
+
+/* Hyperlane lines from CORE to clusters */
+.hyperlane {
+  pointer-events: none;
+}
+
+/* Star Gate hyperlane edges — slightly brighter */
+.constellation-edge.stargate-lane {
+  stroke-width: 1.2;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAR GATES — Portal nodes for top projects
+   ═══════════════════════════════════════════════════════════════ */
+
+.stargate {
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+/* Outer ring rotation */
+.stargate .sg-outer-ring {
+  animation: sg-ring-rotate 15s linear infinite;
+  transform-origin: center;
+}
+
+/* Mid ring counter-rotation */
+.stargate .sg-mid-ring {
+  animation: sg-ring-rotate 20s linear infinite reverse;
+  transform-origin: center;
+}
+
+/* Event horizon pulse */
+.stargate .sg-event-horizon {
+  animation: sg-horizon-pulse 3s ease-in-out infinite;
+}
+
+/* Always-visible label */
+.stargate .sg-label {
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.stargate .sg-type-badge {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.stargate:hover .sg-label {
+  opacity: 1;
+}
+
+.stargate:hover .sg-event-horizon {
+  animation: sg-horizon-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes sg-ring-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes sg-horizon-pulse {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAR GATE FOCUS MODE — Dramatic dimming
+   When hovering/clicking a Star Gate, everything else dims hard
+   ═══════════════════════════════════════════════════════════════ */
+
+.galaxy-container.stargate-focus .cluster-borders,
+.galaxy-container.stargate-focus .cluster-labels,
+.galaxy-container.stargate-focus .megastructures-group {
+  opacity: 0.15;
+  transition: opacity 0.5s ease;
+}
+
+.galaxy-container.stargate-focus .galaxy-star.dimmed {
+  opacity: 0.05;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   STAR GATE DETAIL PANEL — Rich fly-in panel
+   ═══════════════════════════════════════════════════════════════ */
+
+.stargate-detail-panel {
+  position: absolute;
+  top: 50%;
+  right: 24px;
+  transform: translateY(-50%) translateX(30px);
+  width: 320px;
+  background: rgba(6, 10, 18, 0.92);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  z-index: 20;
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  box-shadow:
+    0 0 40px rgba(79, 195, 247, 0.06),
+    0 0 80px rgba(79, 195, 247, 0.03),
+    inset 0 0 30px rgba(79, 195, 247, 0.02);
+}
+
+.stargate-detail-panel.visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  pointer-events: auto;
+}
+
+/* HUD corner accents */
+.stargate-detail-panel::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 20px;
+  height: 20px;
+  border-top: 2px solid var(--sg-color, var(--galaxy-hud-cyan));
+  border-left: 2px solid var(--sg-color, var(--galaxy-hud-cyan));
+  border-radius: 12px 0 0 0;
+  pointer-events: none;
+}
+
+.stargate-detail-panel::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 20px;
+  height: 20px;
+  border-bottom: 2px solid var(--sg-color, var(--galaxy-hud-cyan));
+  border-right: 2px solid var(--sg-color, var(--galaxy-hud-cyan));
+  border-radius: 0 0 12px 0;
+  pointer-events: none;
+}
+
+.sg-close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--galaxy-text-muted);
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.sg-close-btn:hover {
+  color: #e2e8f0;
+}
+
+.sg-header {
+  margin-bottom: 1rem;
+}
+
+.sg-type {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--sg-color, var(--galaxy-hud-cyan));
+  margin-bottom: 0.3rem;
+}
+
+.sg-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--galaxy-text);
+  margin: 0 0 0.2rem 0;
+  padding-right: 28px;
+  line-height: 1.2;
+}
+
+.sg-venue {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--sg-color, var(--galaxy-text-dim));
+  letter-spacing: 0.08em;
+}
+
+.sg-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--galaxy-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* Star Gate links */
+.sg-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.sg-link {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--sg-color, #4fc3f7);
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--sg-color, rgba(79, 195, 247, 0.3));
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.sg-link:hover {
+  background: rgba(79, 195, 247, 0.1);
+  border-color: var(--sg-color, rgba(79, 195, 247, 0.6));
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.15);
+}
+
+/* Tech stack section */
+.sg-stack-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 0.75rem;
+}
+
+.sg-stack-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--galaxy-text-muted);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.sg-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sg-stack-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--galaxy-text-dim);
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sg-stack-chip:hover {
+  color: var(--galaxy-text);
+  border-color: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Star Gate legend icon */
+.legend-stargate {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(79, 195, 247, 0.5);
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 20%, transparent 70%);
+  box-shadow:
+    0 0 6px rgba(79, 195, 247, 0.3),
+    0 0 15px rgba(79, 195, 247, 0.1);
+  animation: sg-horizon-pulse 3s ease-in-out infinite;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   IGNITION — Shockwave + HUD Notification + Screen Shake
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Shockwave ring (SVG, animated via D3 transition) */
+.shockwave-ring {
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* HUD notification popup */
+.hud-notification {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--hud-notif-color, #4fc3f7);
+  background: rgba(6, 10, 18, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--hud-notif-color, rgba(79, 195, 247, 0.3));
+  padding: 8px 24px;
+  border-radius: 4px;
+  z-index: 30;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  text-transform: uppercase;
+  box-shadow:
+    0 0 20px rgba(79, 195, 247, 0.1),
+    inset 0 0 20px rgba(79, 195, 247, 0.03);
+  white-space: nowrap;
+}
+
+.hud-notification.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.hud-notif-icon {
+  color: var(--hud-notif-color, #4fc3f7);
+  margin-right: 8px;
+  animation: hud-notif-blink 0.6s steps(2) 3;
+}
+
+@keyframes hud-notif-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Screen micro-shake */
+.galaxy-container.screen-shake {
+  animation: screen-shake-anim 0.3s ease-out;
+}
+
+@keyframes screen-shake-anim {
+  0% { transform: translate(0, 0); }
+  15% { transform: translate(-2px, 1px); }
+  30% { transform: translate(2px, -1px); }
+  45% { transform: translate(-1px, -1px); }
+  60% { transform: translate(1px, 1px); }
+  75% { transform: translate(-1px, 0); }
+  100% { transform: translate(0, 0); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .galaxy-sidebar {
+    width: 56px;
+    overflow: visible;
+  }
+
+  .sidebar-title,
+  .sidebar-subtitle,
+  .cluster-count {
+    display: none;
+  }
+
+  .cluster-nav-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .cluster-nav-btn span:not(.cluster-dot) {
+    display: none;
+  }
+
+  .cluster-dot {
+    width: 12px;
+    height: 12px;
+  }
+
+  .xp-section {
+    padding: 8px;
+  }
+
+  .xp-header,
+  .xp-value {
+    display: none;
+  }
+
+  .galaxy-detail-panel {
+    top: auto;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-height: 50vh;
+    border-radius: 12px 12px 0 0;
+    transform: translateY(20px);
+  }
+
+  .galaxy-detail-panel.visible {
+    transform: translateY(0);
+  }
+
+  .galaxy-legend {
+    display: none;
+  }
+}

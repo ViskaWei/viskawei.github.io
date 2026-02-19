@@ -2,80 +2,56 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { tracks } from '../data/techtree';
-import '../styles/techtree.css';
-
-// Group tracks by branch
-const coreTracks = tracks.filter(t => t.branch === 'core');
-const engineeringTracks = tracks.filter(t => t.branch === 'engineering');
-const societyTracks = tracks.filter(t => t.branch === 'society');
+import { clusters } from '../data/skilltree';
+import '../styles/skilltree.css';
 ---
 
-<BaseLayout title="Tech Tree — Viska Wei" description="Academic skill tree: Physics, Mathematics, CS, ML/AI, Finance, and more">
-  <div class="techtree-page">
+<BaseLayout title="Skill Galaxy — Viska Wei" description="Interactive galaxy visualization of academic skills and knowledge">
+  <div class="galaxy-page">
     <Nav />
 
-    <div class="techtree-header">
-      <h1>Skill Tree</h1>
-      <div class="subtitle">// academic progression &mdash; present to 2017</div>
-    </div>
+    <div class="galaxy-container" id="galaxy-root">
+      <!-- Sidebar: cluster navigation + XP -->
+      <aside class="galaxy-sidebar">
+        <div class="sidebar-title">Skill Galaxy</div>
+        <div class="sidebar-subtitle">// from stardust to circuits</div>
 
-    <div class="techtree-container" id="techtree-root">
-      <!-- Track filter sidebar — grouped by branch -->
-      <div class="track-filters">
-        <div class="track-filter-group">
-          <div class="track-filter-group-label">Core</div>
-          {coreTracks.map(track => (
-            <button
-              class="track-filter-btn"
-              data-track={track.id}
-              style={`--track-color: ${track.color}`}
-            >
-              <span class="track-dot"></span>
-              {track.label}
-            </button>
-          ))}
-        </div>
-        <div class="track-filter-group">
-          <div class="track-filter-group-label">Engineering</div>
-          {engineeringTracks.map(track => (
-            <button
-              class="track-filter-btn"
-              data-track={track.id}
-              style={`--track-color: ${track.color}`}
-            >
-              <span class="track-dot"></span>
-              {track.label}
-            </button>
-          ))}
-        </div>
-        <div class="track-filter-group">
-          <div class="track-filter-group-label">Society</div>
-          {societyTracks.map(track => (
-            <button
-              class="track-filter-btn"
-              data-track={track.id}
-              style={`--track-color: ${track.color}`}
-            >
-              <span class="track-dot"></span>
-              {track.label}
-            </button>
-          ))}
-        </div>
-      </div>
+        {clusters.map(cluster => (
+          <button
+            class="cluster-nav-btn"
+            data-cluster={cluster.id}
+            style={`--cluster-color: ${cluster.color}`}
+          >
+            <span class="cluster-dot"></span>
+            <span>{cluster.label}</span>
+            <span class="cluster-count">0</span>
+          </button>
+        ))}
 
-      <!-- Detail panel -->
-      <div class="detail-panel">
+        <div class="xp-section">
+          <div class="xp-header">
+            <span class="xp-level">LVL 0</span>
+            <span class="xp-rank">Stargazer</span>
+          </div>
+          <div class="xp-bar-track">
+            <div class="xp-bar-fill" style="width: 0%"></div>
+          </div>
+          <div class="xp-value">0 / 100 XP</div>
+        </div>
+      </aside>
+
+      <!-- Standard detail panel (courses/regular nodes) -->
+      <div class="galaxy-detail-panel">
         <button class="close-btn" aria-label="Close">&times;</button>
-        <h3>Course Name</h3>
-        <div class="detail-code">EN.601.682</div>
+        <h3>Node Name</h3>
+        <div class="detail-code">CODE</div>
         <div class="detail-meta">
           <span class="detail-institution-badge">JHU</span>
           <span class="detail-year">2023</span>
         </div>
         <span class="detail-grade">A+</span>
         <div class="detail-type">COURSE</div>
-        <div class="detail-track">ML / AI</div>
+        <div class="detail-track">Physics</div>
 
         <div class="detail-prereqs detail-section">
           <h4>Prerequisites</h4>
@@ -88,36 +64,63 @@ const societyTracks = tracks.filter(t => t.branch === 'society');
         </div>
       </div>
 
+      <!-- Star Gate detail panel (top projects — fly-in view) -->
+      <div class="stargate-detail-panel">
+        <button class="sg-close-btn" aria-label="Close">&times;</button>
+        <div class="sg-header">
+          <div class="sg-type">[ THESIS ]</div>
+          <h2 class="sg-title">Project Name</h2>
+          <div class="sg-venue"></div>
+          <div class="sg-year"></div>
+        </div>
+        <div class="sg-links"></div>
+        <div class="sg-stack-section">
+          <div class="sg-stack-label">TECH STACK PATH</div>
+          <div class="sg-stack"></div>
+        </div>
+      </div>
+
       <!-- Legend -->
-      <div class="techtree-legend">
+      <div class="galaxy-legend">
         <div class="legend-item">
-          <span class="legend-rect"></span>
-          Course
+          <span class="legend-hypergiant"></span>
+          Hypergiant (A+)
         </div>
         <div class="legend-item">
-          <span class="legend-diamond"></span>
-          Project
+          <span class="legend-main-seq"></span>
+          Main Seq (A/A-)
         </div>
         <div class="legend-item">
-          <span class="legend-hexagon"></span>
-          Thesis
+          <span class="legend-brown-dwarf"></span>
+          Brown Dwarf (B+)
         </div>
         <div class="legend-item">
-          <span class="legend-pentagon"></span>
-          Internship
+          <span class="legend-ghost"></span>
+          Ghost / Locked
         </div>
         <div class="legend-item">
-          <span class="legend-pub"></span>
-          Publication
+          <span class="legend-stargate"></span>
+          Star Gate
         </div>
         <div class="legend-item">
-          <span class="legend-octagon"></span>
-          Repo
+          <span class="legend-dyson"></span>
+          Thesis (Dyson)
         </div>
         <div class="legend-item">
-          <span class="legend-line"></span>
-          Prerequisite
+          <span class="legend-crystal"></span>
+          Publication (Crystal)
         </div>
+        <div class="legend-item">
+          <span class="legend-edge-line"></span>
+          Connection
+        </div>
+      </div>
+
+      <!-- Zoom controls -->
+      <div class="galaxy-zoom-controls">
+        <button class="zoom-in" aria-label="Zoom in">+</button>
+        <button class="zoom-out" aria-label="Zoom out">&minus;</button>
+        <button class="zoom-reset" aria-label="Reset zoom">&#8634;</button>
       </div>
     </div>
 
@@ -126,11 +129,15 @@ const societyTracks = tracks.filter(t => t.branch === 'society');
 </BaseLayout>
 
 <script>
-  import { initTechTree } from '../islands/TechTree';
+  import { initGalaxyView } from '../islands/GalaxyView';
   import { courses, projectNodes, tracks } from '../data/techtree';
+  import { projects } from '../data/projects';
 
-  const container = document.getElementById('techtree-root');
+  // Expose project data for Star Gate link resolution
+  (window as any).__galaxyProjects = projects;
+
+  const container = document.getElementById('galaxy-root');
   if (container) {
-    initTechTree(container, courses, projectNodes, tracks);
+    initGalaxyView(container, courses, projectNodes, tracks);
   }
 </script>
