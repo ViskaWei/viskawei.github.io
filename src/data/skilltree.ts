@@ -4,6 +4,7 @@
  */
 
 import type { CourseNode, ProjectNode, Track, NodeType } from './techtree';
+import skillsRegistry from './skills-registry.json';
 
 // ── Interfaces ─────────────────────────────────────────────────
 
@@ -243,6 +244,7 @@ export function nodeTypeToMegastructure(nodeType: NodeType | 'dark' | 'core'): M
     case 'internship':  return 'station';
     case 'repo':        return 'module';
     case 'project':     return 'diamond';
+    case 'skill':       return 'module';
     default:            return null;
   }
 }
@@ -253,6 +255,7 @@ function assignLayer(nodeType: NodeType | 'dark' | 'core', id: string): NodeLaye
   if (nodeType === 'core') return 'core';
   if (nodeType === 'dark') return 'outer';
   if (STAR_GATE_IDS.has(id)) return 'stargate';
+  if (nodeType === 'skill') return 'mid';
   if (nodeType === 'course') return 'inner';
   // projects, repos = mid layer; thesis/pub/intern = outer
   if (nodeType === 'thesis' || nodeType === 'publication' || nodeType === 'internship') return 'outer';
@@ -269,6 +272,7 @@ function nodeTypeRadius(nodeType: NodeType | 'dark' | 'core', mastery: number): 
     case 'internship':  return 11;
     case 'repo':        return 7;
     case 'project':     return 12;
+    case 'skill':       return 4 + mastery * 6; // 4-10
     case 'dark':        return 5;
     case 'course':
     default:            return 6 + mastery * 8; // 6-14
@@ -380,6 +384,10 @@ export function buildGalaxyNodes(
   // Merge algorithm topic nodes
   if (algorithmNodes) nodes.push(...algorithmNodes);
 
+  // Skill nodes for Engineer cluster
+  const skillNodes = buildSkillNodes();
+  nodes.push(...skillNodes);
+
   return nodes;
 }
 
@@ -421,7 +429,7 @@ const GRADE_XP: Record<string, number> = {
 };
 
 const NODE_TYPE_XP: Record<string, number> = {
-  project: 50, thesis: 80, publication: 100, internship: 60, repo: 30,
+  project: 50, thesis: 80, publication: 100, internship: 60, repo: 30, skill: 20,
 };
 
 const RANK_TABLE: [number, string][] = [
@@ -461,4 +469,46 @@ export function computeXP(
   }
 
   return { xp, level, rank, nextLevelXP, currentLevelXP };
+}
+
+// ── Skill Nodes for Engineer Cluster ─────────────────────────────
+
+interface SkillRegistryEntry {
+  id: string;
+  name: string;
+  description: string | null;
+  source: string;
+  maturity_score: number;
+  maturity_level: string;
+  version: string | null;
+}
+
+function skillMaturityToStarClass(level: string): StarClass {
+  switch (level) {
+    case 'mature': return 'hypergiant';
+    case 'growing': return 'main-sequence';
+    case 'seedling':
+    case 'empty':
+    default: return 'brown-dwarf';
+  }
+}
+
+export function buildSkillNodes(): GalaxyNode[] {
+  const skills = (skillsRegistry as any).skills as SkillRegistryEntry[];
+  if (!skills || skills.length === 0) return [];
+
+  return skills.map(s => ({
+    id: `skill-${s.id}`,
+    name: s.name,
+    nodeType: 'skill' as NodeType,
+    clusterId: 'engineering',
+    mastery: s.maturity_score / 100,
+    brightness: 0.3 + (s.maturity_score / 100) * 0.7,
+    radius: 4 + (s.maturity_score / 100) * 6, // 4-10
+    x: 0,
+    y: 0,
+    starClass: skillMaturityToStarClass(s.maturity_level),
+    megastructure: 'module' as MegastructureType,
+    layer: 'mid' as NodeLayer,
+  }));
 }

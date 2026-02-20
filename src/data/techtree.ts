@@ -6,7 +6,7 @@ export interface Track {
   branch: 'core' | 'engineering' | 'society';
 }
 
-export type NodeType = 'course' | 'project' | 'thesis' | 'internship' | 'publication' | 'repo';
+export type NodeType = 'course' | 'project' | 'thesis' | 'internship' | 'publication' | 'repo' | 'skill';
 
 export interface CourseNode {
   id: string;
