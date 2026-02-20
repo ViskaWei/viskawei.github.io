@@ -1,45 +1,44 @@
 /**
- * Skills Hub — Interactive D3 visualization with treemap + force-directed views.
- * Renders Claude AI skills from the skills registry with maturity-based coloring
- * and source-based clustering.
+ * Skills Hub — Interactive D3 visualization for Claude skills registry.
+ * Supports: Force-directed bubble chart, Treemap, Table views.
  */
 
-interface SkillEntry {
+interface SkillRecord {
   id: string;
   name: string;
-  description: string | null;
+  description: string;
   source: string;
-  version: string | null;
   maturity_score: number;
   maturity_level: string;
   status: string;
-  last_modified: string;
-  has_skill_md: boolean;
   word_count: number;
-  has_scripts: boolean;
-  has_references: boolean;
-  has_assets: boolean;
   file_count: number;
-  allowed_tools: string[] | null;
-  has_hooks: boolean;
+  has_skill_md: boolean;
+  version: string | null;
   tags: string[];
-  category: string | null;
   progress: number | null;
   definition_of_done: string[] | null;
+  last_modified: string;
+  category: string | null;
+  overrides_applied: boolean;
 }
 
-interface SkillsRegistry {
-  generated_at: string;
-  total_skills: number;
+interface Registry {
   summary: {
+    total: number;
     by_source: Record<string, number>;
     by_maturity: Record<string, number>;
-    by_status: Record<string, number>;
+    average_maturity_score: number;
   };
-  skills: SkillEntry[];
+  skills: SkillRecord[];
 }
 
-// ── Color schemes ────────────────────────────────────────────────
+const SOURCE_COLORS: Record<string, string> = {
+  private: '#26c6da',
+  public: '#66bb6a',
+  scientific: '#ab47bc',
+  local: '#ff7043',
+};
 
 const MATURITY_COLORS: Record<string, string> = {
   mature: '#4fc3f7',
@@ -48,541 +47,442 @@ const MATURITY_COLORS: Record<string, string> = {
   empty: '#ef5350',
 };
 
-const SOURCE_COLORS: Record<string, string> = {
-  private: '#ab47bc',
-  public: '#26c6da',
-  scientific: '#66bb6a',
-  local: '#ff7043',
-};
+export function initSkillsHub(container: HTMLElement, registry: Registry): void {
+  import('d3').then((d3) => {
+    const skills = registry.skills;
+    const rect = container.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
 
-function maturityColor(level: string): string {
-  return MATURITY_COLORS[level] || '#888';
-}
+    // Create SVG
+    const svg = d3.select(container)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .style('position', 'absolute')
+      .style('top', '0')
+      .style('left', '0');
 
-function sourceColor(source: string): string {
-  return SOURCE_COLORS[source] || '#888';
-}
+    const g = svg.append('g');
 
-// ── Main entry point ─────────────────────────────────────────────
+    // Zoom behavior
+    const zoom = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.3, 4])
+      .on('zoom', (e) => g.attr('transform', e.transform));
+    svg.call(zoom);
 
-export async function initSkillsHub(
-  container: HTMLElement,
-  registry: SkillsRegistry,
-): Promise<void> {
-  const d3 = await import('d3');
-
-  // ── Update HUD counters ──────────────────────────────────────
-  const setCount = (id: string, val: number) => {
-    const el = document.getElementById(id);
-    if (el) el.textContent = String(val);
-  };
-
-  setCount('total-count', registry.total_skills);
-  setCount('mature-count', registry.summary.by_maturity.mature || 0);
-  setCount('growing-count', registry.summary.by_maturity.growing || 0);
-  setCount('seedling-count', registry.summary.by_maturity.seedling || 0);
-  setCount('empty-count', registry.summary.by_maturity.empty || 0);
-
-  // ── SVG setup ────────────────────────────────────────────────
-  const rect = container.getBoundingClientRect();
-  const width = rect.width;
-  const height = rect.height;
-
-  const svg = d3.select(container)
-    .append('svg')
-    .attr('class', 'galaxy-svg')
-    .attr('width', width)
-    .attr('height', height);
-
-  const defs = svg.append('defs');
-
-  // Glow filter for nodes
-  const glowFilter = defs.append('filter')
-    .attr('id', 'skills-glow')
-    .attr('x', '-100%').attr('y', '-100%')
-    .attr('width', '300%').attr('height', '300%');
-  glowFilter.append('feGaussianBlur')
-    .attr('in', 'SourceGraphic').attr('stdDeviation', '4').attr('result', 'blur');
-  const glowMerge = glowFilter.append('feMerge');
-  glowMerge.append('feMergeNode').attr('in', 'blur');
-  glowMerge.append('feMergeNode').attr('in', 'SourceGraphic');
-
-  const mainGroup = svg.append('g').attr('class', 'skills-main-group');
-
-  // ── State ────────────────────────────────────────────────────
-  let currentView: 'treemap' | 'force' = 'treemap';
-  let currentFilter = 'all';
-  let activeSkills = [...registry.skills];
-
-  // ── Detail panel references ──────────────────────────────────
-  const detailPanel = document.getElementById('skill-detail') as HTMLElement | null;
-  const skillNameEl = document.getElementById('skill-name');
-  const skillSourceEl = document.getElementById('skill-source');
-  const skillMaturityEl = document.getElementById('skill-maturity');
-  const skillVersionEl = document.getElementById('skill-version');
-  const skillDescEl = document.getElementById('skill-description');
-  const skillTagsSection = document.getElementById('skill-tags-section');
-  const skillTagsEl = document.getElementById('skill-tags');
-  const skillToolsSection = document.getElementById('skill-tools-section');
-  const skillToolsEl = document.getElementById('skill-tools');
-  const skillMaturityBar = document.getElementById('skill-maturity-bar');
-  const skillScoreEl = document.getElementById('skill-score');
-
-  function showDetail(skill: SkillEntry) {
-    if (!detailPanel) return;
-
-    const color = maturityColor(skill.maturity_level);
-    detailPanel.style.setProperty('--detail-color', color);
-
-    if (skillNameEl) skillNameEl.textContent = skill.name;
-    if (skillSourceEl) skillSourceEl.textContent = `> ${skill.source.toUpperCase()}`;
-    if (skillMaturityEl) {
-      skillMaturityEl.textContent = skill.maturity_level;
-      skillMaturityEl.style.background = color;
-      skillMaturityEl.style.color = '#0a0a14';
-    }
-    if (skillVersionEl) skillVersionEl.textContent = skill.version ? `v${skill.version}` : '';
-    if (skillDescEl) skillDescEl.textContent = skill.description || '';
-
-    // Tags
-    if (skillTagsSection && skillTagsEl) {
-      if (skill.tags && skill.tags.length > 0) {
-        skillTagsSection.style.display = 'block';
-        skillTagsEl.innerHTML = '';
-        for (const tag of skill.tags) {
-          const chip = document.createElement('div');
-          chip.className = 'detail-prereq-item';
-          chip.textContent = tag;
-          skillTagsEl.appendChild(chip);
-        }
-      } else {
-        skillTagsSection.style.display = 'none';
-      }
-    }
-
-    // Tools
-    if (skillToolsSection && skillToolsEl) {
-      if (skill.allowed_tools && skill.allowed_tools.length > 0) {
-        skillToolsSection.style.display = 'block';
-        skillToolsEl.innerHTML = '';
-        for (const tool of skill.allowed_tools) {
-          const chip = document.createElement('div');
-          chip.className = 'detail-related-item';
-          chip.textContent = tool;
-          skillToolsEl.appendChild(chip);
-        }
-      } else {
-        skillToolsSection.style.display = 'none';
-      }
-    }
-
-    // Maturity bar
-    if (skillMaturityBar) {
-      skillMaturityBar.style.width = `${skill.maturity_score}%`;
-      skillMaturityBar.style.background = color;
-    }
-    if (skillScoreEl) {
-      skillScoreEl.textContent = `${skill.maturity_score}%`;
-    }
-
-    detailPanel.classList.add('visible');
-  }
-
-  function hideDetail() {
-    if (detailPanel) detailPanel.classList.remove('visible');
-  }
-
-  // Close button
-  detailPanel?.querySelector('.close-btn')?.addEventListener('click', hideDetail);
-
-  // ── Zoom behavior ────────────────────────────────────────────
-  const zoom = d3.zoom<SVGSVGElement, unknown>()
-    .scaleExtent([0.5, 4])
-    .on('zoom', (event) => {
-      mainGroup.attr('transform', event.transform.toString());
+    // ── Detail panel wiring ──────────────────────────────────────
+    const detailPanel = document.getElementById('skill-detail');
+    const closeBtn = detailPanel?.querySelector('.close-btn');
+    closeBtn?.addEventListener('click', () => {
+      if (detailPanel) detailPanel.style.display = 'none';
     });
 
-  svg.call(zoom);
+    function showDetail(s: SkillRecord) {
+      if (!detailPanel) return;
+      detailPanel.style.display = 'block';
+      const el = (id: string) => document.getElementById(id);
+      const srcEl = el('detail-source');
+      if (srcEl) {
+        srcEl.textContent = s.source.toUpperCase();
+        srcEl.style.background = SOURCE_COLORS[s.source] || '#888';
+      }
+      const nameEl = el('detail-name');
+      if (nameEl) nameEl.textContent = s.name;
+      const idEl = el('detail-id');
+      if (idEl) idEl.textContent = s.id;
+      const levelEl = el('detail-maturity-level');
+      if (levelEl) {
+        levelEl.textContent = s.maturity_level;
+        levelEl.style.background = MATURITY_COLORS[s.maturity_level] || '#888';
+        levelEl.style.color = s.maturity_level === 'seedling' ? '#000' : '#fff';
+      }
+      const scoreEl = el('detail-score');
+      if (scoreEl) scoreEl.textContent = `Score: ${s.maturity_score}/100`;
+      const descEl = el('detail-desc');
+      if (descEl) descEl.textContent = s.description || '(no description)';
 
-  // ── Treemap View ─────────────────────────────────────────────
+      // Tags
+      const tagsSection = el('detail-tags-section');
+      const tagsEl = el('detail-tags');
+      if (tagsSection && tagsEl) {
+        if (s.tags && s.tags.length > 0) {
+          tagsSection.style.display = 'block';
+          tagsEl.innerHTML = s.tags.map(t =>
+            `<span style="display:inline-block;background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:4px;margin:2px;font-size:0.75rem">${t}</span>`
+          ).join('');
+        } else {
+          tagsSection.style.display = 'none';
+        }
+      }
 
-  function renderTreemap(skills: SkillEntry[]) {
-    mainGroup.selectAll('*').remove();
+      // Definition of done
+      const dodSection = el('detail-dod-section');
+      const dodEl = el('detail-dod');
+      if (dodSection && dodEl) {
+        if (s.definition_of_done && s.definition_of_done.length > 0) {
+          dodSection.style.display = 'block';
+          dodEl.innerHTML = s.definition_of_done.map(d =>
+            `<div style="font-size:0.75rem;opacity:0.8;margin:2px 0">• ${d}</div>`
+          ).join('');
+        } else {
+          dodSection.style.display = 'none';
+        }
+      }
 
-    // Reset zoom for treemap
-    svg.call(zoom.transform, d3.zoomIdentity);
+      // Maturity bar
+      const barEl = el('detail-maturity-bar');
+      if (barEl) {
+        barEl.style.width = `${s.maturity_score}%`;
+        barEl.style.background = MATURITY_COLORS[s.maturity_level] || '#888';
+      }
+    }
 
-    if (skills.length === 0) {
-      mainGroup.append('text')
-        .attr('x', width / 2)
-        .attr('y', height / 2)
+    // ── Force-directed layout ────────────────────────────────────
+    let currentView = 'force';
+
+    function renderForce() {
+      g.selectAll('*').remove();
+
+      // Cluster centers
+      const sources = [...new Set(skills.map(s => s.source))];
+      const sourceAngle = new Map(sources.map((s, i) => [s, (i / sources.length) * Math.PI * 2 - Math.PI / 2]));
+
+      type SimNode = SkillRecord & d3.SimulationNodeDatum;
+      const simNodes: SimNode[] = skills.map(s => ({ ...s } as SimNode));
+
+      const simulation = d3.forceSimulation(simNodes)
+        .force('charge', d3.forceManyBody().strength(-2))
+        .force('x', d3.forceX<SimNode>(d => {
+          const angle = sourceAngle.get(d.source) || 0;
+          return width / 2 + Math.cos(angle) * Math.min(width, height) * 0.25;
+        }).strength(0.15))
+        .force('y', d3.forceY<SimNode>(d => {
+          const angle = sourceAngle.get(d.source) || 0;
+          return height / 2 + Math.sin(angle) * Math.min(width, height) * 0.25;
+        }).strength(0.15))
+        .force('collision', d3.forceCollide<SimNode>(d =>
+          radiusScale(d.maturity_score) + 1.5
+        ))
+        .alpha(0.8)
+        .alphaDecay(0.02);
+
+      const radiusScale = (score: number) => 5 + (score / 100) * 20;
+
+      // Source labels
+      const labelG = g.append('g').attr('class', 'source-labels');
+      sources.forEach(src => {
+        const angle = sourceAngle.get(src) || 0;
+        const lx = width / 2 + Math.cos(angle) * Math.min(width, height) * 0.38;
+        const ly = height / 2 + Math.sin(angle) * Math.min(width, height) * 0.38;
+        labelG.append('text')
+          .attr('x', lx)
+          .attr('y', ly)
+          .attr('text-anchor', 'middle')
+          .attr('fill', SOURCE_COLORS[src] || '#888')
+          .attr('font-size', '14px')
+          .attr('font-family', 'Rajdhani, sans-serif')
+          .attr('font-weight', '600')
+          .attr('letter-spacing', '2px')
+          .attr('opacity', 0.7)
+          .text(src.toUpperCase());
+      });
+
+      // Skill bubbles
+      const bubbles = g.append('g').attr('class', 'bubbles')
+        .selectAll('g')
+        .data(simNodes)
+        .join('g')
+        .style('cursor', 'pointer')
+        .on('click', (_e, d) => showDetail(d));
+
+      bubbles.append('circle')
+        .attr('r', d => radiusScale(d.maturity_score))
+        .attr('fill', d => MATURITY_COLORS[d.maturity_level] || '#888')
+        .attr('opacity', 0.75)
+        .attr('stroke', d => SOURCE_COLORS[d.source] || '#888')
+        .attr('stroke-width', 1.2);
+
+      // Glow for mature
+      bubbles.filter(d => d.maturity_level === 'mature')
+        .select('circle')
+        .attr('filter', 'url(#glow)');
+
+      // Labels for larger nodes
+      bubbles.filter(d => d.maturity_score >= 50)
+        .append('text')
         .attr('text-anchor', 'middle')
-        .attr('fill', 'rgba(255,255,255,0.3)')
-        .attr('font-size', '14px')
-        .text('No skills match the current filter.');
-      return;
+        .attr('dy', '0.35em')
+        .attr('fill', d => d.maturity_level === 'seedling' ? '#333' : '#fff')
+        .attr('font-size', d => d.maturity_score >= 75 ? '8px' : '6px')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .attr('pointer-events', 'none')
+        .text(d => {
+          const name = d.name.length > 12 ? d.name.slice(0, 10) + '..' : d.name;
+          return name;
+        });
+
+      // Tooltip on hover
+      bubbles.on('mouseenter', function(_e, d) {
+        d3.select(this).select('circle')
+          .transition().duration(150)
+          .attr('opacity', 1)
+          .attr('stroke-width', 2.5);
+      }).on('mouseleave', function() {
+        d3.select(this).select('circle')
+          .transition().duration(150)
+          .attr('opacity', 0.75)
+          .attr('stroke-width', 1.2);
+      });
+
+      // SVG defs for glow
+      const defs = svg.append('defs');
+      const filter = defs.append('filter').attr('id', 'glow');
+      filter.append('feGaussianBlur').attr('stdDeviation', '3').attr('result', 'coloredBlur');
+      const merge = filter.append('feMerge');
+      merge.append('feMergeNode').attr('in', 'coloredBlur');
+      merge.append('feMergeNode').attr('in', 'SourceGraphic');
+
+      simulation.on('tick', () => {
+        bubbles.attr('transform', d => `translate(${d.x},${d.y})`);
+      });
     }
 
-    // Build hierarchy: root -> sources -> skills
-    const sourceGroups = new Map<string, SkillEntry[]>();
-    for (const s of skills) {
-      const group = sourceGroups.get(s.source) || [];
-      group.push(s);
-      sourceGroups.set(s.source, group);
-    }
+    // ── Treemap layout ───────────────────────────────────────────
+    function renderTreemap() {
+      g.selectAll('*').remove();
 
-    const hierarchyData = {
-      name: 'root',
-      children: Array.from(sourceGroups.entries()).map(([source, entries]) => ({
-        name: source,
-        children: entries.map(e => ({
-          name: e.name,
-          value: Math.max(10, e.maturity_score),
-          skill: e,
+      const hierarchy = d3.hierarchy({
+        name: 'skills',
+        children: [...new Set(skills.map(s => s.source))].map(src => ({
+          name: src,
+          children: skills.filter(s => s.source === src).map(s => ({
+            name: s.name,
+            value: Math.max(s.maturity_score, 5),
+            skill: s,
+          })),
         })),
-      })),
-    };
+      }).sum(d => (d as any).value || 0);
 
-    const root = d3.hierarchy(hierarchyData)
-      .sum((d: any) => d.value || 0)
-      .sort((a, b) => (b.value || 0) - (a.value || 0));
+      const treemap = d3.treemap<any>()
+        .size([width - 80, height - 100])
+        .padding(3)
+        .paddingOuter(8)
+        .round(true);
 
-    const margin = 40;
-    const treemapLayout = d3.treemap<any>()
-      .size([width - margin * 2, height - margin * 2])
-      .padding(4)
-      .round(true);
+      const root = treemap(hierarchy);
+      const offsetX = 40;
+      const offsetY = 50;
 
-    treemapLayout(root);
+      // Source group backgrounds
+      g.selectAll('.source-bg')
+        .data(root.children || [])
+        .join('rect')
+        .attr('class', 'source-bg')
+        .attr('x', d => d.x0 + offsetX)
+        .attr('y', d => d.y0 + offsetY)
+        .attr('width', d => d.x1 - d.x0)
+        .attr('height', d => d.y1 - d.y0)
+        .attr('fill', d => SOURCE_COLORS[d.data.name] || '#888')
+        .attr('opacity', 0.08)
+        .attr('rx', 4);
 
-    const leaves = root.leaves();
-
-    // Draw rectangles
-    const cells = mainGroup.selectAll('.skill-cell')
-      .data(leaves)
-      .enter()
-      .append('g')
-      .attr('class', 'skill-cell')
-      .attr('transform', (d: any) => `translate(${d.x0 + margin},${d.y0 + margin})`);
-
-    cells.append('rect')
-      .attr('width', (d: any) => Math.max(0, d.x1 - d.x0))
-      .attr('height', (d: any) => Math.max(0, d.y1 - d.y0))
-      .attr('fill', (d: any) => {
-        const skill = d.data.skill as SkillEntry | undefined;
-        return skill ? maturityColor(skill.maturity_level) : '#333';
-      })
-      .attr('fill-opacity', 0.2)
-      .attr('stroke', (d: any) => {
-        const skill = d.data.skill as SkillEntry | undefined;
-        return skill ? maturityColor(skill.maturity_level) : '#444';
-      })
-      .attr('stroke-opacity', 0.5)
-      .attr('stroke-width', 1)
-      .attr('rx', 4)
-      .attr('ry', 4);
-
-    // Labels
-    cells.append('text')
-      .attr('x', 6)
-      .attr('y', 16)
-      .attr('fill', 'rgba(255,255,255,0.85)')
-      .attr('font-size', (d: any) => {
-        const w = d.x1 - d.x0;
-        return w < 80 ? '8px' : w < 140 ? '10px' : '12px';
-      })
-      .attr('font-family', "'Rajdhani', 'Inter', sans-serif")
-      .attr('font-weight', '600')
-      .text((d: any) => {
-        const w = d.x1 - d.x0;
-        const name = d.data.name;
-        const maxChars = Math.floor(w / 7);
-        return name.length > maxChars ? name.slice(0, maxChars - 1) + '\u2026' : name;
-      });
-
-    // Source label (smaller)
-    cells.append('text')
-      .attr('x', 6)
-      .attr('y', 30)
-      .attr('fill', (d: any) => {
-        const skill = d.data.skill as SkillEntry | undefined;
-        return skill ? sourceColor(skill.source) : 'rgba(255,255,255,0.3)';
-      })
-      .attr('font-size', '8px')
-      .attr('font-family', "'JetBrains Mono', monospace")
-      .attr('letter-spacing', '0.05em')
-      .text((d: any) => {
-        const h = d.y1 - d.y0;
-        if (h < 40) return '';
-        const skill = d.data.skill as SkillEntry | undefined;
-        return skill ? skill.source.toUpperCase() : '';
-      });
-
-    // Maturity score
-    cells.append('text')
-      .attr('x', (d: any) => d.x1 - d.x0 - 6)
-      .attr('y', 16)
-      .attr('text-anchor', 'end')
-      .attr('fill', 'rgba(255,255,255,0.4)')
-      .attr('font-size', '9px')
-      .attr('font-family', "'JetBrains Mono', monospace")
-      .text((d: any) => {
-        const w = d.x1 - d.x0;
-        if (w < 60) return '';
-        const skill = d.data.skill as SkillEntry | undefined;
-        return skill ? `${skill.maturity_score}%` : '';
-      });
-
-    // Interactions
-    cells.on('mouseenter', function(this: SVGGElement, _event: MouseEvent, d: any) {
-      const skill = d.data.skill as SkillEntry | undefined;
-      if (!skill) return;
-      d3.select(this).select('rect')
-        .attr('fill-opacity', 0.4)
-        .attr('stroke-opacity', 1)
-        .attr('stroke-width', 2);
-      showDetail(skill);
-    });
-
-    cells.on('mouseleave', function(this: SVGGElement) {
-      d3.select(this).select('rect')
-        .attr('fill-opacity', 0.2)
-        .attr('stroke-opacity', 0.5)
-        .attr('stroke-width', 1);
-    });
-
-    cells.on('click', (_event: MouseEvent, d: any) => {
-      const skill = d.data.skill as SkillEntry | undefined;
-      if (skill) showDetail(skill);
-    });
-  }
-
-  // ── Force-directed View ──────────────────────────────────────
-
-  function renderForce(skills: SkillEntry[]) {
-    mainGroup.selectAll('*').remove();
-
-    // Reset zoom for force view
-    svg.call(zoom.transform, d3.zoomIdentity);
-
-    if (skills.length === 0) {
-      mainGroup.append('text')
-        .attr('x', width / 2)
-        .attr('y', height / 2)
-        .attr('text-anchor', 'middle')
-        .attr('fill', 'rgba(255,255,255,0.3)')
-        .attr('font-size', '14px')
-        .text('No skills match the current filter.');
-      return;
-    }
-
-    // Compute cluster centers by source
-    const sources = Array.from(new Set(skills.map(s => s.source)));
-    const sourceCenters = new Map<string, { x: number; y: number }>();
-    sources.forEach((src, i) => {
-      const angle = (Math.PI * 2 * i) / sources.length - Math.PI / 2;
-      const dist = Math.min(width, height) * 0.2;
-      sourceCenters.set(src, {
-        x: width / 2 + Math.cos(angle) * dist,
-        y: height / 2 + Math.sin(angle) * dist,
-      });
-    });
-
-    // Build simulation nodes
-    interface SimNode extends d3.SimulationNodeDatum {
-      skill: SkillEntry;
-      r: number;
-    }
-
-    const simNodes: SimNode[] = skills.map(s => ({
-      skill: s,
-      r: Math.max(8, s.maturity_score / 4),
-      x: (sourceCenters.get(s.source)?.x || width / 2) + (Math.random() - 0.5) * 50,
-      y: (sourceCenters.get(s.source)?.y || height / 2) + (Math.random() - 0.5) * 50,
-    }));
-
-    const simulation = d3.forceSimulation(simNodes)
-      .force('charge', d3.forceManyBody().strength(-80))
-      .force('collide', d3.forceCollide<SimNode>((d) => d.r + 4))
-      .force('x', d3.forceX<SimNode>((d) => sourceCenters.get(d.skill.source)?.x || width / 2).strength(0.3))
-      .force('y', d3.forceY<SimNode>((d) => sourceCenters.get(d.skill.source)?.y || height / 2).strength(0.3))
-      .stop();
-
-    // Run simulation
-    for (let i = 0; i < 200; i++) simulation.tick();
-
-    // Source labels
-    for (const [src, center] of sourceCenters) {
-      mainGroup.append('text')
-        .attr('class', 'cluster-label-text')
-        .attr('x', center.x)
-        .attr('y', center.y - Math.min(width, height) * 0.15)
-        .attr('text-anchor', 'middle')
-        .attr('fill', sourceColor(src))
+      // Source labels
+      g.selectAll('.source-label')
+        .data(root.children || [])
+        .join('text')
+        .attr('class', 'source-label')
+        .attr('x', d => d.x0 + offsetX + 6)
+        .attr('y', d => d.y0 + offsetY + 14)
+        .attr('fill', d => SOURCE_COLORS[d.data.name] || '#888')
         .attr('font-size', '11px')
-        .attr('font-weight', '400')
-        .attr('letter-spacing', '0.15em')
-        .attr('opacity', 0.5)
-        .text(src.toUpperCase());
+        .attr('font-family', 'Rajdhani, sans-serif')
+        .attr('font-weight', '600')
+        .attr('letter-spacing', '1.5px')
+        .text(d => d.data.name.toUpperCase());
+
+      // Skill tiles
+      const leaves = root.leaves();
+      const tiles = g.selectAll('.tile')
+        .data(leaves)
+        .join('g')
+        .attr('class', 'tile')
+        .attr('transform', d => `translate(${d.x0 + offsetX},${d.y0 + offsetY})`)
+        .style('cursor', 'pointer')
+        .on('click', (_e, d) => showDetail((d.data as any).skill));
+
+      tiles.append('rect')
+        .attr('width', d => Math.max(d.x1 - d.x0, 0))
+        .attr('height', d => Math.max(d.y1 - d.y0, 0))
+        .attr('fill', d => {
+          const skill = (d.data as any).skill as SkillRecord;
+          return MATURITY_COLORS[skill.maturity_level] || '#888';
+        })
+        .attr('opacity', 0.65)
+        .attr('rx', 2)
+        .attr('stroke', 'rgba(255,255,255,0.15)')
+        .attr('stroke-width', 0.5);
+
+      // Tile labels
+      tiles.filter(d => (d.x1 - d.x0) > 40 && (d.y1 - d.y0) > 16)
+        .append('text')
+        .attr('x', 4)
+        .attr('y', 12)
+        .attr('fill', d => {
+          const skill = (d.data as any).skill as SkillRecord;
+          return skill.maturity_level === 'seedling' ? '#333' : '#fff';
+        })
+        .attr('font-size', d => (d.x1 - d.x0) > 80 ? '8px' : '6px')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .attr('pointer-events', 'none')
+        .text(d => {
+          const maxLen = Math.floor((d.x1 - d.x0) / 5);
+          const name = d.data.name;
+          return name.length > maxLen ? name.slice(0, maxLen - 2) + '..' : name;
+        });
+
+      // Hover
+      tiles.on('mouseenter', function() {
+        d3.select(this).select('rect')
+          .transition().duration(100)
+          .attr('opacity', 1)
+          .attr('stroke', 'rgba(255,255,255,0.5)')
+          .attr('stroke-width', 1.5);
+      }).on('mouseleave', function() {
+        d3.select(this).select('rect')
+          .transition().duration(100)
+          .attr('opacity', 0.65)
+          .attr('stroke', 'rgba(255,255,255,0.15)')
+          .attr('stroke-width', 0.5);
+      });
     }
 
-    // Draw nodes
-    const nodeGroups = mainGroup.selectAll('.skill-node')
-      .data(simNodes)
-      .enter()
-      .append('g')
-      .attr('class', 'skill-node')
-      .attr('transform', (d: SimNode) => `translate(${d.x},${d.y})`);
+    // ── Table view ───────────────────────────────────────────────
+    function renderTable() {
+      g.selectAll('*').remove();
 
-    // Glow halo
-    nodeGroups.append('circle')
-      .attr('r', (d: SimNode) => d.r * 2)
-      .attr('fill', (d: SimNode) => maturityColor(d.skill.maturity_level))
-      .attr('fill-opacity', 0.05);
+      const sorted = [...skills].sort((a, b) => b.maturity_score - a.maturity_score);
+      const rowH = 22;
+      const startY = 60;
+      const colX = [50, 280, 370, 450, 550, 630];
 
-    // Main circle
-    nodeGroups.append('circle')
-      .attr('class', 'skill-circle')
-      .attr('r', (d: SimNode) => d.r)
-      .attr('fill', (d: SimNode) => maturityColor(d.skill.maturity_level))
-      .attr('fill-opacity', 0.6)
-      .attr('stroke', (d: SimNode) => maturityColor(d.skill.maturity_level))
-      .attr('stroke-opacity', 0.8)
-      .attr('stroke-width', 1.5)
-      .style('filter', 'url(#skills-glow)');
-
-    // White center dot
-    nodeGroups.append('circle')
-      .attr('r', (d: SimNode) => Math.max(2, d.r * 0.3))
-      .attr('fill', '#ffffff')
-      .attr('opacity', 0.7);
-
-    // Labels
-    nodeGroups.append('text')
-      .attr('y', (d: SimNode) => d.r + 14)
-      .attr('text-anchor', 'middle')
-      .attr('fill', 'rgba(255,255,255,0.7)')
-      .attr('font-size', '9px')
-      .attr('font-family', "'Rajdhani', 'Inter', sans-serif")
-      .attr('font-weight', '600')
-      .text((d: SimNode) => {
-        const name = d.skill.name;
-        return name.length > 16 ? name.slice(0, 14) + '\u2026' : name;
+      // Header
+      const headers = ['Skill', 'Source', 'Maturity', 'Score', 'Status', 'Updated'];
+      headers.forEach((h, i) => {
+        g.append('text')
+          .attr('x', colX[i])
+          .attr('y', startY - 10)
+          .attr('fill', '#8b949e')
+          .attr('font-size', '10px')
+          .attr('font-family', 'Rajdhani, sans-serif')
+          .attr('font-weight', '600')
+          .attr('letter-spacing', '1px')
+          .text(h.toUpperCase());
       });
 
-    // Interactions
-    nodeGroups.on('mouseenter', function(this: SVGGElement, _event: MouseEvent, d: SimNode) {
-      d3.select(this).select('.skill-circle')
-        .attr('fill-opacity', 0.9)
-        .attr('stroke-width', 2.5);
-      showDetail(d.skill);
-    });
+      g.append('line')
+        .attr('x1', 40).attr('x2', width - 40)
+        .attr('y1', startY).attr('y2', startY)
+        .attr('stroke', 'rgba(255,255,255,0.1)');
 
-    nodeGroups.on('mouseleave', function(this: SVGGElement) {
-      d3.select(this).select('.skill-circle')
-        .attr('fill-opacity', 0.6)
-        .attr('stroke-width', 1.5);
-    });
+      // Rows
+      const rows = g.selectAll('.row')
+        .data(sorted.slice(0, Math.floor((height - 120) / rowH)))
+        .join('g')
+        .attr('class', 'row')
+        .attr('transform', (_d, i) => `translate(0,${startY + 8 + i * rowH})`)
+        .style('cursor', 'pointer')
+        .on('click', (_e, d) => showDetail(d));
 
-    nodeGroups.on('click', (_event: MouseEvent, d: SimNode) => {
-      showDetail(d.skill);
-    });
-  }
+      // Hover bg
+      rows.insert('rect', ':first-child')
+        .attr('x', 40).attr('y', -8)
+        .attr('width', width - 80).attr('height', rowH)
+        .attr('fill', 'transparent')
+        .attr('rx', 3);
 
-  // ── Render the active view ───────────────────────────────────
+      rows.on('mouseenter', function() {
+        d3.select(this).select('rect').attr('fill', 'rgba(255,255,255,0.04)');
+      }).on('mouseleave', function() {
+        d3.select(this).select('rect').attr('fill', 'transparent');
+      });
 
-  function render() {
-    if (currentView === 'treemap') {
-      renderTreemap(activeSkills);
-    } else {
-      renderForce(activeSkills);
+      // Name
+      rows.append('text')
+        .attr('x', colX[0]).attr('y', 4)
+        .attr('fill', '#e6edf3')
+        .attr('font-size', '11px')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .text(d => d.name.length > 30 ? d.name.slice(0, 28) + '..' : d.name);
+
+      // Source badge
+      rows.append('rect')
+        .attr('x', colX[1]).attr('y', -7)
+        .attr('width', 60).attr('height', 16).attr('rx', 3)
+        .attr('fill', d => SOURCE_COLORS[d.source] || '#888')
+        .attr('opacity', 0.25);
+      rows.append('text')
+        .attr('x', colX[1] + 30).attr('y', 4)
+        .attr('text-anchor', 'middle')
+        .attr('fill', d => SOURCE_COLORS[d.source] || '#888')
+        .attr('font-size', '9px')
+        .attr('font-family', 'Rajdhani, sans-serif')
+        .attr('font-weight', '600')
+        .text(d => d.source);
+
+      // Maturity bar
+      rows.append('rect')
+        .attr('x', colX[2]).attr('y', -4)
+        .attr('width', 60).attr('height', 10).attr('rx', 2)
+        .attr('fill', 'rgba(255,255,255,0.05)');
+      rows.append('rect')
+        .attr('x', colX[2]).attr('y', -4)
+        .attr('width', d => d.maturity_score / 100 * 60)
+        .attr('height', 10).attr('rx', 2)
+        .attr('fill', d => MATURITY_COLORS[d.maturity_level] || '#888')
+        .attr('opacity', 0.8);
+
+      // Score
+      rows.append('text')
+        .attr('x', colX[3]).attr('y', 4)
+        .attr('fill', '#8b949e')
+        .attr('font-size', '10px')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .text(d => `${d.maturity_score}`);
+
+      // Status
+      rows.append('text')
+        .attr('x', colX[4]).attr('y', 4)
+        .attr('fill', d => d.status === 'active' ? '#66bb6a' : '#8b949e')
+        .attr('font-size', '10px')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .text(d => d.status);
+
+      // Updated
+      rows.append('text')
+        .attr('x', colX[5]).attr('y', 4)
+        .attr('fill', '#8b949e')
+        .attr('font-size', '9px')
+        .attr('font-family', 'JetBrains Mono, monospace')
+        .text(d => d.last_modified);
     }
-  }
 
-  // ── Initial render ───────────────────────────────────────────
-  render();
-
-  // ── View toggle buttons ──────────────────────────────────────
-  const btnTreemap = document.getElementById('btn-treemap');
-  const btnForce = document.getElementById('btn-force');
-  const viewToggle = document.getElementById('view-toggle');
-
-  btnTreemap?.addEventListener('click', () => {
-    if (currentView === 'treemap') return;
-    currentView = 'treemap';
-    btnTreemap.classList.add('active');
-    btnForce?.classList.remove('active');
-    render();
-  });
-
-  btnForce?.addEventListener('click', () => {
-    if (currentView === 'force') return;
-    currentView = 'force';
-    btnForce.classList.add('active');
-    btnTreemap?.classList.remove('active');
-    render();
-  });
-
-  viewToggle?.addEventListener('click', () => {
-    if (currentView === 'treemap') {
-      currentView = 'force';
-      btnForce?.classList.add('active');
-      btnTreemap?.classList.remove('active');
-    } else {
-      currentView = 'treemap';
-      btnTreemap?.classList.add('active');
-      btnForce?.classList.remove('active');
-    }
-    render();
-  });
-
-  // ── Source filter ────────────────────────────────────────────
-  const filterBtns = container.querySelectorAll('.icon-strip-btn[data-source]');
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const source = (btn as HTMLElement).dataset.source!;
-      currentFilter = source;
-
-      filterBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      if (source === 'all') {
-        activeSkills = [...registry.skills];
-      } else {
-        activeSkills = registry.skills.filter(s => s.source === source);
-      }
-
-      hideDetail();
-      render();
+    // ── View switching ───────────────────────────────────────────
+    const viewBtns = container.querySelectorAll('.icon-strip-btn[data-view]');
+    viewBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        viewBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const view = btn.getAttribute('data-view') || 'force';
+        currentView = view;
+        svg.select('defs').remove(); // Clean up filters
+        if (view === 'treemap') renderTreemap();
+        else if (view === 'table') renderTable();
+        else renderForce();
+      });
     });
-  });
 
-  // ── Zoom controls ────────────────────────────────────────────
-  const zoomInBtn = document.querySelector('.zoom-in');
-  const zoomOutBtn = document.querySelector('.zoom-out');
-  const zoomResetBtn = document.querySelector('.zoom-reset');
-
-  zoomInBtn?.addEventListener('click', () => {
-    svg.transition().duration(300).call(zoom.scaleBy, 1.4);
-  });
-  zoomOutBtn?.addEventListener('click', () => {
-    svg.transition().duration(300).call(zoom.scaleBy, 0.7);
-  });
-  zoomResetBtn?.addEventListener('click', () => {
-    svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity);
-  });
-
-  // ── Click on SVG background to close detail ──────────────────
-  svg.on('click', () => {
-    hideDetail();
-  });
-
-  // ── Resize handler ───────────────────────────────────────────
-  window.addEventListener('resize', () => {
-    const newRect = container.getBoundingClientRect();
-    const nw = newRect.width;
-    const nh = newRect.height;
-    svg.attr('width', nw).attr('height', nh);
-    // Re-render would need full recalculation; skip for now
+    // Initial render
+    renderForce();
   });
 }
