@@ -22,6 +22,7 @@ import {
   type ConstellationEdge,
   type SkillCluster,
 } from '../data/skilltree';
+import { buildAlgorithmNodes, algoNodeExtras } from '../data/algorithms';
 import { createGalaxyBackground } from './GalaxyBackground';
 import { animationLoop, hexToRgba } from '../cards/_shared';
 
@@ -42,8 +43,9 @@ export function initGalaxyView(
     const cy = height / 2;
 
     // ── Build data ────────────────────────────────────────────
-    const galaxyNodes = buildGalaxyNodes(courses, projectNodes, clusters);
-    const edges = buildEdges(courses, projectNodes);
+    const { nodes: algoNodes, edges: algoEdges } = buildAlgorithmNodes();
+    const galaxyNodes = buildGalaxyNodes(courses, projectNodes, clusters, algoNodes);
+    const edges = buildEdges(courses, projectNodes, algoEdges);
     const xpResult = computeXP(courses, projectNodes);
     const nodeMap = new Map(galaxyNodes.map(n => [n.id, n]));
 
@@ -73,18 +75,15 @@ export function initGalaxyView(
 
     // Heavy bloom filter (multi-pass gaussian for intense glow)
     for (const cluster of clusters) {
-      // Heavy outer bloom — stacked blur for real bloom feel
+      // Outer bloom — tighter for Stellaris "tiny dot" aesthetic
       const outerFilter = defs.append('filter')
         .attr('id', `glow-outer-${cluster.id}`)
-        .attr('x', '-200%').attr('y', '-200%')
-        .attr('width', '500%').attr('height', '500%');
+        .attr('x', '-150%').attr('y', '-150%')
+        .attr('width', '400%').attr('height', '400%');
       outerFilter.append('feGaussianBlur')
-        .attr('in', 'SourceGraphic').attr('stdDeviation', '12').attr('result', 'blur1');
-      outerFilter.append('feGaussianBlur')
-        .attr('in', 'SourceGraphic').attr('stdDeviation', '4').attr('result', 'blur2');
+        .attr('in', 'SourceGraphic').attr('stdDeviation', '6').attr('result', 'blur1');
       const merge1 = outerFilter.append('feMerge');
       merge1.append('feMergeNode').attr('in', 'blur1');
-      merge1.append('feMergeNode').attr('in', 'blur2');
       merge1.append('feMergeNode').attr('in', 'SourceGraphic');
 
       // Inner glow — tighter, hotter
@@ -99,18 +98,15 @@ export function initGalaxyView(
       merge2.append('feMergeNode').attr('in', 'SourceGraphic');
     }
 
-    // Star Gate portal glow (extra heavy bloom)
+    // Star Gate portal glow (tighter for Stellaris aesthetic)
     const sgGlow = defs.append('filter')
       .attr('id', 'stargate-glow')
-      .attr('x', '-300%').attr('y', '-300%')
-      .attr('width', '700%').attr('height', '700%');
+      .attr('x', '-150%').attr('y', '-150%')
+      .attr('width', '400%').attr('height', '400%');
     sgGlow.append('feGaussianBlur')
-      .attr('in', 'SourceGraphic').attr('stdDeviation', '10').attr('result', 'blur1');
-    sgGlow.append('feGaussianBlur')
-      .attr('in', 'SourceGraphic').attr('stdDeviation', '4').attr('result', 'blur2');
+      .attr('in', 'SourceGraphic').attr('stdDeviation', '6').attr('result', 'blur1');
     const sgMerge = sgGlow.append('feMerge');
     sgMerge.append('feMergeNode').attr('in', 'blur1');
-    sgMerge.append('feMergeNode').attr('in', 'blur2');
     sgMerge.append('feMergeNode').attr('in', 'SourceGraphic');
 
     // Megastructure neon glow filter
@@ -170,19 +166,27 @@ export function initGalaxyView(
     // Main group for zoom/pan
     const g = svg.append('g').attr('class', 'galaxy-main-group');
 
+    // ── LAYERED LAYOUT ────────────────────────────────────────
+    const scale = Math.min(width, height) / 800;
+
     // ── Zoom behavior ─────────────────────────────────────────
+    // minScale = 1.0: initial view shows entire galaxy; zoom IN to explore.
+    // This prevents black edges (canvas always >= viewport size at k >= 1).
     const zoom = d3.zoom<SVGSVGElement, unknown>()
-      .scaleExtent([0.3, 5])
+      .scaleExtent([1, 5])
       .on('zoom', (event) => {
         g.attr('transform', event.transform.toString());
+        // Sync Three.js canvas with D3 zoom
+        const canvas = container.querySelector('canvas') as HTMLCanvasElement | null;
+        if (canvas) {
+          const { x: tx, y: ty, k } = event.transform;
+          canvas.style.transform = `translate(${tx - cx * k}px, ${ty - cy * k}px) scale(${k})`;
+        }
       });
 
     svg.call(zoom);
     const initialTransform = d3.zoomIdentity.translate(cx, cy).scale(1);
     svg.call(zoom.transform, initialTransform);
-
-    // ── LAYERED LAYOUT ────────────────────────────────────────
-    const scale = Math.min(width, height) / 800;
 
     // Radial distances per layer (from cluster center)
     const LAYER_RADIUS = {
@@ -247,34 +251,9 @@ export function initGalaxyView(
       }
     }
 
-    // ── Cluster boundary circles (Stellaris system borders) ───
-    const borderGroup = g.append('g').attr('class', 'cluster-borders');
-
-    for (const cluster of clusters) {
-      const center = clusterCenters.get(cluster.id)!;
-      const borderR = LAYER_RADIUS.stargate.max * scale + 20;
-
-      // Outer system border
-      borderGroup.append('circle')
-        .attr('class', 'system-border')
-        .attr('cx', center.x)
-        .attr('cy', center.y)
-        .attr('r', borderR)
-        .attr('fill', 'none')
-        .attr('stroke', hexToRgba(cluster.color, 0.06))
-        .attr('stroke-width', 1)
-        .attr('stroke-dasharray', '8 6');
-
-      // Inner layer ring (courses zone)
-      borderGroup.append('circle')
-        .attr('class', 'layer-ring')
-        .attr('cx', center.x)
-        .attr('cy', center.y)
-        .attr('r', LAYER_RADIUS.inner.max * scale)
-        .attr('fill', 'none')
-        .attr('stroke', hexToRgba(cluster.color, 0.025))
-        .attr('stroke-width', 0.5);
-    }
+    // ── Cluster boundaries (Stellaris: borders formed by nebula, not circles) ──
+    // Removed: dashed SVG border circles. The Voronoi nebula shader now defines
+    // territory boundaries organically, matching Stellaris visual style.
 
     // ── Edges with per-edge gradients ─────────────────────────
     const edgeGroup = g.append('g').attr('class', 'edges-group');
@@ -323,71 +302,55 @@ export function initGalaxyView(
     // Energy flow particles container
     const energyGroup = g.append('g').attr('class', 'energy-particles');
 
-    // ── Cluster labels (Stellaris system name plates) ─────────
+    // ── Cluster labels (outer perimeter, subtle gray) ──────────
     const labelGroup = g.append('g').attr('class', 'cluster-labels');
 
     for (const cluster of clusters) {
-      const center = clusterCenters.get(cluster.id)!;
-      const labelY = center.y - (LAYER_RADIUS.stargate.max * scale + 30);
-
-      // System name background bar
-      const labelW = cluster.label.length * 7.5 + 24;
-      labelGroup.append('rect')
-        .attr('class', 'system-name-bg')
-        .attr('x', center.x - labelW / 2)
-        .attr('y', labelY - 9)
-        .attr('width', labelW)
-        .attr('height', 18)
-        .attr('rx', 2)
-        .attr('fill', hexToRgba(cluster.color, 0.08))
-        .attr('stroke', hexToRgba(cluster.color, 0.15))
-        .attr('stroke-width', 0.5);
+      // Position label on the outer perimeter, along radial direction
+      const labelDist = cluster.radius * scale * 1.55;
+      const lx = Math.cos(cluster.angle) * labelDist;
+      const ly = Math.sin(cluster.angle) * labelDist;
 
       labelGroup.append('text')
         .attr('class', 'cluster-label-text')
-        .attr('x', center.x)
-        .attr('y', labelY)
+        .attr('data-cluster', cluster.id)
+        .attr('x', lx)
+        .attr('y', ly)
         .attr('text-anchor', 'middle')
         .attr('dominant-baseline', 'central')
-        .attr('fill', cluster.color)
-        .text(cluster.label);
+        .attr('fill', 'rgba(255,255,255,0.25)')
+        .attr('font-size', `${Math.max(11, 14 * scale)}px`)
+        .attr('font-weight', '400')
+        .attr('letter-spacing', '0.15em')
+        .text(cluster.label.toUpperCase());
     }
+
+    // ── Empire emblems (disabled — removed for cleaner aesthetic) ──
+    const emblemGroup = g.append('g').attr('class', 'empire-emblems');
+    // Emblems removed per user preference
 
     // ── Draw CORE node (imposing central star) ────────────────
     const coreGroup = g.append('g')
       .attr('class', 'core-node')
       .attr('transform', `translate(0,0)`);
 
-    // Huge soft halo
-    coreGroup.append('circle')
-      .attr('r', 60)
-      .attr('fill', 'radial-gradient(circle, rgba(255,255,255,0.05), transparent)')
-      .attr('opacity', 0.5);
-    // Use explicit fill since radial-gradient doesn't work in SVG attr
+    // Subtle halo — core void is mainly in the nebula shader
     coreGroup.append('circle')
       .attr('class', 'core-halo')
-      .attr('r', 50)
-      .attr('fill', 'rgba(200,210,255,0.03)');
+      .attr('r', 30)
+      .attr('fill', 'rgba(200,210,255,0.02)');
 
-    // Outer ring
+    // Main core sphere (small, understated)
     coreGroup.append('circle')
-      .attr('r', 35)
-      .attr('fill', 'none')
-      .attr('stroke', 'rgba(255,255,255,0.1)')
-      .attr('stroke-width', 1)
-      .attr('stroke-dasharray', '6 4');
-
-    // Main core sphere
-    coreGroup.append('circle')
-      .attr('r', 22)
+      .attr('r', 12)
       .attr('fill', 'url(#core-gradient)')
-      .style('filter', 'drop-shadow(0 0 10px rgba(255,255,255,0.5)) drop-shadow(0 0 25px rgba(200,210,255,0.3)) drop-shadow(0 0 50px rgba(200,210,255,0.1))');
+      .style('filter', 'drop-shadow(0 0 6px rgba(255,255,255,0.4)) drop-shadow(0 0 15px rgba(200,210,255,0.2))');
 
     // White-hot center
     coreGroup.append('circle')
-      .attr('r', 8)
+      .attr('r', 5)
       .attr('fill', '#ffffff')
-      .attr('opacity', 0.9);
+      .attr('opacity', 0.85);
 
     coreGroup.append('text')
       .attr('class', 'core-label')
@@ -396,25 +359,39 @@ export function initGalaxyView(
       .attr('dominant-baseline', 'central')
       .text('CORE');
 
+    // ── Node classification (must be before hyperlanes) ────────
+    const litNodes = galaxyNodes.filter(n => !n.isDark && n.id !== 'CORE');
+    const darkNodes = galaxyNodes.filter(n => n.isDark);
+    const regularNodes = litNodes.filter(n => !n.isStarGate);
+    const starGateNodes = litNodes.filter(n => n.isStarGate);
+
+    // ── Per-cluster fog of war based on lit node count ──────────
+    const clusterBrightness: number[] = clusters.map(cluster => {
+      const count = litNodes.filter(n => n.clusterId === cluster.id).length;
+      return Math.min(1.0, 0.08 + count * 0.18);
+    });
+    bg.setBaseBrightness(clusterBrightness);
+
     // Hyperlane connections from CORE to each cluster center
-    for (const cluster of clusters) {
+    for (let i = 0; i < clusters.length; i++) {
+      const cluster = clusters[i];
       const center = clusterCenters.get(cluster.id)!;
+      const litCount = litNodes.filter(n => n.clusterId === cluster.id).length;
+      // Grey out hyperlane for deep-void clusters (≤1 lit node)
+      const hlColor = litCount <= 1
+        ? 'rgba(60,60,60,0.03)'
+        : hexToRgba(cluster.color, 0.06);
       g.append('line')
         .attr('class', 'hyperlane')
         .attr('x1', 0).attr('y1', 0)
         .attr('x2', center.x).attr('y2', center.y)
-        .attr('stroke', hexToRgba(cluster.color, 0.06))
+        .attr('stroke', hlColor)
         .attr('stroke-width', 0.5)
         .attr('stroke-dasharray', '4 8');
     }
 
     // ── Star rendering by classification ──────────────────────
     const nodeGroup = g.append('g').attr('class', 'nodes-group');
-
-    const litNodes = galaxyNodes.filter(n => !n.isDark && n.id !== 'CORE');
-    const darkNodes = galaxyNodes.filter(n => n.isDark);
-    const regularNodes = litNodes.filter(n => !n.isStarGate);
-    const starGateNodes = litNodes.filter(n => n.isStarGate);
 
     // ── Regular star nodes ────────────────────────────────────
     const starElements = nodeGroup.selectAll('.galaxy-star.lit')
@@ -434,39 +411,32 @@ export function initGalaxyView(
         el.style('--star-color', color);
 
         if (d.starClass === 'hypergiant') {
-          // Layer 1: Huge soft halo (fresnel/atmosphere simulation)
+          // Stellaris-style: compact glow, not bloated atmosphere
+          // Layer 1: Subtle halo
           el.append('circle').attr('class', 'star-halo')
-            .attr('r', d.radius * 4).attr('fill', `url(#halo-grad-${d.clusterId})`);
-          // Layer 2: Corona (bloom pickup)
+            .attr('r', d.radius * 2.5).attr('fill', `url(#halo-grad-${d.clusterId})`);
+          // Layer 2: Corona (tight)
           el.append('circle').attr('class', 'corona-outer')
-            .attr('r', d.radius * 2.5).attr('fill', hexToRgba(color, 0.08))
-            .style('filter', `url(#glow-outer-${d.clusterId})`);
-          // Layer 3: Accretion disk
-          el.append('ellipse').attr('class', 'accretion-disk')
-            .attr('rx', d.radius * 2.5).attr('ry', d.radius * 0.6)
-            .attr('fill', 'none').attr('stroke', hexToRgba(color, 0.25)).attr('stroke-width', 2);
-          // Layer 4: Mid glow (inner atmosphere)
-          el.append('circle').attr('class', 'star-mid-glow')
-            .attr('r', d.radius * 1.5).attr('fill', hexToRgba(color, 0.15))
+            .attr('r', d.radius * 1.6).attr('fill', hexToRgba(color, 0.1))
             .style('filter', `url(#glow-inner-${d.clusterId})`);
-          // Layer 5: Hot core (bright, saturated)
+          // Layer 3: Hot core (bright, saturated)
           el.append('circle').attr('class', 'star-core')
             .attr('r', d.radius).attr('fill', `url(#core-grad-hot-${d.clusterId})`).attr('opacity', d.brightness);
-          // Layer 6: White-hot center
+          // Layer 4: White-hot center
           el.append('circle').attr('class', 'star-hotspot')
             .attr('r', d.radius * 0.45).attr('fill', '#ffffff').attr('opacity', 0.95);
 
         } else if (d.starClass === 'main-sequence') {
-          // Layer 1: Soft outer halo
+          // Layer 1: Subtle outer halo
           el.append('circle').attr('class', 'star-halo')
-            .attr('r', d.radius * 3).attr('fill', `url(#halo-grad-${d.clusterId})`);
-          // Layer 2: Glow ring
+            .attr('r', d.radius * 1.8).attr('fill', `url(#halo-grad-${d.clusterId})`);
+          // Layer 2: Glow ring (compact)
           el.append('circle').attr('class', 'star-glow')
-            .attr('r', d.radius * 1.8).attr('fill', hexToRgba(color, 0.1));
-          // Layer 3: Core with stacked bloom shadows
+            .attr('r', d.radius * 1.3).attr('fill', hexToRgba(color, 0.1));
+          // Layer 3: Core with constrained bloom
           el.append('circle').attr('class', 'star-core')
             .attr('r', d.radius).attr('fill', `url(#core-grad-hot-${d.clusterId})`).attr('opacity', d.brightness)
-            .style('filter', `drop-shadow(0 0 ${d.radius * 1.5}px ${hexToRgba(color, 0.6)}) drop-shadow(0 0 ${d.radius * 3}px ${hexToRgba(color, 0.2)})`);
+            .style('filter', `drop-shadow(0 0 4px ${hexToRgba(color, 0.6)}) drop-shadow(0 0 10px ${hexToRgba(color, 0.2)})`);
           // Layer 4: Small white center
           el.append('circle').attr('class', 'star-hotspot')
             .attr('r', d.radius * 0.3).attr('fill', '#ffffff').attr('opacity', 0.7);
@@ -517,36 +487,37 @@ export function initGalaxyView(
         el.style('--star-color', color);
         const r = d.radius;
 
-        // Layer 1: Huge atmospheric halo
+        // Stellaris-compact Star Gate: slightly larger than hypergiant, not bloated
+        // Layer 1: Halo (same scale as hypergiant)
         el.append('circle').attr('class', 'sg-halo')
-          .attr('r', r * 5).attr('fill', `url(#halo-grad-${d.clusterId})`)
-          .attr('opacity', 0.8);
+          .attr('r', r * 2.8).attr('fill', `url(#halo-grad-${d.clusterId})`)
+          .attr('opacity', 0.7);
 
-        // Layer 2: Event horizon (portal glow with heavy bloom)
+        // Layer 2: Portal glow (subtle, not bloated)
         el.append('circle').attr('class', 'sg-event-horizon')
-          .attr('r', r * 4).attr('fill', 'url(#stargate-portal-grad)')
+          .attr('r', r * 2).attr('fill', 'url(#stargate-portal-grad)')
           .style('filter', 'url(#stargate-glow)');
 
-        // Layer 3: Rotating outer ring (thick, visible)
+        // Layer 3: Outer ring (dashed, visible but tight)
         el.append('circle').attr('class', 'sg-outer-ring')
-          .attr('r', r * 3.5).attr('fill', 'none')
-          .attr('stroke', hexToRgba(color, 0.35)).attr('stroke-width', 2)
-          .attr('stroke-dasharray', '14 6 4 6');
+          .attr('r', r * 1.8).attr('fill', 'none')
+          .attr('stroke', hexToRgba(color, 0.3)).attr('stroke-width', 1.5)
+          .attr('stroke-dasharray', '10 5 3 5');
 
         // Layer 4: Mid ring (counter-rotation)
         el.append('circle').attr('class', 'sg-mid-ring')
-          .attr('r', r * 2.8).attr('fill', 'none')
-          .attr('stroke', hexToRgba(color, 0.25)).attr('stroke-width', 1.5)
-          .attr('stroke-dasharray', '8 5');
+          .attr('r', r * 1.5).attr('fill', 'none')
+          .attr('stroke', hexToRgba(color, 0.2)).attr('stroke-width', 1)
+          .attr('stroke-dasharray', '6 4');
 
-        // Layer 5: Inner corona
+        // Layer 5: Corona
         el.append('circle').attr('class', 'corona-outer')
-          .attr('r', r * 2).attr('fill', hexToRgba(color, 0.12));
+          .attr('r', r * 1.2).attr('fill', hexToRgba(color, 0.1));
 
-        // Layer 6: Hot core with stacked bloom
+        // Layer 6: Hot core
         el.append('circle').attr('class', 'star-core')
           .attr('r', r * 1.1).attr('fill', `url(#core-grad-hot-${d.clusterId})`).attr('opacity', 1)
-          .style('filter', `drop-shadow(0 0 ${r}px ${hexToRgba(color, 0.6)}) drop-shadow(0 0 ${r * 2}px ${hexToRgba(color, 0.3)})`);
+          .style('filter', `drop-shadow(0 0 ${r * 0.6}px ${hexToRgba(color, 0.5)}) drop-shadow(0 0 ${r}px ${hexToRgba(color, 0.2)})`);
 
         // Layer 7: White-hot center
         el.append('circle').attr('class', 'star-hotspot')
@@ -554,7 +525,7 @@ export function initGalaxyView(
 
         // Always-visible label
         el.append('text').attr('class', 'sg-label')
-          .attr('y', r * 3.5 + 12).attr('text-anchor', 'middle')
+          .attr('y', r * 2 + 12).attr('text-anchor', 'middle')
           .attr('fill', color).attr('font-family', "'Orbitron', sans-serif")
           .attr('font-size', '10px').attr('font-weight', '700')
           .attr('letter-spacing', '0.1em')
@@ -562,7 +533,7 @@ export function initGalaxyView(
 
         // Type badge below label
         el.append('text').attr('class', 'sg-type-badge')
-          .attr('y', r * 3.5 + 24).attr('text-anchor', 'middle')
+          .attr('y', r * 2 + 24).attr('text-anchor', 'middle')
           .attr('fill', hexToRgba(color, 0.5)).attr('font-family', "'JetBrains Mono', monospace")
           .attr('font-size', '7px').attr('letter-spacing', '0.15em')
           .text(`[ ${(d.nodeType || '').toUpperCase()} ]`);
@@ -712,29 +683,81 @@ export function initGalaxyView(
       .attr('stroke', (d: GalaxyNode) => hexToRgba(clusterMap.get(d.clusterId)?.color || '#888', 0.12))
       .attr('stroke-width', 1).attr('stroke-dasharray', '2 3');
 
-    // "LOCKED" label
+    // "LOCKED" / "0 SOLVED" label
     darkStarElements.append('text').attr('class', 'dark-locked-label')
       .attr('text-anchor', 'middle').attr('dominant-baseline', 'central')
       .attr('fill', (d: GalaxyNode) => hexToRgba(clusterMap.get(d.clusterId)?.color || '#888', 0.15))
       .attr('font-family', "'Orbitron', sans-serif").attr('font-size', '5px')
       .attr('letter-spacing', '0.15em').attr('font-weight', '700')
-      .text('LOCKED');
+      .text((d: GalaxyNode) => d.id.startsWith('algo-') ? '0 SOLVED' : 'LOCKED');
 
-    // Name below
+    // Name below (algo ghost → "???" for unsurveyed topics)
     darkStarElements.append('text').attr('class', 'star-label dark-name')
       .attr('y', 16).attr('text-anchor', 'middle')
       .attr('fill', (d: GalaxyNode) => hexToRgba(clusterMap.get(d.clusterId)?.color || '#888', 0.18))
       .attr('font-family', "'Rajdhani', sans-serif")
       .attr('font-size', '8px')
-      .text((d: GalaxyNode) => d.name);
+      .text((d: GalaxyNode) => d.id.startsWith('algo-') ? '???' : d.name);
 
-    // "MISSING DATA" subtext
+    // "MISSING DATA" / "UNKNOWN SIGNAL" subtext
     darkStarElements.append('text').attr('class', 'dark-missing-label')
       .attr('y', 26).attr('text-anchor', 'middle')
       .attr('fill', 'rgba(255,255,255,0.07)')
       .attr('font-family', "'JetBrains Mono', monospace").attr('font-size', '5px')
       .attr('letter-spacing', '0.1em')
-      .text('MISSING DATA');
+      .text((d: GalaxyNode) => d.id.startsWith('algo-') ? 'UNKNOWN SIGNAL' : 'MISSING DATA');
+
+    // ── Fog of War: dim SVG elements for dark clusters ──────────
+    for (let i = 0; i < clusters.length; i++) {
+      const b = clusterBrightness[i];
+      if (b >= 0.9) continue; // fully lit, skip
+      const cid = clusters[i].id;
+      // "Deep void" = clusters with ≤1 lit node (data, business)
+      const litCount = litNodes.filter(n => n.clusterId === cid).length;
+      const isDeepVoid = litCount <= 1;
+
+      if (isDeepVoid) {
+        // ── Deep void: nearly invisible, grey only, no color ──
+        starElements.filter((d: GalaxyNode) => d.clusterId === cid)
+          .style('opacity', 0.06);
+
+        starGateElements.filter((d: GalaxyNode) => d.clusterId === cid)
+          .style('opacity', 0.06);
+
+        labelGroup.selectAll('.cluster-label-text')
+          .filter(function(this: Element) { return d3.select(this).attr('data-cluster') === cid; })
+          .style('opacity', 0.04);
+
+        darkStarElements.filter((ds: GalaxyNode) => ds.clusterId === cid)
+          .style('opacity', 0.06);
+
+        edgeElements.filter((e: ConstellationEdge) => {
+          const src = nodeMap.get(e.source);
+          const tgt = nodeMap.get(e.target);
+          return src?.clusterId === cid || tgt?.clusterId === cid;
+        }).style('opacity', 0.02)
+          .each(function(this: SVGLineElement) {
+            d3.select(this).attr('stroke', 'rgba(60,60,60,0.06)');
+          });
+      } else {
+        // ── Standard fog: dim proportionally ──
+        starElements.filter((d: GalaxyNode) => d.clusterId === cid)
+          .style('opacity', b);
+
+        starGateElements.filter((d: GalaxyNode) => d.clusterId === cid)
+          .style('opacity', b);
+
+        labelGroup.selectAll('.cluster-label-text')
+          .filter(function(this: Element) { return d3.select(this).attr('data-cluster') === cid; })
+          .style('opacity', b);
+
+        edgeElements.filter((e: ConstellationEdge) => {
+          const src = nodeMap.get(e.source);
+          const tgt = nodeMap.get(e.target);
+          return src?.clusterId === cid || tgt?.clusterId === cid;
+        }).style('opacity', b * 0.3);
+      }
+    }
 
     // ── All interactive nodes (regular + star gates) ──────────
     const allStarElements = d3.selectAll<SVGGElement, GalaxyNode>('.galaxy-star.lit');
@@ -790,6 +813,10 @@ export function initGalaxyView(
       }
       for (const p of projectNodes) {
         if (p.relatedCourses.includes(nodeId)) collectDownstreamChain(p.id, visited);
+      }
+      // Also traverse algo prerequisite edges downstream
+      for (const e of algoEdges) {
+        if (e.source === nodeId) collectDownstreamChain(e.target, visited);
       }
     }
 
@@ -990,28 +1017,75 @@ export function initGalaxyView(
 
       const cluster = clusterMap.get(d.clusterId);
       const color = cluster?.color || '#4fc3f7';
+      const isAlgo = d.id.startsWith('algo-');
+      const algoExtra = isAlgo ? algoNodeExtras.get(d.id) : null;
 
       detailPanel.style.setProperty('--detail-color', color);
       detailPanel.querySelector('h3')!.textContent = d.name;
 
       const codeEl = detailPanel.querySelector('.detail-code') as HTMLElement;
-      codeEl.textContent = d.code ? `> ${d.code}` : (d.venue ? `> ${d.venue}` : '');
-      codeEl.style.display = (d.code || d.venue) ? 'block' : 'none';
+      if (isAlgo && algoExtra) {
+        codeEl.textContent = `> MASTERY: ${algoExtra.masteryPct}%  (${algoExtra.solvedCount} solved)`;
+        codeEl.style.display = 'block';
+      } else {
+        codeEl.textContent = d.code ? `> ${d.code}` : (d.venue ? `> ${d.venue}` : '');
+        codeEl.style.display = (d.code || d.venue) ? 'block' : 'none';
+      }
+
+      // Mastery bar (algo topics only)
+      let masteryBarEl = detailPanel.querySelector('.algo-mastery-bar') as HTMLElement | null;
+      if (isAlgo && algoExtra) {
+        if (!masteryBarEl) {
+          masteryBarEl = document.createElement('div');
+          masteryBarEl.className = 'algo-mastery-bar';
+          masteryBarEl.innerHTML = '<div class="algo-mastery-fill"></div>';
+          codeEl.insertAdjacentElement('afterend', masteryBarEl);
+        }
+        masteryBarEl.style.display = 'block';
+        const fill = masteryBarEl.querySelector('.algo-mastery-fill') as HTMLElement;
+        requestAnimationFrame(() => { fill.style.width = `${algoExtra.masteryPct}%`; });
+      } else if (masteryBarEl) {
+        masteryBarEl.style.display = 'none';
+      }
+
+      // Tag chips (algo topics only)
+      let tagChipsEl = detailPanel.querySelector('.algo-tag-chips') as HTMLElement | null;
+      if (isAlgo && algoExtra) {
+        if (!tagChipsEl) {
+          tagChipsEl = document.createElement('div');
+          tagChipsEl.className = 'algo-tag-chips';
+          const masteryBar = detailPanel.querySelector('.algo-mastery-bar');
+          (masteryBar || codeEl).insertAdjacentElement('afterend', tagChipsEl);
+        }
+        tagChipsEl.style.display = 'block';
+        tagChipsEl.innerHTML = algoExtra.tagSlugs.map(s =>
+          `<span class="algo-tag-chip">${s}</span>`
+        ).join('');
+      } else if (tagChipsEl) {
+        tagChipsEl.style.display = 'none';
+      }
 
       const metaEl = detailPanel.querySelector('.detail-meta') as HTMLElement;
       const instBadge = metaEl.querySelector('.detail-institution-badge') as HTMLElement;
       const yearEl = metaEl.querySelector('.detail-year') as HTMLElement;
 
-      if (d.institution) {
+      if (isAlgo) {
+        instBadge.style.display = 'none';
+        yearEl.textContent = '';
+      } else if (d.institution) {
         instBadge.textContent = d.institution;
         instBadge.style.display = 'inline-block';
+        yearEl.textContent = d.semester && d.year ? `${d.semester} ${d.year}` : '';
       } else {
         instBadge.style.display = 'none';
+        yearEl.textContent = d.semester && d.year ? `${d.semester} ${d.year}` : '';
       }
-      yearEl.textContent = d.semester && d.year ? `${d.semester} ${d.year}` : '';
 
       const gradeEl = detailPanel.querySelector('.detail-grade') as HTMLElement;
-      if (d.grade) {
+      if (isAlgo && algoExtra) {
+        gradeEl.textContent = algoExtra.starClassLabel;
+        gradeEl.style.display = 'inline-block';
+      } else if (d.grade) {
         gradeEl.textContent = d.grade;
         gradeEl.style.display = 'inline-block';
       } else {
@@ -1020,13 +1094,73 @@ export function initGalaxyView(
 
       const typeEl = detailPanel.querySelector('.detail-type') as HTMLElement;
       if (typeEl) {
-        typeEl.textContent = `[ ${(d.nodeType || 'course').toUpperCase()} ]`;
+        typeEl.textContent = isAlgo && algoExtra
+          ? `[ ${algoExtra.starClassLabel.toUpperCase()} ]`
+          : `[ ${(d.nodeType || 'course').toUpperCase()} ]`;
         typeEl.style.color = color;
       }
 
       const trackEl = detailPanel.querySelector('.detail-track') as HTMLElement;
-      const trackObj = d.track ? trackMap.get(d.track) : null;
-      trackEl.textContent = cluster?.label || trackObj?.label || '';
+      if (isAlgo) {
+        trackEl.textContent = 'ALGORITHMS';
+      } else {
+        const trackObj = d.track ? trackMap.get(d.track) : null;
+        trackEl.textContent = cluster?.label || trackObj?.label || '';
+      }
+
+      // Links section (repos, papers, demos for project-like nodes)
+      const linksSection = detailPanel.querySelector('.detail-links') as HTMLElement;
+      const linkList = linksSection.querySelector('.detail-link-list') as HTMLElement;
+      linkList.innerHTML = '';
+      {
+        const links: { label: string; href: string }[] = [];
+
+        // Direct URL on the node
+        if (d.url) {
+          const isGithub = d.url.includes('github.com');
+          const isArxiv = d.url.includes('arxiv.org');
+          links.push({ label: isGithub ? '[ GITHUB ]' : isArxiv ? '[ ARXIV ]' : '[ LINK ]', href: d.url });
+        }
+
+        // Match against project data for additional links
+        const projData = (window as any).__galaxyProjects;
+        if (projData) {
+          for (const proj of projData) {
+            const nameNorm = d.name.toLowerCase().replace(/[-_&]/g, ' ').replace(/\s+/g, ' ');
+            const slugNorm = proj.slug.replace(/-/g, ' ');
+            const titleNorm = proj.title.toLowerCase().replace(/[-_&]/g, ' ').replace(/\s+/g, ' ');
+            const slugMatch = nameNorm.includes(slugNorm) || slugNorm.includes(nameNorm);
+            const titleMatch = titleNorm.includes(nameNorm) || nameNorm.includes(titleNorm);
+            if (slugMatch || titleMatch) {
+              if (proj.githubUrl && !links.some(l => l.href === proj.githubUrl)) {
+                links.push({ label: '[ GITHUB ]', href: proj.githubUrl });
+              }
+              if (proj.paperUrl) {
+                links.push({ label: '[ PAPER ]', href: proj.paperUrl });
+              }
+              if (proj.liveUrl) {
+                links.push({ label: '[ DEMO ]', href: proj.liveUrl });
+              }
+            }
+          }
+        }
+
+        if (links.length > 0) {
+          linksSection.style.display = 'block';
+          for (const link of links) {
+            const a = document.createElement('a');
+            a.href = link.href;
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.className = 'sg-link';
+            a.textContent = link.label;
+            a.style.color = color;
+            linkList.appendChild(a);
+          }
+        } else {
+          linksSection.style.display = 'none';
+        }
+      }
 
       // Prerequisites section
       const prereqSection = detailPanel.querySelector('.detail-prereqs') as HTMLElement;
@@ -1035,7 +1169,23 @@ export function initGalaxyView(
       const prereqs = d.prerequisites || [];
       const isProjectLike = ['project', 'thesis', 'internship', 'publication', 'repo'].includes(d.nodeType as string);
 
-      if (isProjectLike && d.relatedCourses && d.relatedCourses.length > 0) {
+      if (isAlgo && prereqs.length > 0) {
+        // Algo topic: show prerequisite algorithm topics (clickable)
+        prereqSection.style.display = 'block';
+        prereqSection.querySelector('h4')!.textContent = 'PREREQUISITES';
+        for (const preId of prereqs) {
+          const preNode = nodeMap.get(preId);
+          if (preNode) {
+            const item = document.createElement('div');
+            item.className = 'detail-prereq-item';
+            item.textContent = preNode.name;
+            item.addEventListener('click', () => {
+              showDetailPanel(preNode);
+            });
+            prereqList.appendChild(item);
+          }
+        }
+      } else if (isProjectLike && d.relatedCourses && d.relatedCourses.length > 0) {
         prereqSection.style.display = 'block';
         prereqSection.querySelector('h4')!.textContent = 'RELATED COURSES';
         for (const cid of d.relatedCourses) {
@@ -1071,12 +1221,14 @@ export function initGalaxyView(
         prereqSection.style.display = 'none';
       }
 
-      // Related projects section
+      // Related projects section (hidden for algo topics)
       const projectSection = detailPanel.querySelector('.detail-projects') as HTMLElement;
       const projectList = projectSection.querySelector('.detail-list') as HTMLElement;
       projectList.innerHTML = '';
 
-      if (!isProjectLike) {
+      if (isAlgo) {
+        projectSection.style.display = 'none';
+      } else if (!isProjectLike) {
         const relatedProjectIds = d.relatedProjects || [];
         const referencing = projectNodes.filter(p => p.relatedCourses.includes(d.id));
         const allRelated = new Set([...relatedProjectIds, ...referencing.map(p => p.id)]);
@@ -1164,16 +1316,30 @@ export function initGalaxyView(
           a.target = '_blank';
           a.rel = 'noopener';
           a.className = 'sg-link';
-          a.textContent = '[ GITHUB ]';
+          const isGH = d.url.includes('github.com');
+          const isArxiv = d.url.includes('arxiv.org');
+          a.textContent = isGH ? '[ GITHUB ]' : isArxiv ? '[ ARXIV ]' : '[ LINK ]';
           sgLinks.appendChild(a);
         }
         // Check project data for more links
         const projData = (window as any).__galaxyProjects;
         if (projData) {
           for (const proj of projData) {
-            const matchesName = d.name.toLowerCase().includes(proj.slug) ||
-              proj.title.toLowerCase() === d.name.toLowerCase();
+            const sgNameNorm = d.name.toLowerCase().replace(/[-_&]/g, ' ').replace(/\s+/g, ' ');
+            const sgSlugNorm = proj.slug.replace(/-/g, ' ');
+            const sgTitleNorm = proj.title.toLowerCase().replace(/[-_&]/g, ' ').replace(/\s+/g, ' ');
+            const matchesName = sgNameNorm.includes(sgSlugNorm) || sgSlugNorm.includes(sgNameNorm) ||
+              sgTitleNorm.includes(sgNameNorm) || sgNameNorm.includes(sgTitleNorm);
             if (matchesName) {
+              if (proj.githubUrl && !d.url?.includes('github.com')) {
+                const a = document.createElement('a');
+                a.href = proj.githubUrl;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.className = 'sg-link';
+                a.textContent = '[ GITHUB ]';
+                sgLinks.appendChild(a);
+              }
               if (proj.paperUrl) {
                 const a = document.createElement('a');
                 a.href = proj.paperUrl;
@@ -1279,20 +1445,25 @@ export function initGalaxyView(
       });
     });
 
-    // ── Sidebar: XP bar ───────────────────────────────────────
-    const xpLevelEl = container.querySelector('.xp-level');
-    const xpRankEl = container.querySelector('.xp-rank');
+    // ── XP display (outliner + top bar) ─────────────────────────
+    // Outliner XP bar
     const xpBarFill = container.querySelector('.xp-bar-fill') as HTMLElement | null;
     const xpValueEl = container.querySelector('.xp-value');
-
-    if (xpLevelEl) xpLevelEl.textContent = `LVL ${xpResult.level}`;
-    if (xpRankEl) xpRankEl.textContent = xpResult.rank;
     if (xpBarFill) {
       const progress = (xpResult.xp - xpResult.currentLevelXP) / (xpResult.nextLevelXP - xpResult.currentLevelXP);
       xpBarFill.style.width = `${Math.min(100, progress * 100)}%`;
     }
     if (xpValueEl) xpValueEl.textContent = `${xpResult.xp} / ${xpResult.nextLevelXP} XP`;
 
+    // Top bar XP level/rank (outside container, use document)
+    document.querySelectorAll('[data-xp-level]').forEach(el => {
+      el.textContent = `LVL ${xpResult.level}`;
+    });
+    document.querySelectorAll('[data-xp-rank]').forEach(el => {
+      el.textContent = xpResult.rank;
+    });
+
+    // Cluster counts (outliner)
     container.querySelectorAll('.cluster-nav-btn').forEach(btn => {
       const clusterId = (btn as HTMLElement).dataset.cluster!;
       const countEl = btn.querySelector('.cluster-count');
@@ -1302,10 +1473,18 @@ export function initGalaxyView(
       }
     });
 
-    // ── Zoom controls ─────────────────────────────────────────
-    const zoomInBtn = container.querySelector('.zoom-in');
-    const zoomOutBtn = container.querySelector('.zoom-out');
-    const zoomResetBtn = container.querySelector('.zoom-reset');
+    // Top bar resource counters (per-cluster XP)
+    for (const cluster of clusters) {
+      const clusterXP = litNodes.filter(n => n.clusterId === cluster.id).length * 30;
+      document.querySelectorAll(`[data-cluster-xp="${cluster.id}"]`).forEach(el => {
+        el.textContent = `+${clusterXP}`;
+      });
+    }
+
+    // ── Zoom controls (in bottom bar, use document) ────────────
+    const zoomInBtn = document.querySelector('.zoom-in');
+    const zoomOutBtn = document.querySelector('.zoom-out');
+    const zoomResetBtn = document.querySelector('.zoom-reset');
 
     zoomInBtn?.addEventListener('click', () => {
       svg.transition().duration(300).call(zoom.scaleBy, 1.4);

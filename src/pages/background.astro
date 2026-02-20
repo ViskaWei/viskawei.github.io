@@ -1,21 +1,92 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Nav from '../components/Nav.astro';
-import Footer from '../components/Footer.astro';
 import { clusters } from '../data/skilltree';
 import '../styles/skilltree.css';
+
+// Compute XP per cluster for resource counters
+const clusterIcons: Record<string, string> = {
+  physics: 'science',
+  math: 'functions',
+  cs: 'terminal',
+  aiml: 'psychology',
+  engineering: 'precision_manufacturing',
+  data: 'account_balance',
+  business: 'groups',
+};
+
+const shortLabels: Record<string, string> = {
+  physics: 'PHYSICS',
+  math: 'MATH',
+  cs: 'ALGORITHM',
+  aiml: 'AI',
+  engineering: 'ENGINEER',
+  data: 'FINANCE',
+  business: 'SOCIETY',
+};
 ---
 
 <BaseLayout title="Skill Galaxy — Viska Wei" description="Interactive galaxy visualization of academic skills and knowledge">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+
   <div class="galaxy-page">
-    <Nav />
+    <!-- ═══════════════════════════════════════════════════════
+         TOP HUD BAR — Resource counters, title, system date
+         ═══════════════════════════════════════════════════════ -->
+    <header class="stellaris-top-bar">
+      <!-- Left: Resource counters -->
+      <div class="top-bar-resources">
+        {clusters.slice(0, 4).map(cluster => (
+          <div class="resource-counter" style={`--rc-color: ${cluster.color}`}>
+            <span class="material-symbols-outlined resource-icon">{clusterIcons[cluster.id]}</span>
+            <span class="resource-label">{shortLabels[cluster.id]}</span>
+            <span class="resource-value" data-cluster-xp={cluster.id}>+0</span>
+          </div>
+        ))}
+      </div>
 
+      <!-- Right: Controls -->
+      <div class="top-bar-controls">
+        {clusters.slice(4).map(cluster => (
+          <div class="resource-counter" style={`--rc-color: ${cluster.color}`}>
+            <span class="material-symbols-outlined resource-icon">{clusterIcons[cluster.id]}</span>
+            <span class="resource-label">{shortLabels[cluster.id]}</span>
+            <span class="resource-value" data-cluster-xp={cluster.id}>+0</span>
+          </div>
+        ))}
+        <div class="top-bar-divider"></div>
+        <button class="hud-icon-btn" title="Settings">
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════
+         MAIN GALAXY CONTAINER
+         ═══════════════════════════════════════════════════════ -->
     <div class="galaxy-container" id="galaxy-root">
-      <!-- Sidebar: cluster navigation + XP -->
-      <aside class="galaxy-sidebar">
-        <div class="sidebar-title">Skill Galaxy</div>
-        <div class="sidebar-subtitle">// from stardust to circuits</div>
 
+      <!-- Left icon strip (Stellaris-style sidebar buttons) -->
+      <nav class="icon-strip">
+        <button class="icon-strip-btn active" title="Galaxy Map">
+          <span class="material-symbols-outlined">travel_explore</span>
+        </button>
+        <button class="icon-strip-btn" title="Contacts">
+          <span class="material-symbols-outlined">contacts</span>
+        </button>
+        <button class="icon-strip-btn" title="Tech Tree">
+          <span class="material-symbols-outlined">military_tech</span>
+        </button>
+        <div class="icon-strip-spacer"></div>
+        <button class="icon-strip-btn" title="Settings">
+          <span class="material-symbols-outlined">settings</span>
+        </button>
+      </nav>
+
+      <!-- Domain Outliner (top-right floating panel) -->
+      <aside class="domain-outliner">
+        <div class="outliner-header">
+          <h3 class="outliner-title">DOMAIN OUTLINER</h3>
+        </div>
         {clusters.map(cluster => (
           <button
             class="cluster-nav-btn"
@@ -23,16 +94,11 @@ import '../styles/skilltree.css';
             style={`--cluster-color: ${cluster.color}`}
           >
             <span class="cluster-dot"></span>
-            <span>{cluster.label}</span>
-            <span class="cluster-count">0</span>
+            <span class="cluster-name">{cluster.label}</span>
+            <span class="cluster-count" data-cluster-count={cluster.id}>0</span>
           </button>
         ))}
-
-        <div class="xp-section">
-          <div class="xp-header">
-            <span class="xp-level">LVL 0</span>
-            <span class="xp-rank">Stargazer</span>
-          </div>
+        <div class="outliner-xp">
           <div class="xp-bar-track">
             <div class="xp-bar-fill" style="width: 0%"></div>
           </div>
@@ -40,9 +106,16 @@ import '../styles/skilltree.css';
         </div>
       </aside>
 
-      <!-- Standard detail panel (courses/regular nodes) -->
+      <!-- Standard detail panel (courses/regular nodes) — HUD style -->
       <div class="galaxy-detail-panel">
+        <div class="hud-border">
+          <div class="hud-corner tl"></div>
+          <div class="hud-corner tr"></div>
+          <div class="hud-corner bl"></div>
+          <div class="hud-corner br"></div>
+        </div>
         <button class="close-btn" aria-label="Close">&times;</button>
+        <div class="detail-type-badge">COURSE</div>
         <h3>Node Name</h3>
         <div class="detail-code">CODE</div>
         <div class="detail-meta">
@@ -52,6 +125,10 @@ import '../styles/skilltree.css';
         <span class="detail-grade">A+</span>
         <div class="detail-type">COURSE</div>
         <div class="detail-track">Physics</div>
+
+        <div class="detail-links detail-section">
+          <div class="detail-link-list"></div>
+        </div>
 
         <div class="detail-prereqs detail-section">
           <h4>Prerequisites</h4>
@@ -64,9 +141,16 @@ import '../styles/skilltree.css';
         </div>
       </div>
 
-      <!-- Star Gate detail panel (top projects — fly-in view) -->
+      <!-- Star Gate detail panel (HUD style with gradient header) -->
       <div class="stargate-detail-panel">
+        <div class="hud-border">
+          <div class="hud-corner tl"></div>
+          <div class="hud-corner tr"></div>
+          <div class="hud-corner bl"></div>
+          <div class="hud-corner br"></div>
+        </div>
         <button class="sg-close-btn" aria-label="Close">&times;</button>
+        <div class="sg-gradient-header"></div>
         <div class="sg-header">
           <div class="sg-type">[ THESIS ]</div>
           <h2 class="sg-title">Project Name</h2>
@@ -78,53 +162,68 @@ import '../styles/skilltree.css';
           <div class="sg-stack-label">TECH STACK PATH</div>
           <div class="sg-stack"></div>
         </div>
-      </div>
-
-      <!-- Legend -->
-      <div class="galaxy-legend">
-        <div class="legend-item">
-          <span class="legend-hypergiant"></span>
-          Hypergiant (A+)
+        <div class="sg-mastery-section">
+          <div class="sg-mastery-label">MASTERY</div>
+          <div class="sg-mastery-bar">
+            <div class="sg-mastery-fill" style="width: 0%"></div>
+          </div>
         </div>
-        <div class="legend-item">
-          <span class="legend-main-seq"></span>
-          Main Seq (A/A-)
-        </div>
-        <div class="legend-item">
-          <span class="legend-brown-dwarf"></span>
-          Brown Dwarf (B+)
-        </div>
-        <div class="legend-item">
-          <span class="legend-ghost"></span>
-          Ghost / Locked
-        </div>
-        <div class="legend-item">
-          <span class="legend-stargate"></span>
-          Star Gate
-        </div>
-        <div class="legend-item">
-          <span class="legend-dyson"></span>
-          Thesis (Dyson)
-        </div>
-        <div class="legend-item">
-          <span class="legend-crystal"></span>
-          Publication (Crystal)
-        </div>
-        <div class="legend-item">
-          <span class="legend-edge-line"></span>
-          Connection
-        </div>
-      </div>
-
-      <!-- Zoom controls -->
-      <div class="galaxy-zoom-controls">
-        <button class="zoom-in" aria-label="Zoom in">+</button>
-        <button class="zoom-out" aria-label="Zoom out">&minus;</button>
-        <button class="zoom-reset" aria-label="Reset zoom">&#8634;</button>
       </div>
     </div>
 
-    <Footer />
+    <!-- ═══════════════════════════════════════════════════════
+         BOTTOM HUD BAR
+         ═══════════════════════════════════════════════════════ -->
+    <footer class="stellaris-bottom-bar">
+      <!-- Left: Legend -->
+      <div class="bottom-legend">
+        <div class="legend-item">
+          <span class="legend-hypergiant"></span>
+          <span>Hypergiant</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-main-seq"></span>
+          <span>Main Seq</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-stargate"></span>
+          <span>Star Gate</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-edge-line"></span>
+          <span>Link</span>
+        </div>
+      </div>
+
+      <!-- Center: Close Galaxy Map trapezoid button -->
+      <div class="bottom-center">
+        <div class="paused-label">PAUSED</div>
+        <a href="/" class="close-galaxy-btn">
+          <span class="close-galaxy-text">Close Galaxy Map</span>
+        </a>
+      </div>
+
+      <!-- Right: Map mode buttons + zoom -->
+      <div class="bottom-right">
+        <div class="map-mode-btns">
+          <button class="map-mode-btn active" title="Territory">
+            <span class="material-symbols-outlined">public</span>
+          </button>
+          <button class="map-mode-btn" title="Connections">
+            <span class="material-symbols-outlined">hub</span>
+          </button>
+          <button class="map-mode-btn" title="Skills">
+            <span class="material-symbols-outlined">diamond</span>
+          </button>
+        </div>
+        <div class="bottom-divider"></div>
+        <div class="galaxy-zoom-controls">
+          <button class="zoom-in" aria-label="Zoom in">+</button>
+          <button class="zoom-out" aria-label="Zoom out">&minus;</button>
+          <button class="zoom-reset" aria-label="Reset zoom">&#8634;</button>
+        </div>
+      </div>
+    </footer>
   </div>
 </BaseLayout>
 

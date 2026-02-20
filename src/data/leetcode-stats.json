@@ -1,0 +1,235 @@
+{
+  "username": "Vikalaka",
+  "fetchedAt": "2026-02-19T07:47:43.746Z",
+  "totalSolved": 513,
+  "easySolved": 171,
+  "mediumSolved": 292,
+  "hardSolved": 50,
+  "tagStats": [
+    {
+      "tagName": "Array",
+      "tagSlug": "array",
+      "problemsSolved": 255
+    },
+    {
+      "tagName": "Matrix",
+      "tagSlug": "matrix",
+      "problemsSolved": 45
+    },
+    {
+      "tagName": "String",
+      "tagSlug": "string",
+      "problemsSolved": 103
+    },
+    {
+      "tagName": "Simulation",
+      "tagSlug": "simulation",
+      "problemsSolved": 19
+    },
+    {
+      "tagName": "Enumeration",
+      "tagSlug": "enumeration",
+      "problemsSolved": 2
+    },
+    {
+      "tagName": "Sorting",
+      "tagSlug": "sorting",
+      "problemsSolved": 55
+    },
+    {
+      "tagName": "Stack",
+      "tagSlug": "stack",
+      "problemsSolved": 31
+    },
+    {
+      "tagName": "Queue",
+      "tagSlug": "queue",
+      "problemsSolved": 7
+    },
+    {
+      "tagName": "Linked List",
+      "tagSlug": "linked-list",
+      "problemsSolved": 36
+    },
+    {
+      "tagName": "Two Pointers",
+      "tagSlug": "two-pointers",
+      "problemsSolved": 66
+    },
+    {
+      "tagName": "Tree",
+      "tagSlug": "tree",
+      "problemsSolved": 57
+    },
+    {
+      "tagName": "Binary Tree",
+      "tagSlug": "binary-tree",
+      "problemsSolved": 55
+    },
+    {
+      "tagName": "Hash Table",
+      "tagSlug": "hash-table",
+      "problemsSolved": 82
+    },
+    {
+      "tagName": "Ordered Set",
+      "tagSlug": "ordered-set",
+      "problemsSolved": 4
+    },
+    {
+      "tagName": "Graph Theory",
+      "tagSlug": "graph",
+      "problemsSolved": 27
+    },
+    {
+      "tagName": "Greedy",
+      "tagSlug": "greedy",
+      "problemsSolved": 34
+    },
+    {
+      "tagName": "Binary Search",
+      "tagSlug": "binary-search",
+      "problemsSolved": 58
+    },
+    {
+      "tagName": "Depth-First Search",
+      "tagSlug": "depth-first-search",
+      "problemsSolved": 78
+    },
+    {
+      "tagName": "Breadth-First Search",
+      "tagSlug": "breadth-first-search",
+      "problemsSolved": 71
+    },
+    {
+      "tagName": "Recursion",
+      "tagSlug": "recursion",
+      "problemsSolved": 18
+    },
+    {
+      "tagName": "Sliding Window",
+      "tagSlug": "sliding-window",
+      "problemsSolved": 20
+    },
+    {
+      "tagName": "Bit Manipulation",
+      "tagSlug": "bit-manipulation",
+      "problemsSolved": 21
+    },
+    {
+      "tagName": "Math",
+      "tagSlug": "math",
+      "problemsSolved": 58
+    },
+    {
+      "tagName": "Randomized",
+      "tagSlug": "randomized",
+      "problemsSolved": 3
+    },
+    {
+      "tagName": "Design",
+      "tagSlug": "design",
+      "problemsSolved": 22
+    },
+    {
+      "tagName": "Iterator",
+      "tagSlug": "iterator",
+      "problemsSolved": 1
+    },
+    {
+      "tagName": "Brainteaser",
+      "tagSlug": "brainteaser",
+      "problemsSolved": 1
+    },
+    {
+      "tagName": "Database",
+      "tagSlug": "database",
+      "problemsSolved": 31
+    },
+    {
+      "tagName": "Data Stream",
+      "tagSlug": "data-stream",
+      "problemsSolved": 5
+    },
+    {
+      "tagName": "Game Theory",
+      "tagSlug": "game-theory",
+      "problemsSolved": 2
+    },
+    {
+      "tagName": "Rolling Hash",
+      "tagSlug": "rolling-hash",
+      "problemsSolved": 1
+    },
+    {
+      "tagName": "Sweep Line",
+      "tagSlug": "line-sweep",
+      "problemsSolved": 1
+    },
+    {
+      "tagName": "Backtracking",
+      "tagSlug": "backtracking",
+      "problemsSolved": 18
+    },
+    {
+      "tagName": "Bitmask",
+      "tagSlug": "bitmask",
+      "problemsSolved": 4
+    },
+    {
+      "tagName": "Quickselect",
+      "tagSlug": "quickselect",
+      "problemsSolved": 3
+    },
+    {
+      "tagName": "Dynamic Programming",
+      "tagSlug": "dynamic-programming",
+      "problemsSolved": 97
+    },
+    {
+      "tagName": "Divide and Conquer",
+      "tagSlug": "divide-and-conquer",
+      "problemsSolved": 14
+    },
+    {
+      "tagName": "Trie",
+      "tagSlug": "trie",
+      "problemsSolved": 5
+    },
+    {
+      "tagName": "Union-Find",
+      "tagSlug": "union-find",
+      "problemsSolved": 20
+    },
+    {
+      "tagName": "Binary Indexed Tree",
+      "tagSlug": "binary-indexed-tree",
+      "problemsSolved": 1
+    },
+    {
+      "tagName": "Segment Tree",
+      "tagSlug": "segment-tree",
+      "problemsSolved": 1
+    },
+    {
+      "tagName": "Monotonic Stack",
+      "tagSlug": "monotonic-stack",
+      "problemsSolved": 6
+    },
+    {
+      "tagName": "Monotonic Queue",
+      "tagSlug": "monotonic-queue",
+      "problemsSolved": 2
+    },
+    {
+      "tagName": "Topological Sort",
+      "tagSlug": "topological-sort",
+      "problemsSolved": 5
+    },
+    {
+      "tagName": "Shortest Path",
+      "tagSlug": "shortest-path",
+      "problemsSolved": 3
+    }
+  ]
+}

@@ -14,7 +14,7 @@ npm run build     # Production build to dist/
 npm run preview   # Preview production build locally
 ```
 
-No test suite or linter is configured.
+No test suite or linter is configured. Validate changes with `npm run build`.
 
 ## Architecture
 
@@ -24,26 +24,31 @@ No test suite or linter is configured.
 
 ### Source Layout
 
-- `src/pages/` — Routes: `index.astro` (home/hero + project grid), `background.astro` (interactive skill tree)
+- `src/pages/` — Routes: `index.astro` (home/hero + project grid), `background.astro` (Skill Galaxy interactive visualization)
 - `src/layouts/BaseLayout.astro` — Root HTML shell (fonts, meta, global styles)
 - `src/components/` — Astro components: `Nav.astro`, `Footer.astro`, `ProjectCard.astro`
-- `src/cards/` — Per-project canvas/WebGL animations, each mapped by `cardStyle` in project data. `_shared.ts` has common utilities (canvas setup, animation loop)
-- `src/islands/` — Page-level interactive elements: `MonetBackground.ts` (Three.js shader background), `TechTree.ts` (D3 skill tree, ~950 lines)
-- `src/data/` — Typed data: `projects.ts` (project metadata, `Project` interface), `techtree.ts` (courses/nodes/tracks)
-- `src/styles/` — CSS files: `global.css` (design tokens, Monet palette), `cards.css` (project grid), `techtree.css` (dark theme)
+- `src/cards/` — Per-project canvas/WebGL animations, each mapped by `cardStyle` in project data. `_shared.ts` has common utilities (canvas setup, animation loop, visibility observer)
+- `src/islands/` — Page-level interactive elements: `MonetBackground.ts` (Three.js shader background for index), `GalaxyView.ts` + `GalaxyBackground.ts` (D3 skill galaxy for background page), `TechTree.ts` (legacy D3 skill tree)
+- `src/data/` — Typed data: `projects.ts` (project metadata, `Project` interface), `techtree.ts` (courses/nodes/tracks for galaxy), `skilltree.ts` (cluster definitions for galaxy sidebar)
+- `src/styles/` — CSS files: `global.css` (design tokens, Monet palette), `cards.css` (project grid), `skilltree.css` (galaxy dark theme), `techtree.css` (legacy)
 - `public/` — Static assets: `images/`, `files/` (PDFs), `favicon.svg`
 
 ### Design System (in `src/styles/global.css`)
 
-Monet palette CSS variables: `--monet-lavender`, `--monet-yellow`, `--monet-mint`, `--monet-sky`, `--monet-rose`. Primary accent: `--accent-purple: #7c5cbf`. Fonts: Inter (body), Playfair Display (headings), JetBrains Mono (code).
+Monet palette CSS variables: `--monet-lavender`, `--monet-yellow`, `--monet-mint`, `--monet-sky`, `--monet-rose`. Primary accent: `--accent-purple: #7c5cbf`. Fonts: Inter (body), Playfair Display (headings), JetBrains Mono (code). Shared palette constants also in `src/cards/_shared.ts` as `MONET_PALETTE`.
 
 ### Card Animation Pattern
 
-Each project card has a unique visualization determined by `cardStyle` in `src/data/projects.ts`. The mapping from style name to init function lives in `src/pages/index.astro`. Cards use `data-card-init` attributes and are initialized via Intersection Observer for lazy loading. Three.js cards cap device pixel ratio at 2x; canvas cards at 1.5x. All animations target 30 FPS.
+To add a new project card:
+1. Add project entry to `src/data/projects.ts` with a unique `cardStyle` name
+2. Create `src/cards/Card<StyleName>.ts` exporting `init<StyleName>(el: HTMLElement)` — use `setupCanvas()`, `animationLoop()`, and `observeVisibility()` from `_shared.ts`
+3. Import and register in the `cardInits` map in `src/pages/index.astro`'s `<script>` block
+
+`ProjectCard.astro` renders a `data-card-init={cardStyle}` attribute on each card's canvas container. The script in `index.astro` looks up the init function by that attribute value. Canvas cards cap DPR at 1.5x; Three.js cards at 2x. All animations target 30 FPS via `_shared.ts:animationLoop()`.
 
 ### Deployment
 
-GitHub Actions (`.github/workflows/deploy.yml`) builds and deploys to GitHub Pages on push to `main`. Uses Node 20, `npm ci`, outputs `dist/`.
+GitHub Actions (`.github/workflows/deploy.yml`) builds and deploys to GitHub Pages on push to `master`. Uses Node 20, `npm ci`, outputs `dist/`.
 
 ## TypeScript
 

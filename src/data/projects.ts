@@ -34,6 +34,7 @@ export const projects: Project[] = [
     featured: false,
     year: 2024,
     tags: ['Stochastic Processes', 'Mathematical Physics', 'Mean-Field Theory'],
+    liveUrl: 'https://viskawei.github.io/ips_unlabeled_learning_web/',
     relatedCourses: ['EN.553.626', 'EN.553.627'],
   },
   {
@@ -44,7 +45,7 @@ export const projects: Project[] = [
     featured: false,
     year: 2023,
     tags: ['Data Science', 'Dimensionality Reduction', 'Algorithms'],
-    githubUrl: 'https://github.com/viskawei',
+    githubUrl: 'https://github.com/viskawei/sketch-scale',
     relatedCourses: ['EN.553.636', 'EN.601.633'],
   },
   {
@@ -53,9 +54,10 @@ export const projects: Project[] = [
     tagline: 'Probing charm quark Yukawa coupling at the LHC via Higgs production channels',
     cardStyle: 'ParticleSim',
     featured: false,
-    year: 2020,
-    venue: 'UC Berkeley',
+    year: 2019,
+    venue: 'Phys. Rev. D',
     tags: ['Particle Physics', 'QFT', 'Collider Phenomenology'],
+    paperUrl: 'https://arxiv.org/abs/1905.09360',
     relatedCourses: ['PHYS232A', 'PHYS232B', 'PHYS233A'],
   },
   {
@@ -66,6 +68,7 @@ export const projects: Project[] = [
     featured: false,
     year: 2024,
     tags: ['Physics-Informed', 'ML', 'Stellar Physics'],
+    githubUrl: 'https://github.com/viskawei/Physics_Informed_AI',
     relatedCourses: ['AS.171.749', 'AS.171.801'],
   },
   {
@@ -74,10 +77,10 @@ export const projects: Project[] = [
     tagline: 'Unsupervised clustering of cancer subtypes using multi-omics data with UMAP',
     cardStyle: 'ClusterMap',
     featured: false,
-    year: 2019,
+    year: 2020,
     venue: 'IEEE Big Data',
     tags: ['Bioinformatics', 'Clustering', 'UMAP'],
-    paperUrl: '/files/paper1.pdf',
+    paperUrl: 'https://arxiv.org/abs/2011.06103',
     relatedCourses: ['EN.553.636'],
   },
 ];

@@ -87,9 +87,9 @@ const TAU = Math.PI * 2;
 export const clusters: SkillCluster[] = [
   {
     id: 'physics',
-    label: 'Fundamental Physics',
+    label: 'Physics',
     color: '#4fc3f7',
-    nebulaColor: '#0a3d5c',
+    nebulaColor: '#1a7aaa',
     angle: -TAU / 14,          // ~top-right
     radius: 300,
     trackIds: ['physics'],
@@ -102,9 +102,9 @@ export const clusters: SkillCluster[] = [
   },
   {
     id: 'math',
-    label: 'Mathematics',
+    label: 'Math',
     color: '#ffd54f',
-    nebulaColor: '#5c4a0a',
+    nebulaColor: '#a08520',
     angle: TAU / 14,            // ~top-left
     radius: 300,
     trackIds: ['math'],
@@ -117,26 +117,19 @@ export const clusters: SkillCluster[] = [
   },
   {
     id: 'cs',
-    label: 'Computer Science',
+    label: 'Algorithm',
     color: '#66bb6a',
-    nebulaColor: '#0a4f1a',
+    nebulaColor: '#1a8035',
     angle: 3 * TAU / 14,
     radius: 300,
     trackIds: ['algorithms'],
-    darkStars: [
-      { id: 'dark-ds', name: 'Data Structures', clusterId: 'cs' },
-      { id: 'dark-complexity', name: 'Complexity Theory', clusterId: 'cs' },
-      { id: 'dark-os', name: 'Operating Systems', clusterId: 'cs' },
-      { id: 'dark-networks', name: 'Networks', clusterId: 'cs' },
-      { id: 'dark-databases', name: 'Databases', clusterId: 'cs' },
-      { id: 'dark-compilers', name: 'Compilers', clusterId: 'cs' },
-    ],
+    darkStars: [], // Algorithm topics replace dark stars in this cluster
   },
   {
     id: 'aiml',
-    label: 'AI & Machine Learning',
+    label: 'AI',
     color: '#ef5350',
-    nebulaColor: '#5c0a0a',
+    nebulaColor: '#9a2020',
     angle: 5 * TAU / 14,
     radius: 300,
     trackIds: ['ai', 'ml'],
@@ -149,9 +142,9 @@ export const clusters: SkillCluster[] = [
   },
   {
     id: 'engineering',
-    label: 'Engineering & Systems',
+    label: 'Engineer',
     color: '#26c6da',
-    nebulaColor: '#0a4f4f',
+    nebulaColor: '#1a8888',
     angle: 7 * TAU / 14,        // bottom
     radius: 300,
     trackIds: ['systems'],
@@ -165,9 +158,9 @@ export const clusters: SkillCluster[] = [
   },
   {
     id: 'data',
-    label: 'Data & Analytics',
+    label: 'Finance',
     color: '#ab47bc',
-    nebulaColor: '#3d0a5c',
+    nebulaColor: '#7a2a9a',
     angle: 9 * TAU / 14,
     radius: 300,
     trackIds: [],  // no dedicated track, but EN553636 maps here
@@ -179,9 +172,9 @@ export const clusters: SkillCluster[] = [
   },
   {
     id: 'business',
-    label: 'Business & Humanities',
+    label: 'Society',
     color: '#ff7043',
-    nebulaColor: '#5c2a0a',
+    nebulaColor: '#aa5520',
     angle: 11 * TAU / 14,
     radius: 300,
     trackIds: ['business', 'social'],
@@ -288,6 +281,7 @@ export function buildGalaxyNodes(
   courses: CourseNode[],
   projectNodes: ProjectNode[],
   _clusters: SkillCluster[],
+  algorithmNodes?: GalaxyNode[],
 ): GalaxyNode[] {
   const nodes: GalaxyNode[] = [];
 
@@ -383,6 +377,9 @@ export function buildGalaxyNodes(
     }
   }
 
+  // Merge algorithm topic nodes
+  if (algorithmNodes) nodes.push(...algorithmNodes);
+
   return nodes;
 }
 
@@ -391,6 +388,7 @@ export function buildGalaxyNodes(
 export function buildEdges(
   courses: CourseNode[],
   projectNodes: ProjectNode[],
+  algorithmEdges?: ConstellationEdge[],
 ): ConstellationEdge[] {
   const edges: ConstellationEdge[] = [];
 
@@ -409,6 +407,9 @@ export function buildEdges(
       edges.push({ source: cid, target: p.id, type: 'related' });
     }
   }
+
+  // Merge algorithm prerequisite edges
+  if (algorithmEdges) edges.push(...algorithmEdges);
 
   return edges;
 }
