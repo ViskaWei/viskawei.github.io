@@ -15,11 +15,22 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    slug: 'blade-agent',
+    title: 'Blade Agent',
+    tagline: 'Multi-lane AI orchestrator — engineer, scientist & student pipelines with quality gates',
+    cardStyle: 'BladePipeline',
+    featured: true,
+    year: 2025,
+    tags: ['AI Agent', 'Orchestration', 'Pipeline'],
+    githubUrl: 'https://github.com/ViskaWei/blade-agent-web',
+    liveUrl: 'https://viskawei.github.io/blade-agent-web',
+  },
+  {
     slug: 'specvit',
     title: 'SpecViT',
     tagline: 'Vision Transformers for stellar parameter estimation from spectroscopic data',
     cardStyle: 'StellarSpectrum',
-    featured: true,
+    featured: false,
     year: 2025,
     tags: ['Deep Learning', 'Astronomy', 'Vision Transformers'],
     githubUrl: 'https://github.com/viskawei/SpecViT',

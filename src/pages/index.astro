@@ -282,6 +282,7 @@ const sortedProjects = [...projects].sort((a, b) => {
   import { initNeuralField } from '../cards/CardNeuralField';
   import { initClusterMap } from '../cards/CardClusterMap';
   import { initStellarSpectrum } from '../cards/CardStellarSpectrum';
+  import { initBladePipeline } from '../cards/CardBladePipeline';
   import { initDefault } from '../cards/CardDefault';
 
   const cardInits: Record<string, (el: HTMLElement) => void> = {
@@ -292,6 +293,7 @@ const sortedProjects = [...projects].sort((a, b) => {
     NeuralField: initNeuralField,
     ClusterMap: initClusterMap,
     StellarSpectrum: initStellarSpectrum,
+    BladePipeline: initBladePipeline,
     Default: initDefault,
   };
 
