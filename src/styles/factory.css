@@ -68,6 +68,108 @@
   margin-top: 0.25rem;
 }
 
+/* ── Board Tabs ── */
+.board-tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+  padding: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  width: fit-content;
+}
+
+.board-tab {
+  padding: 0.4rem 1.2rem;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary, #4a4a6a);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.02em;
+}
+
+.board-tab:hover {
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--text-primary, #1a1a2e);
+}
+
+.board-tab--active {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--accent-purple, #7c5cbf);
+  box-shadow: 0 1px 4px rgba(140, 120, 200, 0.1);
+}
+
+/* ── Family Board ── */
+.family-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.family-group {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.family-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(196, 181, 224, 0.12);
+  cursor: pointer;
+  user-select: none;
+}
+
+.family-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.family-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a2e);
+  letter-spacing: 0.02em;
+}
+
+.family-count {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 24px;
+}
+
+.family-toggle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-muted, #8888aa);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.family-header:hover .family-toggle {
+  background: rgba(124, 92, 191, 0.08);
+  color: var(--text-primary, #1a1a2e);
+}
+
 /* ── Tunnel Board (Time-based lanes) ── */
 .tunnel-board {
   display: flex;

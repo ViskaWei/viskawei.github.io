@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import '../styles/factory.css';
 
-import FactoryBoard from '../islands/factory/FactoryBoard';
+import BoardTabs from '../islands/factory/BoardTabs';
 import TodoRadar from '../islands/factory/TodoRadar';
 import StandardsShelf from '../islands/factory/StandardsShelf';
 
@@ -76,7 +76,7 @@ const standardsCoverage = skills.length > 0 ? Math.round((withStandards / skills
     <!-- Strip B: Kanban Board -->
     <section class="factory-section">
       <div class="factory-section-title">Factory Board</div>
-      <FactoryBoard client:load skills={skills} />
+      <BoardTabs client:load skills={skills} />
     </section>
 
     <!-- Strip C: Todo Radar -->
