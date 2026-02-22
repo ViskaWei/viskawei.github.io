@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/skilltree.css';
+import '../styles/techtree.css';
 
 // Load registry data at build time
 import registryData from '../data/skills-registry.json';
@@ -41,6 +42,15 @@ const maturityColors: Record<string, string> = {
           </div>
         ))}
       </div>
+      <div class="top-bar-center" style="display:flex;align-items:center;gap:12px">
+        <span class="material-symbols-outlined" style="color:#ef3535;font-size:22px">smart_toy</span>
+        <span style="color:#ef3535;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;letter-spacing:0.15em">BLADE AGENT</span>
+        <a href="/factory" class="factory-link">
+          <span class="material-symbols-outlined" style="font-size:16px">precision_manufacturing</span>
+          Factory
+          <span style="font-size:12px;opacity:0.6">&rarr;</span>
+        </a>
+      </div>
       <div class="top-bar-controls">
         <div class="resource-counter" style="--rc-color: #4fc3f7">
           <span class="material-symbols-outlined resource-icon">speed</span>
@@ -58,25 +68,10 @@ const maturityColors: Record<string, string> = {
 
     <!-- MAIN SKILLS CONTAINER -->
     <div class="galaxy-container" id="skills-root">
-      <!-- Left icon strip -->
-      <nav class="icon-strip">
-        <button class="icon-strip-btn" data-view="treemap" title="Treemap View">
-          <span class="material-symbols-outlined">grid_view</span>
-        </button>
-        <button class="icon-strip-btn active" data-view="force" title="Force Layout">
-          <span class="material-symbols-outlined">bubble_chart</span>
-        </button>
-        <button class="icon-strip-btn" data-view="table" title="Table View">
-          <span class="material-symbols-outlined">table_rows</span>
-        </button>
-        <div class="icon-strip-spacer"></div>
-        <a href="/background" class="icon-strip-btn" title="Skill Galaxy">
-          <span class="material-symbols-outlined">travel_explore</span>
-        </a>
-      </nav>
+      <!-- Track filters + SVG tree rendered dynamically by SkillsHub.ts -->
 
       <!-- Skill detail panel -->
-      <div class="galaxy-detail-panel" id="skill-detail" style="display:none">
+      <div class="galaxy-detail-panel" id="skill-detail" style="right:16px">
         <div class="hud-border">
           <div class="hud-corner tl"></div>
           <div class="hud-corner tr"></div>
@@ -105,6 +100,10 @@ const maturityColors: Record<string, string> = {
           <div class="sg-mastery-bar">
             <div class="sg-mastery-fill" id="detail-maturity-bar" style="width: 0%"></div>
           </div>
+        </div>
+        <div id="detail-reference-section" style="display:none;margin-top:0.75rem;border-top:1px solid rgba(255,255,255,0.06);padding-top:0.5rem">
+          <h4 style="font-size:0.7rem;color:#4fc3f7;margin:0 0 0.4rem;letter-spacing:0.1em">REFERENCE</h4>
+          <div id="detail-reference" style="max-height:280px;overflow-y:auto;font-size:0.68rem;line-height:1.5;color:#8b949e"></div>
         </div>
       </div>
     </div>
@@ -136,17 +135,74 @@ const maturityColors: Record<string, string> = {
             <span class="material-symbols-outlined">star</span>
           </button>
         </div>
+        <a href="/background" class="map-mode-btn" title="Skill Galaxy" style="text-decoration:none">
+          <span class="material-symbols-outlined">travel_explore</span>
+        </a>
       </div>
     </footer>
   </div>
 </BaseLayout>
 
+<style>
+  /* Override galaxy-container for scrollable tree layout */
+  #skills-root {
+    overflow: auto !important;
+  }
+  #skills-root::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  #skills-root::-webkit-scrollbar-track {
+    background: rgba(13, 17, 23, 0.5);
+  }
+  #skills-root::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+  }
+  #skills-root::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  #skills-root::-webkit-scrollbar-corner {
+    background: rgba(13, 17, 23, 0.5);
+  }
+  .factory-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(79, 195, 247, 0.3);
+    background: rgba(79, 195, 247, 0.08);
+    color: #4fc3f7;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+  .factory-link:hover {
+    background: rgba(79, 195, 247, 0.18);
+    border-color: rgba(79, 195, 247, 0.5);
+    color: #4fc3f7;
+    box-shadow: 0 0 12px rgba(79, 195, 247, 0.15);
+  }
+</style>
+
 <script>
   import { initSkillsHub } from '../islands/SkillsHub';
-  import registryData from '../data/skills-registry.json';
+  import * as registryModule from '../data/skills-registry.json';
+
+  // Vite exports JSON as named exports; reconstruct the object
+  const registryData = {
+    summary: registryModule.summary,
+    skills: registryModule.skills,
+    generated_at: registryModule.generated_at,
+    version: registryModule.version,
+  };
 
   const container = document.getElementById('skills-root');
   if (container) {
-    initSkillsHub(container, registryData);
+    initSkillsHub(container, registryData as any);
   }
 </script>

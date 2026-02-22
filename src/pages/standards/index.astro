@@ -1,0 +1,55 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import '../../styles/factory.css';
+
+let standards: any[] = [];
+try {
+  const data = await import('../../data/standards_index.json');
+  standards = data.standards || [];
+} catch { /* not yet generated */ }
+---
+
+<BaseLayout title="Standards Library | Viska Wei" description="Shared standards for skills — symbols, formatting, and design rules">
+  <Nav />
+
+  <div style="padding: 5rem 2rem 3rem; max-width: 1400px; margin: 0 auto;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+      <h1 class="standards-page-title" style="margin:0">Standards Library</h1>
+      <a href="/factory" class="factory-link-btn">&larr; Factory</a>
+    </div>
+
+    {standards.length === 0 ? (
+      <div class="glass-card" style="text-align:center;padding:3rem">
+        <p style="color:#8888aa;font-size:0.9rem">No standards defined yet. Add standards to <code>standards/</code> in the private repo.</p>
+      </div>
+    ) : (
+      <div class="standards-gallery">
+        {standards.map((std: any) => (
+          <a href={`/standards/${std.id}`} class="standard-card" style="display:block;text-decoration:none;color:inherit">
+            <div class="standard-preview">
+              {std.preview_content ? (
+                <pre>{std.preview_content.slice(0, 400)}</pre>
+              ) : std.body_md ? (
+                <pre>{std.body_md.slice(0, 400)}</pre>
+              ) : (
+                <div class="standard-preview-placeholder">{(std.preview_type || std.category || 'MD').toUpperCase()}</div>
+              )}
+            </div>
+            <div class="standard-card-title">{std.title}</div>
+            <div class="standard-card-meta">
+              <span class="standard-category-badge">{std.category}</span>
+              <span class="standard-usage-badge">
+                {std.skill_count} skill{std.skill_count !== 1 ? 's' : ''}
+              </span>
+            </div>
+            {std.version !== 'auto' && <div class="standard-version">v{std.version}</div>}
+            {std.word_count > 0 && (
+              <div style="font-size:0.6rem;color:#8888aa;margin-top:0.25rem">{std.word_count} words</div>
+            )}
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</BaseLayout>

@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-02-20T22:32:27.440410+00:00",
+  "generated_at": "2026-02-20T23:12:32.874486+00:00",
   "version": "1.0.0",
   "summary": {
-    "total": 114,
+    "total": 115,
     "by_source": {
       "private": 33,
       "public": 29,
       "scientific": 21,
-      "local": 31
+      "local": 32
     },
     "by_status": {
       "stub": 17,
-      "active": 97
+      "active": 98
     },
     "by_maturity": {
       "empty": 16,
       "growing": 47,
       "seedling": 27,
-      "mature": 24
+      "mature": 25
     },
-    "average_maturity_score": 52.3
+    "average_maturity_score": 52.5
   },
   "skills": [
     {
@@ -2563,11 +2563,11 @@
       "has_skill_md": true,
       "version": null,
       "allowed_tools": null,
-      "file_count": 53,
+      "file_count": 57,
       "has_scripts": true,
       "has_references": true,
       "has_assets": true,
-      "word_count": 3016,
+      "word_count": 3080,
       "checklist_done": 0,
       "checklist_total": 4,
       "maturity_score": 85,
@@ -2736,6 +2736,40 @@
       "maturity_score": 65,
       "maturity_level": "growing",
       "last_modified": "2026-02-14",
+      "status": "active",
+      "category": null,
+      "tags": [],
+      "progress": null,
+      "definition_of_done": null,
+      "overrides_applied": false
+    },
+    {
+      "id": "flowchart",
+      "name": "flowchart",
+      "description": "Generate standardized flowcharts using the FlowViz visual language. Produces D2 diagrams with 10 atomic node types, 5 edge types, and strict layout rules. Use when user says 'flowchart', 'flow diagram', 'pipeline flow', 'process diagram', or needs a visual pipeline/workflow diagram.",
+      "source": "local",
+      "source_path": "/home/swei20/.claude/skills/flowchart",
+      "has_skill_md": true,
+      "version": "3.0.0",
+      "allowed_tools": [
+        "Read",
+        "Write",
+        "Edit",
+        "Bash",
+        "Grep",
+        "Glob",
+        "Task"
+      ],
+      "file_count": 6,
+      "has_scripts": false,
+      "has_references": true,
+      "has_assets": false,
+      "word_count": 1074,
+      "checklist_done": 0,
+      "checklist_total": 7,
+      "maturity_score": 80,
+      "maturity_level": "mature",
+      "last_modified": "2026-02-20",
       "status": "active",
       "category": null,
       "tags": [],

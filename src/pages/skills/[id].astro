@@ -1,0 +1,134 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import '../../styles/factory.css';
+
+import GatePanel from '../../islands/factory/GatePanel';
+
+export async function getStaticPaths() {
+  let skills: any[] = [];
+  try {
+    const data = await import('../../data/skills_index.json');
+    skills = data.skills || [];
+  } catch {
+    return [];
+  }
+
+  return skills.map((skill: any) => ({
+    params: { id: skill.id },
+    props: { skill },
+  }));
+}
+
+const { skill } = Astro.props;
+---
+
+<BaseLayout title={`${skill.name} | Skills Factory`} description={skill.description}>
+  <Nav />
+
+  <div class="skill-detail">
+    <!-- Left: Summary -->
+    <div class="skill-detail-left">
+      <div class="glass-card">
+        <span class={`status-chip status-chip--${skill.status}`}>
+          {skill.status.replace('_', ' ')}
+        </span>
+        <h1 class="skill-detail-title">{skill.name}</h1>
+        <div class="skill-detail-id">{skill.id}</div>
+        {skill.description && <p class="skill-detail-desc">{skill.description}</p>}
+
+        <div class="skill-detail-meta" style="margin-top:1rem;font-size:0.75rem;color:#4a4a6a">
+          <div>Source: <strong>{skill.source}</strong></div>
+          <div>Maturity: <strong>{skill.maturity_level}</strong> ({skill.maturity_score}/100)</div>
+          <div>Updated: <strong>{skill.last_modified}</strong></div>
+          {skill.version && <div>Version: <strong>{skill.version}</strong></div>}
+        </div>
+      </div>
+
+      {(skill.inputs?.length > 0 || skill.outputs?.length > 0) && (
+        <div class="glass-card skill-io-section">
+          {skill.inputs?.length > 0 && (
+            <>
+              <h4>Inputs</h4>
+              <ul class="skill-io-list">
+                {skill.inputs.map((inp: string) => <li>{inp}</li>)}
+              </ul>
+            </>
+          )}
+          {skill.outputs?.length > 0 && (
+            <>
+              <h4>Outputs</h4>
+              <ul class="skill-io-list">
+                {skill.outputs.map((out: string) => <li>{out}</li>)}
+              </ul>
+            </>
+          )}
+        </div>
+      )}
+
+      {skill.standards?.length > 0 && (
+        <div class="glass-card">
+          <h4 style="font-size:0.75rem;font-weight:600;color:#4a4a6a;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.5rem">Standards</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            {skill.standards.map((std: string) => (
+              <a href={`/standards/${std}`} class="standard-usage-badge">{std}</a>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <!-- Center: Gates + DoD -->
+    <div class="skill-detail-center">
+      <div class="glass-card">
+        <GatePanel client:load skill={skill} />
+      </div>
+    </div>
+
+    <!-- Right: Artifacts -->
+    <div class="skill-detail-right">
+      {skill.reference_files?.length > 0 && (
+        <div class="glass-card">
+          <h4 style="font-size:0.75rem;font-weight:600;color:#4a4a6a;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.75rem">Reference Files</h4>
+          <ul class="reference-files">
+            {skill.reference_files.map((ref: any) => (
+              <li class="reference-file">
+                <span class="reference-file-icon">&#128196;</span>
+                <span>{ref.title || ref.name}</span>
+                <span class="reference-file-wc">{ref.word_count}w</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {Array.isArray(skill.allowed_tools) && skill.allowed_tools.length > 0 && (
+        <div class="glass-card">
+          <h4 style="font-size:0.75rem;font-weight:600;color:#4a4a6a;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.75rem">Allowed Tools</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            {skill.allowed_tools.map((tool: string) => (
+              <span class="skill-card-tag">{tool}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {skill.tags?.length > 0 && (
+        <div class="glass-card">
+          <h4 style="font-size:0.75rem;font-weight:600;color:#4a4a6a;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 0.75rem">Tags</h4>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">
+            {skill.tags.map((tag: string) => (
+              <span class="skill-card-tag">{tag}</span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div class="glass-card" style="text-align:center">
+        <a href="/factory" class="drawer-detail-link" style="display:inline-block">
+          &larr; Back to Factory
+        </a>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

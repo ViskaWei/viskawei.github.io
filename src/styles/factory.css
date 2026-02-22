@@ -1,0 +1,974 @@
+/* ═══════════════════════════════════════════════════════
+   Factory — Skills Factory Command Center
+   Theme: Liquid Glass Monet (light glassmorphic)
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Layout ── */
+.factory-page {
+  max-width: var(--wide-width, 1400px);
+  margin: 0 auto;
+  padding: 2rem 2rem 4rem;
+  min-height: 100vh;
+}
+
+.factory-section {
+  margin-bottom: 2.5rem;
+}
+
+.factory-section-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-secondary, #4a4a6a);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(196, 181, 224, 0.25);
+}
+
+/* ── KPI Strip ── */
+.kpi-strip {
+  display: flex;
+  gap: 1rem;
+  padding: 1.5rem 0;
+}
+
+.kpi-card {
+  background: rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  flex: 1;
+  box-shadow: 0 2px 8px rgba(140, 120, 200, 0.06);
+  transition: all 0.25s ease;
+}
+
+.kpi-card:hover {
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow: 0 4px 16px rgba(140, 120, 200, 0.1);
+  transform: translateY(-1px);
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  color: var(--text-primary, #1a1a2e);
+  line-height: 1.2;
+}
+
+.kpi-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary, #4a4a6a);
+  margin-top: 0.25rem;
+}
+
+/* ── Tunnel Board (Time-based lanes) ── */
+.tunnel-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.tunnel {
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  transition: all 0.3s ease;
+}
+
+.tunnel--highlight {
+  background: rgba(255, 255, 255, 0.42);
+  border: 1px solid rgba(37, 99, 235, 0.15);
+  box-shadow: 0 2px 12px rgba(37, 99, 235, 0.06);
+}
+
+.tunnel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(196, 181, 224, 0.12);
+}
+
+.tunnel-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.tunnel-accent {
+  width: 4px;
+  height: 20px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.tunnel-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a2e);
+  letter-spacing: 0.02em;
+}
+
+.tunnel-sublabel {
+  font-size: 0.68rem;
+  color: var(--text-muted, #8888aa);
+  font-weight: 400;
+}
+
+.tunnel-count {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  min-width: 24px;
+  text-align: right;
+}
+
+/* Horizontal scrolling track within each tunnel */
+.tunnel-track {
+  display: flex;
+  gap: 0.65rem;
+  overflow-x: auto;
+  padding: 0.25rem 0 0.5rem;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(124, 92, 191, 0.15) transparent;
+}
+
+.tunnel-track::-webkit-scrollbar {
+  height: 5px;
+}
+
+.tunnel-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tunnel-track::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 191, 0.15);
+  border-radius: 3px;
+}
+
+.tunnel-track::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 191, 0.3);
+}
+
+/* ── Skill Card ── */
+.skill-card {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 4px rgba(140, 120, 200, 0.05);
+  /* Fixed width for horizontal tunnel layout */
+  min-width: 200px;
+  max-width: 220px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.skill-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(124, 92, 191, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.skill-card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a2e);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.skill-card-desc {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #4a4a6a);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.skill-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.skill-card-time {
+  font-size: 0.6rem;
+  color: var(--text-muted, #8888aa);
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+
+.skill-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 0.4rem;
+}
+
+.skill-card-tag {
+  background: rgba(124, 92, 191, 0.08);
+  color: var(--accent-purple, #7c5cbf);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.58rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.skill-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* ── Status Chips ── */
+.status-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.6;
+}
+
+.status-chip--draft {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+.status-chip--in_progress {
+  background: #DBEAFE;
+  color: #2563EB;
+}
+
+.status-chip--done {
+  background: #D1FAE5;
+  color: #059669;
+}
+
+.status-chip--deprecated {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.status-chip--active {
+  background: #DBEAFE;
+  color: #2563EB;
+}
+
+.status-chip--stub {
+  background: #F3F4F6;
+  color: #9CA3AF;
+}
+
+/* ── Progress Bar ── */
+.progress-bar {
+  height: 4px;
+  background: #E5E7EB;
+  border-radius: 2px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.progress-bar-fill--low {
+  background: #EF4444;
+}
+
+.progress-bar-fill--mid {
+  background: #F59E0B;
+}
+
+.progress-bar-fill--high {
+  background: #10B981;
+}
+
+/* ── Gate Indicators ── */
+.gate-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.gate-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gate-dot--pass {
+  background: #10B981;
+}
+
+.gate-dot--fail {
+  background: #EF4444;
+}
+
+.gate-dot--unknown {
+  background: #D1D5DB;
+}
+
+/* ── Gate Panel (detail page) ── */
+.gate-panel {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  padding: 1.25rem;
+}
+
+.gate-panel-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a2e);
+  margin-bottom: 0.75rem;
+}
+
+.gate-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.gate-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.gate-badge--pass {
+  background: #D1FAE5;
+  color: #059669;
+}
+
+.gate-badge--fail {
+  background: #FEE2E2;
+  color: #DC2626;
+}
+
+.gate-badge--unknown {
+  background: #F3F4F6;
+  color: #9CA3AF;
+}
+
+/* ── Todo Radar ── */
+.todo-radar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.todo-radar-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a2e);
+  margin-bottom: 0.25rem;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border-left: 3px solid;
+  background: rgba(255, 255, 255, 0.4);
+  font-size: 0.8rem;
+  color: var(--text-secondary, #4a4a6a);
+  transition: background 0.2s ease;
+}
+
+.todo-item:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.todo-item--high {
+  border-left-color: #EF4444;
+}
+
+.todo-item--medium {
+  border-left-color: #F59E0B;
+}
+
+.todo-item--low {
+  border-left-color: #10B981;
+}
+
+.todo-skill-badge {
+  background: rgba(124, 92, 191, 0.1);
+  color: var(--accent-purple, #7c5cbf);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.todo-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Standards Shelf ── */
+.standards-shelf {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.standards-shelf::-webkit-scrollbar {
+  height: 6px;
+}
+
+.standards-shelf::-webkit-scrollbar-thumb {
+  background: rgba(124, 92, 191, 0.2);
+  border-radius: 3px;
+}
+
+.standards-shelf::-webkit-scrollbar-thumb:hover {
+  background: rgba(124, 92, 191, 0.35);
+}
+
+.standard-card {
+  min-width: 200px;
+  scroll-snap-align: start;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.standard-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(45, 165, 184, 0.15);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.standard-card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary, #1a1a2e);
+  margin-bottom: 0.25rem;
+}
+
+.standard-card-desc {
+  font-size: 0.7rem;
+  color: var(--text-secondary, #4a4a6a);
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.standard-preview {
+  height: 80px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #F8FAFC;
+  margin-bottom: 0.75rem;
+  font-size: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-muted, #8888aa);
+  padding: 0.5rem;
+  line-height: 1.4;
+}
+
+.standard-usage-badge {
+  background: rgba(45, 165, 184, 0.1);
+  color: var(--accent-cyan, #2da5b8);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+/* ── Drawer ── */
+.skill-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 200;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.skill-drawer-overlay--open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.skill-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 90vw;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(28px) saturate(1.5);
+  -webkit-backdrop-filter: blur(28px) saturate(1.5);
+  border-left: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: -8px 0 32px rgba(140, 120, 200, 0.15);
+  z-index: 201;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+.skill-drawer--open {
+  transform: translateX(0);
+}
+
+.drawer-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-secondary, #4a4a6a);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.drawer-close-btn:hover {
+  background: rgba(124, 92, 191, 0.08);
+  color: var(--text-primary, #1a1a2e);
+}
+
+.drawer-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary, #1a1a2e);
+  margin-bottom: 0.5rem;
+  padding-right: 2rem;
+}
+
+.drawer-section {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(196, 181, 224, 0.15);
+}
+
+.drawer-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted, #8888aa);
+  margin-bottom: 0.5rem;
+}
+
+/* ── Skill Detail Page (3-col layout) ── */
+.skill-detail {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: var(--wide-width, 1200px);
+  margin: 0 auto;
+}
+
+.skill-detail-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.skill-detail-center {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.skill-detail-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* ── Standards Gallery ── */
+.standards-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* ── Standards Detail Page ── */
+.standard-detail-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 5rem 2rem 3rem;
+}
+
+.standard-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.standard-detail-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.standard-detail-header-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.standard-detail-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  color: var(--text-primary, #1a1a2e);
+  margin: 0 0 0.5rem;
+  line-height: 1.3;
+}
+
+.standard-detail-source {
+  font-size: 0.75rem;
+  color: var(--text-muted, #8888aa);
+  margin-bottom: 1.5rem;
+}
+
+.standard-wc {
+  font-size: 0.65rem;
+  color: var(--text-muted, #8888aa);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Standard Body (rendered markdown) ── */
+.standard-body {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-primary, #1a1a2e);
+}
+
+.standard-body h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 2rem 0 0.75rem;
+  color: var(--text-primary, #1a1a2e);
+  border-bottom: 1px solid rgba(196, 181, 224, 0.2);
+  padding-bottom: 0.4rem;
+}
+
+.standard-body h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 1.75rem 0 0.6rem;
+  color: var(--text-primary, #1a1a2e);
+}
+
+.standard-body h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.5rem;
+  color: #4a4a6a;
+}
+
+.standard-body h4 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin: 1rem 0 0.4rem;
+  color: #4a4a6a;
+}
+
+.standard-body p {
+  margin: 0.6rem 0;
+}
+
+.standard-body ul, .standard-body ol {
+  padding-left: 1.5rem;
+  margin: 0.5rem 0;
+}
+
+.standard-body li {
+  margin: 0.25rem 0;
+}
+
+.standard-body blockquote {
+  border-left: 3px solid rgba(124, 92, 191, 0.3);
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background: rgba(124, 92, 191, 0.04);
+  border-radius: 0 8px 8px 0;
+  color: #4a4a6a;
+  font-size: 0.84rem;
+}
+
+.standard-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75rem 0;
+  font-size: 0.8rem;
+}
+
+.standard-body th {
+  background: rgba(124, 92, 191, 0.08);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.5rem 0.6rem;
+  border-bottom: 2px solid rgba(196, 181, 224, 0.3);
+  color: #4a4a6a;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.standard-body td {
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid rgba(196, 181, 224, 0.12);
+  vertical-align: top;
+}
+
+.standard-body tr:hover td {
+  background: rgba(124, 92, 191, 0.03);
+}
+
+.standard-body code {
+  background: rgba(124, 92, 191, 0.08);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.82em;
+  color: #7c5cbf;
+}
+
+.standard-body pre {
+  background: #1a1a2e;
+  color: #e2e8f0;
+  padding: 1rem;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.standard-body pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+.standard-body hr {
+  border: none;
+  border-top: 1px solid rgba(196, 181, 224, 0.2);
+  margin: 1.5rem 0;
+}
+
+.standard-body strong {
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* ── Used-by section ── */
+.standard-used-by {
+  margin-top: 1.5rem;
+}
+
+.standard-used-by h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a4a6a;
+  margin: 0 0 0.75rem;
+}
+
+.standard-used-by-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.standard-used-by-link {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  background: rgba(45, 165, 184, 0.08);
+  color: var(--accent-cyan, #2da5b8);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.standard-used-by-link:hover {
+  background: rgba(45, 165, 184, 0.15);
+}
+
+/* ── Glass Card (reusable) — extends global.css .glass-card ── */
+.factory-page .glass-card {
+  background: rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(140, 120, 200, 0.06);
+}
+
+/* ── Checklist ── */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  font-size: 0.8rem;
+  color: var(--text-secondary, #4a4a6a);
+}
+
+.checklist-check {
+  color: #10B981;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.checklist-uncheck {
+  color: #D1D5DB;
+  flex-shrink: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .skill-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .standard-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-card {
+    min-width: 180px;
+    max-width: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kpi-strip {
+    flex-wrap: wrap;
+  }
+
+  .kpi-card {
+    min-width: 120px;
+  }
+
+  .factory-page {
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+  .skill-drawer {
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .tunnel {
+    padding: 0.6rem 0.75rem;
+  }
+
+  .skill-card {
+    min-width: 160px;
+    max-width: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-strip {
+    flex-direction: column;
+  }
+
+  .kpi-card {
+    min-width: unset;
+  }
+
+  .standards-shelf {
+    gap: 0.75rem;
+  }
+
+  .standard-card {
+    min-width: 170px;
+  }
+
+  .tunnel-header {
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .skill-card {
+    min-width: 150px;
+    max-width: 170px;
+  }
+}

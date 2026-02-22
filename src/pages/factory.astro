@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import '../styles/factory.css';
+
+import FactoryBoard from '../islands/factory/FactoryBoard';
+import TodoRadar from '../islands/factory/TodoRadar';
+import StandardsShelf from '../islands/factory/StandardsShelf';
+
+// Load manifest data at build time
+let skills: any[] = [];
+let todos: any[] = [];
+let standards: any[] = [];
+let summary: any = { total: 0, by_source: {}, by_status: {}, by_maturity: {}, average_maturity_score: 0 };
+
+try {
+  const skillsData = await import('../data/skills_index.json');
+  skills = skillsData.skills || [];
+  summary = skillsData.summary || summary;
+} catch { /* skills_index.json not yet generated */ }
+
+try {
+  const todosData = await import('../data/todos.json');
+  todos = todosData.todos || [];
+} catch { /* todos.json not yet generated */ }
+
+try {
+  const standardsData = await import('../data/standards_index.json');
+  standards = standardsData.standards || [];
+} catch { /* standards_index.json not yet generated */ }
+
+// Compute KPIs
+const doneCount = skills.filter((s: any) => s.status === 'done').length;
+const wipCount = skills.filter((s: any) => s.status === 'in_progress' || s.status === 'active').length;
+const draftCount = skills.filter((s: any) => s.status === 'draft').length;
+const totalTodos = todos.length;
+const withStandards = skills.filter((s: any) => s.standards && s.standards.length > 0).length;
+const standardsCoverage = skills.length > 0 ? Math.round((withStandards / skills.length) * 100) : 0;
+---
+
+<BaseLayout title="Skills Factory | Viska Wei" description="Skills lifecycle command center — KPIs, Kanban, TODOs, and standards">
+  <Nav />
+
+  <div class="factory-page">
+    <!-- Strip A: KPI Strip -->
+    <section class="factory-section">
+      <div class="factory-section-title">Command Center</div>
+      <div class="kpi-strip">
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: #059669">{doneCount}</div>
+          <div class="kpi-label">Done</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: #2563EB">{wipCount}</div>
+          <div class="kpi-label">Active / WIP</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: #6B7280">{draftCount}</div>
+          <div class="kpi-label">Draft</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: #D97706">{totalTodos}</div>
+          <div class="kpi-label">Open TODOs</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value" style="color: #7c5cbf">{standardsCoverage}%</div>
+          <div class="kpi-label">Standards Coverage</div>
+        </div>
+        <div class="kpi-card kpi-card--accent">
+          <div class="kpi-value">{summary.average_maturity_score}</div>
+          <div class="kpi-label">Avg Maturity</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Strip B: Kanban Board -->
+    <section class="factory-section">
+      <div class="factory-section-title">Factory Board</div>
+      <FactoryBoard client:load skills={skills} />
+    </section>
+
+    <!-- Strip C: Todo Radar -->
+    <section class="factory-section">
+      <div class="factory-section-title">Todo Radar</div>
+      <TodoRadar client:load todos={todos} />
+    </section>
+
+    <!-- Strip D: Standards Shelf -->
+    <section class="factory-section">
+      <div class="factory-section-title">Standards Library</div>
+      <StandardsShelf client:load standards={standards} />
+    </section>
+  </div>
+</BaseLayout>

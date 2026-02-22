@@ -1,0 +1,72 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import '../../styles/factory.css';
+import { marked } from 'marked';
+
+export async function getStaticPaths() {
+  let standards: any[] = [];
+  try {
+    const data = await import('../../data/standards_index.json');
+    standards = data.standards || [];
+  } catch {
+    return [];
+  }
+
+  return standards.map((std: any) => ({
+    params: { id: std.id },
+    props: { standard: std },
+  }));
+}
+
+const { standard } = Astro.props;
+
+// Render markdown at build time with marked
+const renderedBody = standard.body_md ? marked.parse(standard.body_md) : '';
+---
+
+<BaseLayout title={`${standard.title} | Standards`} description={`${standard.category} standard v${standard.version}`}>
+  <Nav />
+
+  <div class="standard-detail-page">
+    <!-- Header -->
+    <div class="standard-detail-header">
+      <div class="standard-detail-header-left">
+        <span class="standard-category-badge">{standard.category}</span>
+        {standard.version !== 'auto' && (
+          <span class="standard-version">v{standard.version}</span>
+        )}
+        <span class="standard-wc">{standard.word_count} words</span>
+      </div>
+      <div class="standard-detail-header-right">
+        <a href="/standards" class="factory-link-btn">&larr; All Standards</a>
+        <a href="/factory" class="factory-link-btn">&larr; Factory</a>
+      </div>
+    </div>
+
+    <h1 class="standard-detail-title">{standard.title}</h1>
+
+    {standard.source_skill && (
+      <div class="standard-detail-source">
+        Source: <a href={`/skills/${standard.source_skill}`} class="standard-usage-badge">{standard.source_skill}</a>
+      </div>
+    )}
+
+    <!-- Body: Full-width rendered markdown -->
+    {renderedBody && (
+      <article class="standard-body glass-card" set:html={renderedBody} />
+    )}
+
+    <!-- Skills using this standard -->
+    {standard.skills_using && standard.skills_using.length > 0 && (
+      <div class="standard-used-by glass-card">
+        <h3>Skills Using This Standard ({standard.skill_count})</h3>
+        <div class="standard-used-by-grid">
+          {standard.skills_using.map((skillId: string) => (
+            <a href={`/skills/${skillId}`} class="standard-used-by-link">{skillId}</a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</BaseLayout>

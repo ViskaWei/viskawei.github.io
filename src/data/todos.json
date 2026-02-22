@@ -1,0 +1,3827 @@
+{
+  "generated_at": "2026-02-22T02:40:36.693Z",
+  "total": 477,
+  "by_priority": {
+    "high": 71,
+    "medium": 362,
+    "low": 44
+  },
+  "todos": [
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "Language correctly detected (Chinese default unless English specified)",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "All sections present and complete",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "Chinese characters render properly (if applicable)",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "Code listings formatted with syntax highlighting",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "Table of contents generated",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "Figures and tables numbered correctly",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "References formatted (if applicable)",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "PDF compiles without errors",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "File size reasonable (<10MB for typical reports)",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "doc",
+      "skill_source": "private",
+      "text": "Output filename descriptive (e.g., `polymarket_agent_report.pdf`)",
+      "section": "Quality Checklist",
+      "priority": "high",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "All demos render and animate at 60fps",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "No console errors",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "Responsive: test at 375px (mobile) and 1920px (desktop)",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "Three.js hero: reduces particles on mobile",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "KaTeX equations render correctly",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "Results data loads from JSON (check network tab)",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "Language toggle works without reload",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "All links (PDF, GitHub, arXiv) are correct",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "BibTeX copy button works",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "research-2-web",
+      "skill_source": "private",
+      "text": "Canvas demos resize properly on window resize",
+      "section": "Phase 6: Build, Test & Deploy (30 min)",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Error metric evaluates at points drawn from the actual data distribution",
+      "section": "RIGHT: Evaluate at actual data positions",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Plots use `np.percentile(r_data, [3, 97])` for axis range, not hardcoded limits",
+      "section": "RIGHT: Evaluate at actual data positions",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "If using a grid, it covers only the data support (where density > threshold)",
+      "section": "RIGHT: Evaluate at actual data positions",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "If fitting multiple fields from a single observation, use joint regression (not sequential projection)",
+      "section": "Solve: min_theta ||F @ theta - v||^2 jointly",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Design matrix columns span ALL unknown fields simultaneously",
+      "section": "Solve: min_theta ||F @ theta - v||^2 jointly",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Cross-contamination test: does fitting V alone change when Φ basis is added?",
+      "section": "Solve: min_theta ||F @ theta - v||^2 jointly",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "For `L(θ) = θᵀAθ - bᵀθ`: normal equations are `(2A)θ = b`, NOT `Aθ = b`",
+      "section": "RIGHT: Loss L = θᵀAθ - bᵀθ + C → ∇L = 2Aθ - b = 0 → (2A)θ = b",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "For `L(θ) = (1/2)θᵀAθ - bᵀθ`: normal equations are `Aθ = b` (the 1/2 cancels)",
+      "section": "RIGHT: Loss L = θᵀAθ - bᵀθ + C → ∇L = 2Aθ - b = 0 → (2A)θ = b",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Verify by checking: does `L(θ_solved)` < `L(θ_solved ± small perturbation)`?",
+      "section": "RIGHT: Loss L = θᵀAθ - bᵀθ + C → ∇L = 2Aθ - b = 0 → (2A)θ = b",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Double-check paper notation — some papers absorb the factor of 2 into A",
+      "section": "RIGHT: Loss L = θᵀAθ - bᵀθ + C → ∇L = 2Aθ - b = 0 → (2A)θ = b",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Error formula matches paper's exact definition (check equation numbers)",
+      "section": "Functions identified up to additive constant → find best constant",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "If functions identified up to additive constant: use `c_opt = mean(true - pred)` alignment",
+      "section": "Functions identified up to additive constant → find best constant",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Denominator uses `||f*||`, NOT `||f* - mean(f*)||`",
+      "section": "Functions identified up to additive constant → find best constant",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Verify: error(true, true) == 0 (sanity check)",
+      "section": "Functions identified up to additive constant → find best constant",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "scicomp-validation",
+      "skill_source": "private",
+      "text": "Verify: error units match what paper reports (%, decimal, etc.)",
+      "section": "Functions identified up to additive constant → find best constant",
+      "priority": "high",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Task 1",
+      "section": "Phase 1: Preparation",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Task 2",
+      "section": "Phase 1: Preparation",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Task 3",
+      "section": "Phase 2: Execution",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Task 4",
+      "section": "Phase 2: Execution",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Task 5",
+      "section": "Phase 3: Validation",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Task 6",
+      "section": "Phase 3: Validation",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Metadata complete (name, description, version)",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Description is clear and under 200 chars",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "\"When to Use\" section with 3+ specific scenarios",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Hooks configured if auto-triggered (optional)",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Hook syntax validated against schema",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Examples included (minimum 2)",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Structure clear (rigid vs flexible)",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "No anti-patterns present",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Tested in live session",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "skill-creator-enhanced",
+      "skill_source": "private",
+      "text": "Trigger words documented",
+      "section": "Checklist Summary",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Completeness**: Every cell in the factorial design is filled (or marked missing with reason)",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Consistency**: Same metric format across all tables (%, decimal places, bold convention)",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Reproducibility**: Parameter table lists ALL settings, not just varied ones",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Bolding**: Best values bolded consistently (per-column or per-row, not mixed)",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Analysis**: Every anomaly, failure, and surprising result has an explanation",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Cross-reference**: Tables reference the same experiment IDs/paths for traceability",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Status**: Running/missing experiments clearly marked with ETAs",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "table-results",
+      "skill_source": "private",
+      "text": "**Captions**: Each table has a descriptive caption (for LaTeX)",
+      "section": "Checklist Before Finalizing",
+      "priority": "high",
+      "last_modified": "2026-02-15"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Test 2-3 sample references**: Verify they pull correct values before building full model",
+      "section": "Essential Verification",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Column mapping**: Confirm Excel columns match (e.g., column 64 = BL, not BK)",
+      "section": "Essential Verification",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Row offset**: Remember Excel rows are 1-indexed (DataFrame row 5 = Excel row 6)",
+      "section": "Essential Verification",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**NaN handling**: Check for null values with `pd.notna()`",
+      "section": "Common Pitfalls",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Far-right columns**: FY data often in columns 50+",
+      "section": "Common Pitfalls",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Multiple matches**: Search all occurrences, not just first",
+      "section": "Common Pitfalls",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Division by zero**: Check denominators before using `/` in formulas (#DIV/0!)",
+      "section": "Common Pitfalls",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Wrong references**: Verify all cell references point to intended cells (#REF!)",
+      "section": "Common Pitfalls",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Cross-sheet references**: Use correct format (Sheet1!A1) for linking sheets",
+      "section": "Common Pitfalls",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Start small**: Test formulas on 2-3 cells before applying broadly",
+      "section": "Formula Testing Strategy",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Verify dependencies**: Check all cells referenced in formulas exist",
+      "section": "Formula Testing Strategy",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "xlsx",
+      "skill_source": "private",
+      "text": "**Test edge cases**: Include zero, negative, and very large values",
+      "section": "Formula Testing Strategy",
+      "priority": "high",
+      "last_modified": "2026-02-07"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Run APOGEE exclusion script",
+      "section": "Stage 0: Data Preparation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Verify 360k train samples created",
+      "section": "Stage 0: Data Preparation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Check overlap count in SPLIT_INFO.txt",
+      "section": "Stage 0: Data Preparation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Validate HDF5 file integrity",
+      "section": "Stage 0: Data Preparation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Set `CUDA_VISIBLE_DEVICES` to single GPU",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Verify BOSZ checkpoint path in config",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Launch training",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Monitor GPU utilization (should be 90-100%)",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Check WandB logging active",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Wait for completion (~6-8 hours)",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Find best checkpoint by val_mae",
+      "section": "Stage 1: DESI Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Update config with Stage 1 best checkpoint",
+      "section": "Stage 2: APOGEE Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Verify APOGEE data paths",
+      "section": "Stage 2: APOGEE Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Launch training",
+      "section": "Stage 2: APOGEE Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Monitor convergence",
+      "section": "Stage 2: APOGEE Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Wait for completion (~2-3 hours)",
+      "section": "Stage 2: APOGEE Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Find best checkpoint",
+      "section": "Stage 2: APOGEE Fine-tuning",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Run evaluation script on APOGEE test",
+      "section": "Stage 3: Evaluation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Verify σ_robust < 0.40",
+      "section": "Stage 3: Evaluation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Verify R² > 0.75",
+      "section": "Stage 3: Evaluation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Create visualization",
+      "section": "Stage 3: Evaluation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "bosz-to-desi-training",
+      "skill_source": "private",
+      "text": "Document results",
+      "section": "Stage 3: Evaluation",
+      "priority": "medium",
+      "last_modified": "2026-02-09"
+    },
+    {
+      "skill_id": "gpu-setup-volta04",
+      "skill_source": "private",
+      "text": "**Step 1**: Verify volta04 environment",
+      "section": "Implementation Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "gpu-setup-volta04",
+      "skill_source": "private",
+      "text": "**Step 2**: Check CUDA installation",
+      "section": "Implementation Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "gpu-setup-volta04",
+      "skill_source": "private",
+      "text": "**Step 3**: Add LD_LIBRARY_PATH to execution scripts",
+      "section": "Implementation Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "gpu-setup-volta04",
+      "skill_source": "private",
+      "text": "**Step 4**: Create test_gpu.sh",
+      "section": "Implementation Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "gpu-setup-volta04",
+      "skill_source": "private",
+      "text": "**Step 5**: Verify GPU detection",
+      "section": "Implementation Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "gpu-setup-volta04",
+      "skill_source": "private",
+      "text": "**Step 6**: Document in project README",
+      "section": "Implementation Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Content fills entire page (no large white margins)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Consistent spacing between columns",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Consistent spacing between blocks/sections",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All elements aligned properly (use ruler tool)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "No overlapping text or figures",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "White space evenly distributed",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Title clearly visible and large (72pt+)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Section headers readable (48-72pt)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Body text readable at 100% zoom (24-36pt minimum)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "No text cutoff or running off edges",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Consistent font usage throughout",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All special characters render correctly (symbols, Greek letters)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All figures display correctly",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "No pixelated or blurry images",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Figure captions present and readable",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Colors render as expected (not washed out or too dark)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Logos display clearly",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "QR codes visible and scannable",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Title and authors complete",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All sections present (Intro, Methods, Results, Conclusions)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "References included",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Contact information visible",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Acknowledgments (if applicable)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "No placeholder text remaining (Lorem ipsum, TODO, etc.)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "No LaTeX compilation warnings in important areas",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All citations resolved (no [?] marks)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All cross-references working",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Page boundaries correct (no content cut off)",
+      "section": "FIX ALL OF THESE before proceeding",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Title readable from 6 feet away",
+      "section": "For 36x48\" poster, print on letter paper (~25% scale)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Section headers readable from 4 feet away",
+      "section": "For 36x48\" poster, print on letter paper (~25% scale)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Body text readable from 2 feet away",
+      "section": "For 36x48\" poster, print on letter paper (~25% scale)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Figures clear and understandable",
+      "section": "For 36x48\" poster, print on letter paper (~25% scale)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Colors printed accurately",
+      "section": "For 36x48\" poster, print on letter paper (~25% scale)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "No obvious design flaws",
+      "section": "For 36x48\" poster, print on letter paper (~25% scale)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Text-background contrast ratio ≥ 4.5:1 (WCAG AA)",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Important elements contrast ratio ≥ 7:1 (WCAG AAA)",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "View PDF through color blindness simulator",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Information not lost with red-green simulation",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Use Coblis (color-blindness.com) or similar tool",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Spell-check all text",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Verify all author names and affiliations",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Check all numbers and statistics for accuracy",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Confirm all citations are correct",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Review figure labels and captions",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Check for typos in headers and titles",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Ask colleague to review poster",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "30-second test: Can they identify main message?",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "5-minute review: Do they understand conclusions?",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Note any confusing elements",
+      "section": "For printing, keep original (no compression)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "PDF size exactly matches requirements (check with pdfinfo)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "All fonts embedded (check with pdffonts)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Color mode correct (RGB for screen, CMYK for print if required)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Bleed area added if required (usually 3-5mm)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Crop marks visible if required",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Test print completed and reviewed",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "File naming clear: [LastName]_[Conference]_Poster.pdf",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Backup copy saved",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Paper type (matte vs. glossy)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Printing method (inkjet, large format, fabric)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Color profile (provided to printer if required)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Delivery deadline and shipping address",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Tube or flat packaging preference",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "PDF size optimized (<10MB for email)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Tested on multiple PDF viewers (Adobe, Preview, etc.)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Displays correctly on different screens",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "QR codes tested and functional",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "latex-posters",
+      "skill_source": "private",
+      "text": "Alternative formats prepared (PNG for social media)",
+      "section": "- Missing figures: Image files not found",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "数据划分固定且可复现",
+      "section": "2.2 检查清单",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "训练/验证/测试无泄漏",
+      "section": "2.2 检查清单",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "数据预处理逻辑统一",
+      "section": "2.2 检查清单",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "标签分布检查（是否平衡）",
+      "section": "2.2 检查清单",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "缺失值处理方案确定",
+      "section": "2.2 检查清单",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "Action 1",
+      "section": "下一步",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "ml-experiment-patterns",
+      "skill_source": "private",
+      "text": "Action 2",
+      "section": "下一步",
+      "priority": "medium",
+      "last_modified": "2026-02-01"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "All formulas use proper LaTeX syntax ($...$ or $$...$$)",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Each file has clear beginning and ending",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Narrative flows smoothly when read aloud",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Complex concepts have multiple explanations",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "\"Why\" motivations are included",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Files are balanced in length and content",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Understanding the set of files ≈ understanding the original document",
+      "section": "Step 5: Validate Output",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "All formulas validated (no code blocks, proper LaTeX syntax)",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Each file has clear introduction and conclusion",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Narrative reads smoothly when spoken aloud",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Complex concepts have ≥3 explanatory angles",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Understanding checkpoints included",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "\"Why\" motivations provided for key concepts",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Files are balanced in length (±30%)",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Progression from simple to complex",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "Cross-references between files are clear",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "notebooklm-learn",
+      "skill_source": "private",
+      "text": "User could understand original by reading all parts",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "`base_config` points to valid YAML file",
+      "section": "Generate template",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "`sweep` contains at least one parameter",
+      "section": "Generate template",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "All sweep values are lists (even for single value: `[42]`)",
+      "section": "Generate template",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "`results.metric` matches what your training script logs",
+      "section": "Generate template",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "`results.goal` is either \"minimize\" or \"maximize\"",
+      "section": "Generate template",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Create sweep config** (`configs/my_sweep.yaml`)",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Copy sweep runner template** (from Step 2 above → `scripts/run_sweep.py`)",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Implement `train_model(config) -> dict`** in your project",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Test with 1 GPU first**: `--gpus 0`",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Validate results**: Check `results/sweep_*/summary.yaml`",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Scale to all GPUs**: `--gpus 0,1,2,3,4,5,6,7`",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Monitor**: `watch nvidia-smi`, check logs in `results/sweep_*/logs/`",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "parallel-experiment-runner",
+      "skill_source": "private",
+      "text": "**Analyze best config**: Load `summary.yaml`, extract best run",
+      "section": "Quick Start Checklist",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Text is large enough (minimum 18pt, ideally 24pt+ for body text)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "High contrast between text and background (4.5:1 minimum, 7:1 preferred)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Color scheme is professional and colorblind-accessible",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Consistent visual design across all slides",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "White space is adequate (not cramped)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Fonts are clear and professional",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "No text overflow or truncation at slide edges",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "No element overlaps (text over images, overlapping shapes)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Titles are consistently positioned",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Content is properly aligned",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Bullets and text are not cut off",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Figures fit within slide boundaries",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Captions and labels are visible and readable",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "One main idea per slide (not overloaded)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Minimal text (3-6 bullets per slide maximum)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Bullet points are concise (5-7 words each)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Figures are simplified and clear (not copy-pasted from papers)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Data visualizations have large, readable labels",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Citations are present and properly formatted",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Results/data slides dominate the presentation (40-50% of content)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Clear narrative arc (introduction → methods → results → discussion)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Logical progression between slides",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Slide count appropriate for talk duration (~1 slide per minute)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Title slide includes authors, affiliation, date",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Introduction cites relevant background literature (3-5 papers)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Discussion cites comparison papers (3-5 papers)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Conclusions slide summarizes key findings",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Acknowledgments/funding slide at end",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Research question clearly stated",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Methods adequately summarized (not excessive detail)",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Results presented logically with clear visualizations",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Statistical significance indicated appropriately",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Conclusions supported by data shown",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Limitations acknowledged where appropriate",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Future directions or broader impact discussed",
+      "section": "Presentations and Slide Decks",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Summary statement clearly conveys overall assessment",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Major concerns are clearly identified and justified",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Suggested revisions are specific and actionable",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Minor issues are noted but properly categorized",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Statistical methods have been evaluated",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Reproducibility and data availability assessed",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Ethical considerations verified",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Figures and tables evaluated for quality and integrity",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Writing quality assessed",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Tone is constructive and professional throughout",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Review is thorough but proportionate to manuscript scope",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "peer-review",
+      "skill_source": "private",
+      "text": "Recommendation is consistent with identified issues",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Can describe in 3-4 items or less? (NOT 5+)",
+      "section": "Step 0: Pre-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Is it a simple workflow (3-4 steps, NOT 7+)?",
+      "section": "Step 0: Pre-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Can describe all text in 10 words or less?",
+      "section": "Step 0: Pre-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Does it convey ONE message (not multiple)?",
+      "section": "Step 0: Pre-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Can read ALL text clearly",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Count: 3-4 elements or fewer",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "White space: 50%+ empty",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Understand in 2 seconds",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "NOT a complex 5+ stage workflow",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "NOT multiple nested sections",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Text small/hard to read → Regenerate with \"150pt+\"",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "More than 4 elements → Regenerate \"ONLY 3 elements\"",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Less than 50% white space → Regenerate \"60% white space\"",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Complex multi-stage → SPLIT into 2-3 graphics",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Multiple cases cramped → SPLIT into separate graphics",
+      "section": "Step 2b: Post-Generation Review (MANDATORY)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "NO content cut off at ANY of the 4 edges (check carefully)",
+      "section": "After Export",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "All images display correctly",
+      "section": "After Export",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Colors render as expected",
+      "section": "After Export",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Text readable at 25% scale",
+      "section": "After Export",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "pptx-posters",
+      "skill_source": "private",
+      "text": "Graphics look SIMPLE (not like complex 7-stage workflows)",
+      "section": "After Export",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "High-quality image format (PNG from AI generation)",
+      "section": "Visual Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "No overlapping elements (AI handles automatically)",
+      "section": "Visual Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Adequate spacing between all components (AI optimizes)",
+      "section": "Visual Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Clean, professional alignment",
+      "section": "Visual Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "All arrows connect properly to intended targets",
+      "section": "Visual Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Colorblind-safe palette (Okabe-Ito) used",
+      "section": "Accessibility",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Works in grayscale (tested with accessibility checker)",
+      "section": "Accessibility",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Sufficient contrast between elements (verified)",
+      "section": "Accessibility",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Redundant encoding where appropriate (shapes + colors)",
+      "section": "Accessibility",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Colorblind simulation passes all checks",
+      "section": "Accessibility",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Text minimum 7-8 pt at final size",
+      "section": "Typography and Readability",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "All elements labeled clearly and completely",
+      "section": "Typography and Readability",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Consistent font family and sizing",
+      "section": "Typography and Readability",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "No text overlaps or cutoffs",
+      "section": "Typography and Readability",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Units included where applicable",
+      "section": "Typography and Readability",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Consistent styling with other figures in manuscript",
+      "section": "Publication Standards",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Comprehensive caption written with all abbreviations defined",
+      "section": "Publication Standards",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Referenced appropriately in manuscript text",
+      "section": "Publication Standards",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Meets journal-specific dimension requirements",
+      "section": "Publication Standards",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Exported in required format for journal (PDF/EPS/TIFF)",
+      "section": "Publication Standards",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Ran `run_quality_checks()` and achieved PASS status",
+      "section": "Quality Verification (Required)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Reviewed overlap detection report (zero high-severity overlaps)",
+      "section": "Quality Verification (Required)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Passed accessibility verification (grayscale and colorblind)",
+      "section": "Quality Verification (Required)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Resolution validated at target DPI (300+ for print)",
+      "section": "Quality Verification (Required)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Visual quality report generated and reviewed",
+      "section": "Quality Verification (Required)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "All quality reports saved with figure files",
+      "section": "Quality Verification (Required)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Source files (.tex, .py) saved for future revision",
+      "section": "Documentation and Version Control",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Quality reports archived in `quality_reports/` directory",
+      "section": "Documentation and Version Control",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Configuration parameters documented (colors, spacing, sizes)",
+      "section": "Documentation and Version Control",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Git commit includes source, output, and quality reports",
+      "section": "Documentation and Version Control",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "README or comments explain how to regenerate figure",
+      "section": "Documentation and Version Control",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Figure displays correctly in compiled manuscript",
+      "section": "Final Integration Check",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Cross-references work (`\\ref{}` points to correct figure)",
+      "section": "Final Integration Check",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Figure number matches text citations",
+      "section": "Final Integration Check",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "Caption appears on correct page relative to figure",
+      "section": "Final Integration Check",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-schematics",
+      "skill_source": "private",
+      "text": "No compilation warnings or errors related to figure",
+      "section": "Final Integration Check",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Slide count appropriate for duration",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Title slide complete (name, affiliation, date)",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Clear narrative flow",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "One main idea per slide",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Font sizes ≥18pt (preferably 24pt+)",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "High contrast colors",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Figures large and readable",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "No text overflow or element overlap",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Consistent design throughout",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Slide numbers present",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Contact info on final slide",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Backup slides prepared",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Tested on projector (if possible)",
+      "section": "- Slide dimensions",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Multiple copies saved (laptop, cloud, USB)",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Works on presentation computer",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Adapters/cables available",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Backup PDF version",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Tested with projector (if possible)",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "No typos or errors",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "All figures high quality",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Slide numbers correct",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Contact info on final slide",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Backup slides ready",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Notes prepared (if using)",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Timer/phone ready",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Water available",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Business cards/handouts",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "scientific-slides",
+      "skill_source": "private",
+      "text": "Comfortable with material (3+ practices)",
+      "section": "Stage 6: Final Preparation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "venue-templates",
+      "skill_source": "private",
+      "text": "All sections present and properly formatted",
+      "section": "Or use latexmk for automated compilation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "venue-templates",
+      "skill_source": "private",
+      "text": "Citations render correctly",
+      "section": "Or use latexmk for automated compilation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "venue-templates",
+      "skill_source": "private",
+      "text": "Figures appear with proper captions",
+      "section": "Or use latexmk for automated compilation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "venue-templates",
+      "skill_source": "private",
+      "text": "Page count within limits",
+      "section": "Or use latexmk for automated compilation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "venue-templates",
+      "skill_source": "private",
+      "text": "Author guidelines followed",
+      "section": "Or use latexmk for automated compilation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "venue-templates",
+      "skill_source": "private",
+      "text": "Supplementary materials prepared (if needed)",
+      "section": "Or use latexmk for automated compilation",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "Training started successfully (see \"Epoch 0\" in log)",
+      "section": "Look for: val_mae decreasing, R² increasing",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "GPU utilization >90%",
+      "section": "Look for: val_mae decreasing, R² increasing",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "Val MAE decreasing trend",
+      "section": "Look for: val_mae decreasing, R² increasing",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "No CUDA OOM errors",
+      "section": "Look for: val_mae decreasing, R² increasing",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "WandB logging active",
+      "section": "Look for: val_mae decreasing, R² increasing",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "Checkpoint loaded successfully",
+      "section": "Monitor progress",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "Training on 4,867 APOGEE samples",
+      "section": "Monitor progress",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "Val MAE on APOGEE labels decreasing",
+      "section": "Monitor progress",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "vit-desi-apogee-pipeline",
+      "skill_source": "private",
+      "text": "GPU utilization stable",
+      "section": "Monitor progress",
+      "priority": "medium",
+      "last_modified": "2026-02-08"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "All required sections complete",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Patient privacy protected (HIPAA compliance)",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Informed consent obtained (if applicable)",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Accurate and verified clinical data",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Appropriate medical terminology and coding",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Clear, professional language",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Proper formatting per guidelines",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "References cited appropriately",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Figures and tables labeled correctly",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Spell-checked and proofread",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Regulatory requirements met",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Institutional policies followed",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Signatures and dates present",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "clinical-reports",
+      "skill_source": "scientific",
+      "text": "Quality assurance review completed",
+      "section": "Final Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Total page count is 50+ pages",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "All essential visuals (5-6 core + any additional) are included and render correctly",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Executive summary captures key findings",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "All data points have sources cited",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Analysis frameworks are properly applied",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Recommendations are actionable and prioritized",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "No orphaned figures or tables",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Table of contents, list of figures, list of tables are accurate",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Bibliography is complete",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "PDF renders without errors",
+      "section": "Phase 5: Compilation & Review",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Cover page with hero visual",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Table of contents (auto-generated)",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "List of figures (auto-generated)",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "List of tables (auto-generated)",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Executive summary (2-3 pages)",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "All 11 core chapters present",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Appendix A: Methodology",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Appendix B: Data tables",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Appendix C: Company profiles",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "References/Bibliography",
+      "section": "Structure Completeness",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Market growth trajectory chart (Priority 1)",
+      "section": "Visual Completeness (Core 5-6)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "TAM/SAM/SOM diagram (Priority 2)",
+      "section": "Visual Completeness (Core 5-6)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Porter's Five Forces (Priority 3)",
+      "section": "Visual Completeness (Core 5-6)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Competitive positioning matrix (Priority 4)",
+      "section": "Visual Completeness (Core 5-6)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Risk heatmap (Priority 5)",
+      "section": "Visual Completeness (Core 5-6)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Executive summary infographic (Priority 6, optional)",
+      "section": "Visual Completeness (Core 5-6)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Market ecosystem diagram",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Regional breakdown chart",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Segment growth chart",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Industry trends/PESTLE diagram",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Market share chart",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Customer segmentation chart",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Technology roadmap",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Regulatory timeline",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Opportunity matrix",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Implementation timeline",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Financial projections chart",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Other section-specific visuals",
+      "section": "Additional Visuals (Generate as Needed)",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "All statistics have sources",
+      "section": "Content Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Projections include assumptions",
+      "section": "Content Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Frameworks properly applied",
+      "section": "Content Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Recommendations are actionable",
+      "section": "Content Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Writing is professional quality",
+      "section": "Content Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "No placeholder or incomplete sections",
+      "section": "Content Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "PDF compiles without errors",
+      "section": "Technical Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "All figures render correctly",
+      "section": "Technical Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Cross-references work",
+      "section": "Technical Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Bibliography complete",
+      "section": "Technical Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "market-research-reports",
+      "skill_source": "scientific",
+      "text": "Page count exceeds 50",
+      "section": "Technical Quality",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Diagnosis is accurate and properly coded (ICD-10)",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Goals are SMART and patient-centered",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Interventions are evidence-based and guideline-concordant",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Timeline is realistic and clearly defined",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Monitoring plan is comprehensive",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Safety considerations are addressed",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Patient preferences and values incorporated",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Shared decision-making documented",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Health literacy appropriate language",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Cultural considerations addressed",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Patient education plan included",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "HIPAA-compliant de-identification",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Medical necessity documented",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Informed consent noted",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Provider signature and credentials",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Date of plan creation/revision",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Specialist referrals documented",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Care team roles defined",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Follow-up schedule clear",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Emergency contacts provided",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "treatment-plans",
+      "skill_source": "scientific",
+      "text": "Transition planning addressed",
+      "section": "Quality Checklist",
+      "priority": "medium",
+      "last_modified": "2026-01-25"
+    },
+    {
+      "skill_id": "audit",
+      "skill_source": "private",
+      "text": "[Question 1]",
+      "section": "BLOCKED",
+      "priority": "low",
+      "last_modified": "2026-02-20"
+    },
+    {
+      "skill_id": "audit",
+      "skill_source": "private",
+      "text": "[Question 2]",
+      "section": "BLOCKED",
+      "priority": "low",
+      "last_modified": "2026-02-20"
+    },
+    {
+      "skill_id": "audit",
+      "skill_source": "private",
+      "text": "[Question 3 — max 3]",
+      "section": "BLOCKED",
+      "priority": "low",
+      "last_modified": "2026-02-20"
+    },
+    {
+      "skill_id": "audit",
+      "skill_source": "private",
+      "text": "`pytest tests/ -v` → exit 0",
+      "section": "Auto-Verify Commands",
+      "priority": "low",
+      "last_modified": "2026-02-20"
+    },
+    {
+      "skill_id": "audit",
+      "skill_source": "private",
+      "text": "`ruff check .` → exit 0",
+      "section": "Auto-Verify Commands",
+      "priority": "low",
+      "last_modified": "2026-02-20"
+    },
+    {
+      "skill_id": "audit",
+      "skill_source": "private",
+      "text": "`mypy src/` → exit 0",
+      "section": "Auto-Verify Commands",
+      "priority": "low",
+      "last_modified": "2026-02-20"
+    },
+    {
+      "skill_id": "code2d2-web",
+      "skill_source": "private",
+      "text": "All target files listed",
+      "section": "Phase G1: Setup (Lead)",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "code2d2-web",
+      "skill_source": "private",
+      "text": "D2 install completed",
+      "section": "Phase G1: Setup (Lead)",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "code2d2-web",
+      "skill_source": "private",
+      "text": "Output directory created",
+      "section": "Phase G1: Setup (Lead)",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "code2d2-web",
+      "skill_source": "private",
+      "text": "D2 syntax + style template content in memory",
+      "section": "Phase G1: Setup (Lead)",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "Every node has exactly 1 class from the standard symbols",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "No self-loop edges (`source === target`)",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "Overview ≤ 10 nodes (groups collapsed)",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "Primary flow is clean L→R or T→B, no large detours",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "Secondary edges labeled; primary edges unlabeled",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "No orphan nodes (every node has ≥ 1 connection)",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart",
+      "skill_source": "private",
+      "text": "Legend included",
+      "section": "Phase 3: Self-Check",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**No orphan nodes** — every node has at least 1 connection",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**No self-loops** — no edge where source === target",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**Every gate has pass + fail** — every DecisionNode has exactly 2 outgoing gate edges",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**Edge toggles work** — each category can be independently shown/hidden",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**ELK no overlaps** — no nodes overlap after layout",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**Detail panel** — every clickable node has metadata in the right sidebar",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**4-channel encoding** — every node has: shape (function), color (executor), stripe (stage), halo (if gate)",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**Breadcrumb navigation** — drill-down and back navigation works",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**Group expansion** — collapsed/expanded states work correctly",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-detail",
+      "skill_source": "private",
+      "text": "**Depth filter** — L0/L1/L2 filtering works",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**3-second scan** — narrate main flow without clicking",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**8-10 nodes** — exactly (split if fewer, group if more)",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**Primary-only spine** — collapsed view shows ONLY primary flow edges (black 3px)",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**Shape compliance** — every node's shape matches its standard symbol type",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**Gate pattern** — every expansion follows: dataflow → diamond → pass/fail → output/rework → feedback",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**Legend present** — shapes + edges + accents documented",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**No orphan nodes** — every node connected",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-overview",
+      "skill_source": "private",
+      "text": "**No self-loops** — no edge where source === target",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-21"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Content completeness** — N/N source items mapped (0 missing)",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Loop structure clear** — nested containers with labeled headers and count badges",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Parameters visible** — every specific value shown as annotation node",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Code refs present** — every file:Class reference shown as badge",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Comparison branches** — parallel strategies shown as horizontal branches from dispatch",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Standard shapes** — decisions = diamonds, outputs = documents, dispatch = hexagon",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Legend present** — node types, edge types, stage colors documented",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Readable** — all text ≥ 9px, no overlapping nodes, no truncated labels",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    },
+    {
+      "skill_id": "flowchart-protocol",
+      "skill_source": "private",
+      "text": "**Passes `/audit-flowchart`** — including Layer C (Content Completeness) for protocol diagrams",
+      "section": "Acceptance Checklist",
+      "priority": "low",
+      "last_modified": "2026-02-22"
+    }
+  ]
+}
