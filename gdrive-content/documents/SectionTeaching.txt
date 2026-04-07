@@ -1,0 +1,80 @@
+﻿Today we’re going to explore the electric field created by a very long, uniformly charged rod of linear charge density +λ+\lambda+λ. We have four points in the same plane as the rod—W, X, Y, and Z—arranged so that W and Y are equidistant from the rod, and X and Z are also equidistant from the rod. We’ll use the electric field of a long charged rod to answer questions about directions of fields and about the work done on a positively charged particle moving along different paths.
+1. Because the rod is positively charged, the electric field E at any point points radially outward, away from the rod.
+On a top view, that means if the rod is at the center, the field vectors point straight away from the rod toward larger rrr.
+2. 
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+  
+
+
+
+
+
+  
+x
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Teaching Script (Concise Explanation)
+Introduction
+ “Today, let’s see how to use Gauss’s law to find the electric field due to an infinite sheet with negative surface charge density, and then extend it to multiple sheets by superposition.”
+
+
+
+
+  
+
+________________
+
+
+Part (a): Single Sheet with Negative Charge −σ-\sigma
+1. Setup a Gaussian Surface
+   * Imagine a cylindrical ‘pillbox’ of area AA, centered on the charged sheet so that it extends equally above and below the sheet.
+2. Apply Gauss’s Law
+   * Gauss’s law says ∮E⋅dA=qencε0\displaystyle \oint \mathbf{E}\cdot d\mathbf{A} = \frac{q_{\text{enc}}}{\varepsilon_0}.
+   * The only charge enclosed is the sheet’s charge on the area AA, so qenc=−σ Aq_{\text{enc}} = -\sigma \, A.
+3. Calculate the Flux
+   * The electric field from a negatively charged infinite sheet points toward the sheet on both sides.
+   * The flux is E×AE \times A through each circular face, but the directions cause a net negative sign if you assume outward flux is positive. This yields a total flux of ±2EA\pm 2EA, depending on how you define directions.
+4. Solve for EE
+   * Combine the flux and enclosed charge to get
+5. ±2EA=−σAε0⇒E=σ2ε0(sign depends on the side). \pm 2E A = \frac{-\sigma A}{\varepsilon_0} \quad \Rightarrow \quad E = \frac{\sigma}{2\varepsilon_0} \quad (\text{sign depends on the side}).
+   * Concretely, E(x)=−σ2ε0 x^for x>0,E(x)=+σ2ε0 x^for x<0. \mathbf{E}(x) = -\frac{\sigma}{2\varepsilon_0}\,\hat{\mathbf{x}}\quad \text{for } x>0, \quad \mathbf{E}(x) = +\frac{\sigma}{2\varepsilon_0}\,\hat{\mathbf{x}}\quad \text{for } x<0.
+________________
+
+
+Part (b): Multiple Sheets (Superposition)
+* For multiple parallel sheets, just add the fields from each sheet in each region.
+* Because each single sheet’s field is constant (in magnitude) and points away from a positively charged sheet or toward a negatively charged sheet, the total field in any region is the vector sum of all individual fields.
+* The result often simplifies dramatically because fields in some regions can cancel out if the sheets have equal and opposite charges.
+________________
+
+
+Summary
+1. Use a symmetric Gaussian surface so that the flux calculation is straightforward.
+2. Relate the total flux to the enclosed charge.
+3. Solve for EE.
+4. For multiple sheets, sum each sheet’s contribution region by region.
+“That’s it! Gauss’s law plus superposition makes these problems manageable.”

@@ -1,0 +1,125 @@
+﻿# Reinforcement Learning Framework for Stellar Target Selection in Galactic Archaeology
+
+
+## 1. Introduction
+
+
+This report outlines a reinforcement learning (RL) approach for optimizing stellar target selection in the field of galactic archaeology. The primary objective is to identify the oldest stars in the galaxy, with a particular focus on red giants characterized by very low surface gravity.
+
+
+## 2. Reinforcement Learning Model
+
+
+Given fixed time, 
+
+
+### 2.1 State Space
+
+
+The state space (S) is defined as the number of stars that have been processed at any given time step. This can be represented as:
+
+
+S = {s | s ∈ ℕ, 0 ≤ s ≤ N}
+
+
+Where N is the total number of stars in the available dataset.
+How much time already spent on each star and How much time left.
+
+
+Total_time = 10hr,  10 # intervals, if we have 100 stars, then we allocate 10 to 100. 100 * 10 = 1000
+
+
+60mins ,  100 ^ 10
+
+
+### 2.2 Action Space
+1. Look at which star and for how long  0,1,2….remaining hours
+
+
+The action space (A) consists of the decision to select or not select a particular star for observation. This can be formalized as:
+
+
+A = {a | a ∈ {0, 1}}
+
+
+Where 0 represents not selecting a star, and 1 represents selecting a star for observation.
+
+
+### 2.3 Reward Function: total number of times spent on valuable stars.
+
+
+The reward function (R) is based on the scientific value of the selected star, with higher rewards given for older stars, particularly red giants with very low surface gravity. This can be expressed as:
+
+
+R(s, a) = f(age, surface_gravity)
+
+
+Where f is a function that quantifies the star's value based on its age and surface gravity.
+
+
+### 2.4 Transition Function
+
+
+The transition function (T) describes how the state changes after each action:
+
+
+T(s, a, s') = P(s' | s, a)
+
+
+Where s' is the next state, given the current state s and action a.
+
+
+### 2.5 Policy
+
+
+The policy (π) is the strategy the agent uses to select actions:
+
+
+π(a | s) = P(a | s)
+
+
+The goal is to learn an optimal policy π* that maximizes the expected cumulative reward.
+
+
+## 3. Training Process
+
+
+### 3.1 Epoch Definition
+
+
+An epoch is defined as the period in which all 100 hours of observation time are utilized. This can be formalized as:
+
+
+Epoch = {t | ∑t(observation_time) = 100 hours}
+
+
+### 3.2 Learning Algorithm
+
+
+[Specify the chosen RL algorithm, e.g., DQN, PPO, etc.]
+
+
+## 4. Evaluation Metrics
+
+
+The performance of the RL model will be evaluated based on:
+
+
+1. The age distribution of selected stars
+2. The proportion of selected stars that are red giants with very low surface gravity
+3. The efficiency of observation time utilization
+
+
+## 5. Challenges and Considerations
+
+
+- Balancing exploration vs. exploitation
+- Handling the large state space of stellar spectra
+- Incorporating domain knowledge into the reward function
+- Adapting to new data and evolving scientific priorities
+
+
+## 6. Conclusion
+
+
+This reinforcement learning approach offers a promising framework for optimizing stellar target selection in galactic archaeology. By learning to identify the most valuable targets, particularly the oldest stars and low-gravity red giants, this method has the potential to significantly enhance our understanding of galactic evolution and formation history.

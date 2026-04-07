@@ -1,0 +1,20 @@
+﻿消融实验：
+1. TODO: 
+
+
+Embed_fn :   APE, CPE, RPE, RoPE, VPE, (default = VPE)
+Proj_fn: C1D, DC, SW, CB, PCA  (default = DC)
+Task:  cls vs reg 
+Param 接口
+
+
+Y : Param:   para[:, 1] = N x 3
+
+
+M = 0, T = 1, G = 2
+
+
+TODO: add noise
+
+
+最终需要的图和表参考：

@@ -1,0 +1,278 @@
+﻿https://www.youtube.com/watch?v=XRBc_xkZREg
+下面是基于你给的课件 7_FeatureDetection_SIFT.pdf 做的期中复习包（目前只看到这一份；以下所有要点与试题均据此整理）。
+________________
+
+
+（1）PPT要点（中文为主，专有名词中英对照）
+1. 动机与“兴趣点”（Interest Point / Feature）
+* 原始图像在尺度（scale）/方向（orientation）/光照（illumination）变化下难以直接匹配（见 p.6 图示“Raw Images are Hard to Match”）。解决思路：在局部找稳定且可重复的兴趣点并用不变描述子（invariant descriptor）来匹配（p.5–9）。
+
+* 好的兴趣点应具备：丰富的局部内容（局部有明显梯度/颜色变化）、位置明确、对旋转与尺度不变、对光照相对稳定（p.9）。相反，边缘（edge）不易精确定位（“Cannot Localize an Edge”，p.10），而斑点（blob，亮区被暗区包围或反之）具有固定位置与确定大小，更适合作为锚点（p.11–12）。
+
+2. 斑点检测与尺度空间（Blob Detection & Scale-Space）
+   * 尺度空间（Scale-Space）：用不同 σ 的高斯核对图像卷积形成金字塔堆栈
+(S(x,y,\sigma)=G(x,y,\sigma)*I(x,y))（p.24–26）。σ 越大，分辨率越低（p.25）。
+
+   * 拉普拉斯高斯（LoG, Laplacian of Gaussian）与规范化拉普拉斯（NLoG, Normalized LoG）：用 (\sigma^2\nabla^2) 做尺度归一化（Scale Normalization），使响应在不同 σ 下可比较（p.19–22），以局部极值确定斑点位置与特征尺度（Characteristic Scale）（p.23，p.27–28）。1D中“二阶高斯导数的零交叉对应边缘”（p.15），“在 (x,σ) 空间的局部极值表示斑点并给出特征尺度”（p.16–18）。
+
+3. SIFT 检测器（SIFT Detector）
+      * SIFT（Scale-Invariant Feature Transform）用高斯差分（DoG, Difference of Gaussian）近似 NLoG：
+( \text{DoG} = G_{s\sigma}-G_{\sigma} \approx (s-1)\sigma^2\nabla^2G )（p.32）。构建高斯尺度空间并相邻层相减得到 DoG 金字塔（p.33–36），在3×3×3邻域（x、y 与尺度 3D 立方体）做极值检测得到候选点（p.35–38），再剔除弱极值/低对比度点（p.37）。
+
+      * 尺度不变：使用每个点的特征尺度来匹配不同分辨率的对应区域（p.42）。
+
+4. 主方向与旋转不变（Principal Orientation & Rotation Invariance）
+         * 在关键点邻域统计梯度方向直方图，用
+(\theta=\tan^{-1}!\big((\partial I/\partial y)/(\partial I/\partial x)\big)) 计算方向（p.43），选取最显著峰值为主方向（Principal Orientation），据此实现旋转不变性（p.44）。
+
+5. SIFT 描述子（SIFT Descriptor）
+            * 在关键点邻域的网格上统计梯度方向直方图（Histogram of Oriented Gradients, HoG 思想），形成对尺度/光照/亮度鲁棒的局部描述（p.45–46）。
+
+6. 匹配与应用（Matching & Applications）
+               * SIFT 在尺度/旋转变化下能检测到相应特征并进行匹配（p.47–50），对**杂乱背景（clutter）也较鲁棒（p.49）。在全景拼接（Panorama Stitching）中，通过匹配 SIFT 点以估计图像变换/扭曲（warp）并对齐（p.50–52）；还展示了自动拼贴（Auto Collage）**等应用（p.53–54）。
+
+7. 局限（Limitations）
+                  * 对3D 视点大幅变化（如 90°）并非完全不变（p.55）。
+
+注：以上页码均指该 PDF 文件页，并结合其图示/公式内容（如 p.32 的 DoG≈NLoG 曲线对比、p.21–22 的尺度归一化效果图、p.43 的方向公式与直方图示意等）。
+________________
+
+
+（2）最可能考的题目
+说明：以下判断题与单选题中关键术语直接用 English；所有题目均来自/对应课件要点与图示。
+A. 判断题（30 题）
+                     1. Edges are ideal interest points because they have precise localization.
+
+                     2. Blobs have fixed position and definite size, suitable as interest points.
+
+                     3. Scale-space is built by convolving an image with Gaussians of varying σ.
+
+                     4. Increasing σ in scale-space yields higher spatial resolution.
+
+                     5. The unnormalized Laplacian response increases with σ.
+
+                     6. For scale invariance, Laplacian is multiplied by σ² (scale normalization).
+
+                     7. Local extrema of the normalized Laplacian across scales indicate blobs and their characteristic scale.
+
+                     8. SIFT uses DoG to approximate the normalized LoG.
+
+                     9. SIFT finds extrema in a 3×3×3 neighborhood across (x,y,scale).
+
+                     10. The principal orientation is chosen as the most prominent peak in the local gradient-direction histogram.
+
+                     11. The SIFT descriptor is made from histograms of gradient directions over spatial regions.
+
+                     12. The SIFT descriptor is highly sensitive to global brightness changes.
+
+                     13. The σ schedule in a Gaussian scale-space can be written as σ_k = σ₀·s^k.
+
+                     14. Edges are good interest points for blob detection.
+
+                     15. In 1D, local extrema in (x,σ)-space of the scale-normalized 2nd derivative represent blobs.
+
+                     16. Zero-crossings of the 2nd derivative of Gaussian denote edges in 1D signals.
+
+                     17. DoG equals σ²∇²G exactly for any s.
+
+                     18. SIFT matching is robust to rotation and clutter.
+
+                     19. Panorama stitching can be done by matching SIFT interest points and warping images accordingly.
+
+                     20. SIFT is fully invariant to large 3D viewpoint changes (e.g., 90°).
+
+                     21. The characteristic scale is the σ at which the normalized Laplacian attains an extremum.
+
+                     22. Scale normalization multiplies the first derivative by σ and the Laplacian by σ².
+
+                     23. Good interest points should be invariant to rotation and scale and relatively invariant to lighting.
+
+                     24. Raw images are easy to match across size/orientation/lighting changes.
+
+                     25. SIFT detects keypoints only at a single scale level.
+
+                     26. A DoG image is obtained by subtracting adjacent Gaussian-blurred images.
+
+                     27. The orientation used by SIFT can be computed as θ = arctan((∂I/∂y)/(∂I/∂x)).
+
+                     28. LoG/DoG blob detectors are isotropic and thus rotation-invariant in detection.
+
+                     29. SIFT detection removes low-contrast extrema as part of keypoint filtering.
+
+                     30. SIFT’s descriptor conceptually uses histogram-of-oriented-gradients.
+
+B. 单选题（30 题）
+                        1. The correct definition of scale-space is
+A. (S(x,y,\sigma)=G(x,y,\sigma)*I(x,y)) B. (S=I/\sigma) C. (S=\nabla^2 I) D. (S=I^{\sigma})
+
+                        2. A correct σ schedule is
+A. (\sigma_k=\sigma_0+k) B. (\sigma_k=\sigma_0 s^{k}) C. (\sigma_k=k/\sigma_0) D. (\sigma_k=\sigma_0 e^k)
+
+                        3. Scale normalization for Laplacian uses the factor
+A. σ B. σ² C. √σ D. 1/σ
+
+                        4. DoG approximates
+A. Sobel B. normalized LoG C. Hessian determinant D. Scharr
+
+                        5. SIFT extrema are detected by comparing to neighbors in
+A. 2D 3×3 B. 3D 3×3×3 C. 2D 5×5 D. whole image
+
+                        6. The orientation formula used is
+A. (\theta=\tan^{-1}(\partial_x/\partial_y)) B. (\theta=\tan^{-1}(\partial_y/\partial_x)) C. (\theta=\partial_x+\partial_y) D. (\theta=\nabla^2 I)
+
+                        7. Blobs are preferred because they provide
+A. infinite extent B. fixed position & size C. constant intensity D. straight edges
+
+                        8. As σ increases, the unnormalized Laplacian response tends to
+A. constant B. increase C. decrease D. oscillate
+
+                        9. A characteristic scale is where
+A. (|\nabla I|) is max B. normalized LoG attains an extremum C. intensity is max D. first derivative zero-crossing
+
+                        10. After assigning principal orientation, SIFT achieves
+A. scale invariance B. photometric invariance C. rotation invariance D. affine invariance
+
+                        11. The SIFT descriptor is computed from
+A. raw pixels B. gradient-direction histograms over spatial bins C. FFT D. integral image
+
+                        12. Which region is worst for precise localization as an interest point?
+A. corners B. blobs C. edges D. textured patches
+
+                        13. An application directly shown in slides is
+A. semantic segmentation B. panorama stitching C. super-resolution D. optical flow
+
+                        14. Under a 90° viewpoint change for a 3D object, SIFT matching is
+A. perfect B. poor C. slightly degraded D. unchanged
+
+                        15. Matching across scales mainly uses
+A. raw intensities B. characteristic scales C. ignoring orientation D. histogram equalization
+
+                        16. In 1D, zero-crossings of the 2nd derivative indicate
+A. corners B. edges C. color changes D. motion
+
+                        17. In DoG≈(s−1)σ²∇²G, the proportional constant depends on
+A. s−1 B. σ+1 C. 1/σ D. ∇²I
+
+                        18. Removal of low-contrast points happens during
+A. DoG construction B. extrema detection C. keypoint filtering D. orientation assignment
+
+                        19. For rotation invariance, SIFT uses
+A. affine normalization B. principal orientation from local gradient histogram C. RANSAC D. Hough transform
+
+                        20. In the scale-space stack, increasing σ yields
+A. higher resolution B. lower resolution C. lower σ D. random σ
+
+                        21. In the keypoint visualization, circle radii most directly indicate
+A. orientation B. scale C. intensity D. edge strength
+
+                        22. A DoG image is created by
+A. subtracting image from its blur B. subtracting two consecutive Gaussian-blurred images C. differentiating Gaussian once D. a Fourier difference
+
+                        23. A key desired property of interest points is
+A. non-repeatability B. brightness sensitivity C. invariance to rotation/scale D. translation only
+
+                        24. Blob detection via local extrema across scales uses
+A. Hessian det only B. NLoG across scales C. Canny edge D. Harris corner
+
+                        25. Effect of scale normalization is to
+A. add noise B. make responses comparable across σ C. sharpen edges D. remove orientation
+
+                        26. Robustness to clutter in SIFT matching comes mainly from
+A. global histograms B. many local distinctive descriptors C. segmentation D. template matching
+
+                        27. The panorama pipeline shown is
+A. compute SIFT → match → estimate warp B. compute edges only C. corners-only homography D. random transforms
+
+                        28. Orientation histograms are computed over
+A. entire image B. a local window around keypoint C. only edges D. frequency domain
+
+                        29. A remaining drawback is
+A. not rotation-invariant B. not scale-invariant C. not robust to any clutter D. large 3D viewpoint changes still hard
+
+                        30. About edges vs blobs as interest points
+A. edges give precise localization in both directions
+B. blobs lack scale info
+C. blobs provide both location and size cues
+D. edges are preferred in SIFT
+
+________________
+
+
+（3）计算题（20 题；10 简单 + 10 略复杂（2–3 步））
+说明：只给出题目本身；所有计算题的答案与简要过程统一放在文末“答案汇总”。
+C1. 简单（10 题）
+                           1. σ schedule：给定 σ₀=1.0，s=√2；求 σ₁、σ₂、σ₃。
+
+                           2. Blob 尺寸比：若两斑点的特征尺度分别为 σ_A=1.5、σ_B=3.0，求 size_A/size_B（注意 Size ∝ σ）。
+
+                           3. Orientation：(\partial I/\partial x=3)，(\partial I/\partial y=3\sqrt{3})，求 θ（度）。
+
+                           4. Orientation（象限判断）：(\partial I/\partial x=-4)，(\partial I/\partial y=4)。求 θ（度）。
+
+                           5. NLoG 数值：已知在 σ=2 处 (\nabla^2 G * I=-10)。求 normalized LoG 值 (\sigma^2\nabla^2 G * I)。
+
+                           6. DoG≈(s−1)·NLoG：已知 s=1.2，某像素 NLoG=5.0。估算 DoG。
+
+                           7. 3×3×3 极值判定：某候选点值 12.0，其 26 个邻居的最大值为 12.5。该点是否为极大值？
+
+                           8. 特征尺度选择：同一位置在三层 σ={1.0,1.414,2.0} 的 NLoG 响应为 {0.5, 2.0, 1.2}。给出特征尺度。
+
+                           9. 尺度匹配比例：两幅图匹配到同一物体处的特征尺度分别为 σ_A=2、σ_B=3。求尺度比 r=σ_B/σ_A。
+
+                           10. 梯度幅值：(|\nabla I|=\sqrt{(\partial_x I)^2+(\partial_y I)^2})，若 (\partial_x I=6,\partial_y I=8)，求 (|\nabla I|)。
+
+C2. 略复杂（10 题）
+                              11. DoG vs NLoG 近似检验：取 s=√2、σ=1.6；已知 L(x,σ)=80、L(x,sσ)=74，且 NLoG(x,σ)=−30。计算 DoG、(s−1)·NLoG 及二者之比。
+
+                              12. 由 ∇²G*I 估算 DoG：σ=1.6、s=2，已知 (\nabla^2 GI=-5)。用 DoG ≈ (s−1)σ²∇²GI 估算 DoG。
+
+                              13. 加权方向直方图：8 个方向箱（每箱 45°）。给 5 个梯度（角度°/权重）：(10/2), (20/1), (15/1), (100/0.5), (110/0.5)。求主方向（给出落入的箱与近似角度）。
+
+                              14. 下采样与 σ 的关系：若图像各向同性下采样 0.5 倍，同一物理斑点在原图 σ*=2.0，则在下采样后图像中该斑点的 σ* 为多少？
+
+                              15. 多尺度响应选取：σ={1.0,1.6,2.26}（后两者约为乘 s=√2），其 NLoG 响应 {−0.8, −2.4, −1.6}。求特征尺度。
+
+                              16. Orientation（第三象限）：(\partial_x I=-5,\partial_y I=-5\sqrt{3})。求 θ（度）。
+
+                              17. σ 表（多层）：σ₀=1.6，s=√2。求 k=0..4 的 σ_k。
+
+                              18. 尺度步数差：若 r=σ_B/σ_A=1.5，s=√2。求跨越的离散“尺度步数” (\Delta k=\log(r)/\log(s))。
+
+                              19. 严格极值：候选 DoG=0.040，26 邻域最大为 0.039（其余更小）。该点是否为严格极大值？
+
+                              20. 旋转影响：某关键点主方向为 30°。整幅图像旋转 −45° 后，该关键点的新主方向是多少（按 0–360° 给出）？
+
+________________
+
+
+答案汇总（按题型顺序；选择题答案不加粗；判断/选择答案紧凑、无换行；计算题含简要过程）
+判断题（30）
+ 1-F,2-T,3-T,4-F,5-F,6-T,7-T,8-T,9-T,10-T,11-T,12-F,13-T,14-F,15-T,16-T,17-F,18-T,19-T,20-F,21-T,22-T,23-T,24-F,25-F,26-T,27-T,28-T,29-T,30-T
+单选题（30）
+ 1-A,2-B,3-B,4-B,5-B,6-B,7-B,8-C,9-B,10-C,11-B,12-C,13-B,14-B,15-B,16-B,17-A,18-C,19-B,20-B,21-B,22-B,23-C,24-B,25-B,26-B,27-A,28-B,29-D,30-C
+计算题（20）
+ C1-1）σ₁=1.0×1.414≈1.414，σ₂≈1.414×1.414=2.000，σ₃≈2.000×1.414≈2.828。
+C1-2）Size∝σ ⇒ size_A/size_B=1.5/3.0=0.5。
+C1-3）θ=atan((3√3)/3)=atan(√3)=60°。
+C1-4）θ=atan2(4,−4)=135°（第二象限）。
+C1-5）NLoG=σ²·(∇²GI)=2²×(−10)=−40。
+C1-6）DoG≈(s−1)·NLoG=0.2×5.0=1.0。
+C1-7）否；存在 12.5>12.0，不是极大值。
+C1-8）在三层中 2.0 为最大 ⇒ 特征尺度 σ=1.414。
+C1-9）r=σ_B/σ_A=3/2=1.5。
+C1-10）(|\nabla I|=\sqrt{6^2+8^2}=\sqrt{100}=10)。
+C2-11）DoG=L(sσ)−L(σ)=74−80=−6；(s−1)·NLoG≈0.4142×(−30)=−12.43；比值 ≈(−6)/(−12.43)≈0.48。
+C2-12）DoG≈(s−1)σ²∇²GI=1×(1.6)²×(−5)=2.56×(−5)=−12.8。
+C2-13）45°一箱：0–45°箱权重=2+1+1=4；90–135°箱=0.5+0.5=1 ⇒ 主方向落在 0–45°箱，近似取 ~15°。
+C2-14）下采样 0.5 倍 ⇒ 物理尺度减半 ⇒ σ≈2.0×0.5=1.0。
+C2-15）三值中 |−2.4| 最大，取中间层 ⇒ σ*=1.6。
+C2-16）dy/dx=(−5√3)/(−5)=√3，象限 III ⇒ θ=180°+60°=240°。
+C2-17）σ₀=1.600；σ₁≈1.600×1.414=2.263；σ₂≈3.200；σ₃≈4.525；σ₄≈6.400。
+C2-18）(\Delta k=\ln(1.5)/\ln(\sqrt{2})≈0.405465/0.346574≈1.170)。
+C2-19）是；候选值 0.040 严格大于所有邻居最大 0.039。
+C2-20）新方向=30°+(−45°)=−15°≡345°（0–360°）。
+________________
+
+
+注：题目设计与答案推导对应课件中的核心概念、公式与图示（如 DoG≈(s−1)σ²∇²G、3×3×3 极值、σ 进位公式、方向直方图与主方向、尺度归一化、应用页示例等）。
+如果你把第二份课件也上传，我可以把以上内容合并为一套更完整的复习包并补充跨两套课件的综合题。

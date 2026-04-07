@@ -1,0 +1,112 @@
+﻿韦思嘉 Viska Wei
+• +1-5105020711 • 微信：Viska-
+
+
+教育背景
+	
+
+约翰斯·霍普金斯大学 GPA 4.0
+物理学博士 （PhD）· 导师：Alex Szalay教授
+计算机科学硕士（MSE） · 导师：Vladimir Braverman教授
+应用数学与统计学硕士（MSE） · 方向：概率论
+	
+
+
+
+2019-2026
+2025
+2024
+	卡内基梅隆大学 GPA 4.0
+计算机科学暑期课程    
+芝加哥大学 GPA 4.0
+物理学硕士（MS）导师：Carlos Wagner教授   论文：SUSY三线性希格斯耦合[PhysRevD 2019]
+加州大学伯克利分校 Senior GPA 3.9
+物理学学士（BA） 导师：Robert Littlejohn教授  
+
+
+	
+
+2019
+
+
+2017-2019
+
+
+2012-2017
+	实习经历
+	
+
+字节跳动 · 大语言模型(LLM)研究实习生  
+
+
+
+
+
+
+自动化提示优化系统开发（已投产）  
+构建端到端自动化提示优化系统，取代费时且依赖专家的手工工程和长达数周的调试周期，通过AI驱动的工作流程部署于200+企业合作伙伴场景（客户服务与CX自动化、内容审核与合规、电商与推荐、汽车与制造、医疗、旅游和金融）。  
+  - 实现AI驱动的规则挖掘，自动生成系统提示中的分类规则，在多样化的高流量生产任务中平均提升提示准确率20%，并将迭代周期缩短88%（从260次降至30次LLM调用）。  
+  - 设计决策路径学习算法，利用历史优化数据提升提示质量并防止性能退化。  
+  - 集成人机协同（Argilla）优化流程，减少70%人工标注成本，实现可扩展的高效部署。
+
+
+
+
+
+
+11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+
+
+	
+
+San Jose, 2024夏
+	[JOB TITLE]
+[Company Name]
+•  Spearheaded [specific project or initiative], resulting in [quantifiable achievement].
+•  Collaborated with cross-functional teams to [accomplishment or task].
+•  Implemented [strategy or process improvement], leading to [positive outcome].
+•  Managed [specific responsibility or duty], ensuring [desired outcome].
+
+
+	[Location]
+[Dates of Employment]
+
+
+	University Projects
+	
+
+	
+
+[PROJECT TITLE]        
+•  Description: Brief overview of the project and its objectives.
+•  Role: Your specific role or contribution to the project.
+•  Technologies Used: Any tools, software, or programming languages utilized.
+•  Outcome: Results achieved or lessons learned from the project.
+
+
+	
+
+[Dates]
+
+
+	Activities
+	
+
+[ACTIVITY NAME]        
+•  Description: Brief overview of the activity and your role.
+•  Skills Developed: Any relevant skills or qualities honed through participation.
+•  Achievements: Any notable achievements or leadership roles within the activity.
+
+
+	
+
+[Dates]
+
+
+	Additional
+	
+
+Language Skills: [List any languages you speak fluently or proficiently.]
+Technical Skills: [List any relevant technical skills or software proficiencies.]
+Volunteer Experience: [Briefly mention any volunteer work you've done, highlighting skills or experiences gained.]
+Interests/Hobbies: [Include any interests or hobbies that demonstrate relevant skills or qualities, or provide insight into your personality.]
