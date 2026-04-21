@@ -6,7 +6,9 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const linkUrl = project.liveUrl || project.githubUrl || project.paperUrl || '#';
+const linkUrl = project.kind === 'paper'
+  ? project.paperUrl || project.liveUrl || project.githubUrl || '#'
+  : project.liveUrl || project.githubUrl || project.paperUrl || '#';
 ---
 
 <div
@@ -24,6 +26,7 @@ const linkUrl = project.liveUrl || project.githubUrl || project.paperUrl || '#';
     <div class="card-meta">
       {project.year && <span>{project.year}</span>}
       {project.venue && <span>· {project.venue}</span>}
+      {project.liveUrl && <span>· <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" class="card-link">Site</a></span>}
       {project.githubUrl && <span>· <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" class="card-link">Code</a></span>}
       {project.paperUrl && <span>· <a href={project.paperUrl} target="_blank" rel="noopener noreferrer" class="card-link">Paper</a></span>}
     </div>
